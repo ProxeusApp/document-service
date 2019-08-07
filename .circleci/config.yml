@@ -1,0 +1,135 @@
+
+version: 2.1
+executors:
+  docker-publisher:
+    environment:
+      CONTAINER_IMAGE_NAME: proxeus/document-service
+    docker:
+      - image: circleci/buildpack-deps:stretch
+
+jobs:
+
+  build-jar:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - checkout
+      - run:
+          name: build Jar file "document-service.jar"
+          command: make build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./document-service.jar
+      - run:
+          name: List files in path 
+          command: ls -lh
+
+  build-docker:
+    executor: docker-publisher
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/project/
+      - run:
+          command: ls -lh ~/project
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -f Dockerfile.dev -t $CONTAINER_IMAGE_NAME:latest -t $CONTAINER_IMAGE_NAME .
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar $CONTAINER_IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - image.tar
+
+  publish-latest:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME
+
+  publish-ci-sha:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Tag docker image  
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1
+
+  publish-staging:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Tag docker image  
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME:staging
+            
+workflows:
+  version: 2
+  build-master:
+    jobs:
+      - build-jar:
+          filters:
+            branches:
+              only: master
+      - build-docker:
+          requires:
+            - build-jar
+          filters:
+            branches:
+              only: master
+      - publish-latest:
+          requires:
+            - build-docker
+          filters:
+            branches:
+              only: master
+      - publish-ci-sha:
+          requires:
+            - build-docker
+          filters:
+            branches:
+              only: master
+      - hold:
+          type: approval
+          requires:
+            - build-docker
+      - publish-staging:
+          requires:
+            - hold
+          filters:
+            branches:
+              only: master

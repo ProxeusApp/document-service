@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html>
+    <body>
+        <ul:abc abc="1">
+            àààääää
+            <a>{</a>% <b>set abc </b>= <c>"% } {{}}" %}</c>
+            <a>{%</a> set abc2 = [] <a>%}</a>
+            <li:a abc="1">
+                {%if (true)%}
+                <span>before if{%if (false)%} after if</span>
+            </li:a>
+            <li:a abc="2">
+                <span>before elseif{%elseif (false) %} after elseif</span>
+            </li:a>
+            <li:a abc="3">
+                <span>before else{%else%} after else</span>
+                <div>{%if input.IntendedDeliveryDate == ‘Specific Date‘ %}<p>{{input.SpecificDate}}{%else%}</p>{{input.DeliveryWeek}}<p>{%endif%}</p></div>
+            </li:a>
+            <li:a abc="4">
+                <imgele name:var="{{input.myvar[abc:123]}}"></imgele>
+                <ul:abc abc="4.1">
+                    <li:a abc="4.1">
+                        <span>lala{%endif%} omfg</span>
+                    </li:a>
+                </ul:abc>
+                {%endif%}
+            </li:a>
+        </ul:abc>
+    </body>
+</html>
+

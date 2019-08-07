@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>API</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<h1 class="api-title">Document-Service API</h1>
+<div class="modal-content">
+    <div class="panel-group api" id="_accordion" role="tablist" aria-multiselectable="true">
+        <style>
+            .api-title {
+                background: #fff;
+                margin: 0;
+                margin-bottom: -1px;
+                padding: 4px 10px;
+                border-top-left-radius: 6px;
+                border-top-right-radius: 6px;
+                margin-left: 1px;
+                margin-right: 1px;
+            }
+
+            table.nicetbl {
+                width: 100%;
+                max-width: 100%;
+                overflow: hidden;
+            }
+
+            .tdmin {
+                width: 1px;
+            }
+
+            .titlespan {
+                white-space: nowrap;
+                text-align: center;
+                width: 100%;
+                padding: 10px;
+                font-weight: bold;
+                display: block;
+                color: #000000;
+            }
+
+            .cntspan > span {
+                padding: 4px;
+                display: block;
+                margin-left: 8px;
+            }
+
+            .lfspn, .rtspn {
+                background: #f7f7f7e6;
+            }
+
+            .leftradius {
+                border-top-left-radius: 10px;
+                border-bottom-left-radius: 10px;
+            }
+
+            .requestbg {
+                background: #adffad;
+            }
+
+            .headerbg {
+                background: #f75fe170;
+            }
+
+            .responsebg {
+                background: #706bf370;
+            }
+
+            .querypbg {
+                background: #61dfff94;
+            }
+
+            .bodybg {
+                background: #519cb578;
+            }
+
+            .zipbg {
+                background: #ff8c0094;
+            }
+
+            .ext {
+                color: #b701d4;
+            }
+
+            .paramstbl th {
+                text-align: center;
+            }
+
+            .successbg {
+                background: #4cff7f78;
+            }
+
+            .errorbg {
+                background: #ff666694;
+            }
+
+            .m {
+                margin: 10px;
+            }
+
+            .b {
+                color: #ff7a00;
+                font-weight: bold;
+            }
+
+            .s {
+                color: #007b2e;
+            }
+
+            span.label {
+                font-size: 12px;
+                line-height: 1;
+                padding-top: 4px;
+            }
+
+            #_accordion a[data-parent='#_accordion'] {
+                text-decoration: none !important;
+            }
+
+            .qn {
+                color: lime;
+            }
+
+            .qv {
+                color: #ffdf7b;
+                font-weight: 100;
+            }
+        </style>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="_headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#_accordion" href="#_collapseOne" aria-expanded="false"
+                       aria-controls="_collapseOne">
+                        <span class="label label-primary">POST</span> <span class="label label-default" style="">/compile</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="_collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="_headingOne">
+                <div class="panel-body">
+                    <table class="nicetbl">
+                        <tr class="requestbg">
+                            <td class="leftradius">
+                                <span class="titlespan">Request</span>
+                            </td>
+                            <td>
+                                <table class="nicetbl" style="border-collapse: separate;border-spacing: 0 5px;padding-right: 35px;">
+                                    <tr class="headerbg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Header</span>
+                                        </td>
+                                        <td>
+                                            <table class="nicetbl" style="border-collapse: separate;border-spacing: 0 5px;">
+                                                <tr class="querypbg">
+                                                    <td class="leftradius">
+                                                        <span class="titlespan">Query Parameter</span>
+                                                    </td>
+                                                    <td>
+                                                        <table class="nicetbl paramstbl"
+                                                               style="border-collapse: separate;border-spacing: 0 5px;">
+                                                            <tr>
+                                                                <th>
+                                                                    <span>Field</span>
+                                                                </th>
+                                                                <th>
+                                                                    <span>Default</span>
+                                                                </th>
+                                                                <th>
+                                                                    <span>Description</span>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span class="label label-default m"
+                                                                          style="color: lime !important;">format</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                    <span><b class="ext">pdf</b></span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                    <span>The result format you want to get. Possible formats are <b
+                                                                            class="ext">pdf</b>, <b class="ext">odt</b>, <b
+                                                                            class="ext">docx</b>, <b class="ext">doc</b>.
+                                                                        If none is provided, the default which is <b
+                                                                                class="ext">pdf</b> will be taken.
+                                                                        <br>Example call:
+                                                                        <span class="label label-default"
+                                                                              style="">/compile
+                                                                            <span style="color: #ebff00;">?</span><span
+                                                                                    class="qn">format</span>=<span
+                                                                                    class="ext">pdf</span>
+                                                                        </span>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span class="label label-default m"
+                                                                          style="color: lime !important;">error</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                    <span>false</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                    <span>To make it easier to figure out the mistakes in the template,
+                                                                        it is possible to activate embedded error.
+                                                                        This way template errors are going to be visible in the returned document.
+                                                                        Please note, only code errors inside the template are going to be embedded not other kind of errors.
+                                                                        This parameter is important to prevent compile error being visible under production.
+                                                                        The idea is to provide this flag only under development of a template, to not show the mistaken document at all under production.
+                                                                        By providing this flag, the status code would be <span
+                                                                                class="label label-primary">200</span> otherwise it would be <span
+                                                                                class="label label-warning">422</span>
+                                                                        <br>Example call:
+                                                                        <span class="label label-default"
+                                                                              style="">/compile
+                                                                            <span style="color: #ebff00;">?</span><span
+                                                                                    class="qn">error</span>
+                                                                        </span>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr class="bodybg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Body</span>
+                                        </td>
+                                        <td>
+                                            <table class="nicetbl" style="margin: 10px;">
+                                                <tr class="zipbg">
+                                                    <td class="leftradius">
+                                                        <span class="titlespan">ZIP</span>
+                                                    </td>
+                                                    <td>
+                                                        <table class="nicetbl"
+                                                               style="margin:10px;border-collapse: separate;border-spacing: 0 5px;">
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span>template<b class="ext">.odt</b></span>
+                                                                </td>
+                                                                <td class="cntspan rtspn">
+                                                                    <span>
+                                                                        Template named with the correct extension, the name before the extension doesn't matter.
+                                                                        Only one template can be included per request in a ZIP file.
+                                                                        If you provide more than one, the last one will be taken.
+                                                                        Other formats like <b class="ext">docx</b> are not available yet.
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span>data<b class="ext">.json</b></span>
+                                                                </td>
+                                                                <td class="cntspan rtspn">
+                                                                    <span>
+                                                                        JSON data you want the template to get resolved with.
+                                                                        Here as well, the extension must be provided in the file name, the name before the extension doesn't matter.
+                                                                        Only one file is accepted per ZIP file. If you provide more than one, the last one will be taken.
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span>asset1</span>
+                                                                </td>
+                                                                <td class="cntspan rtspn">
+                                                                    <span>
+                                                                        Assets that are referenced in your JSON data.
+                                                                        Assets are usually pictures you want to embed in your document.
+                                                                        You can include n assets into the ZIP file.
+                                                                        <br>Example of how it could be referenced in JSON data:<br>
+                                                                        <table class="nicetbl"
+                                                                               style="border-collapse: separate;border-spacing: 0 5px;">
+                                                                            <tr><td class="cntspan lfspn leftradius">
+                                                                                    As a <b>string</b>.
+                                                                                </td>
+                                                                                <td class="lfspn">
+                                                                                    <span class="b">{</span>
+                                                                                    <span class="s">"imgVar"</span>
+                                                                                    <span class="b">:</span>
+                                                                                    <span class="s">"asset1"</span>
+                                                                                    <span class="b">}</span>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td class="cntspan lfspn leftradius">
+                                                                                    As an <b>object</b>. Only <b
+                                                                                        class="ext">path</b> must be provided. It is case insensitive.
+                                                                                </td>
+                                                                                <td class="lfspn">
+                                                                                    <span class="b">{</span>
+                                                                                    <span class="s">"imgVar"</span>
+                                                                                    <span class="b">:{</span>
+                                                                                    <span class="s">"contentType"</span>
+                                                                                    <span class="b">:</span>
+                                                                                    <span class="s">"image/png"</span>
+                                                                                    <span class="b">, </span>
+                                                                                    <span class="s">"path"</span>
+                                                                                    <span class="b">:</span>
+                                                                                    <span class="s">"asset1"</span>
+                                                                                    ,
+                                                                                    <span class="s">"size"</span>
+                                                                                    <span class="b">:</span>
+                                                                                    <span style="color:blue;">2453</span>
+                                                                                    <span class="b">}}</span>
+                                                                                </td></tr>
+                                                                            <tr>
+                                                                                <td class="cntspan lfspn leftradius">
+                                                                                    As a <b>list</b>. The first entry that is a string and points to a file in the ZIP will be taken.
+                                                                                </td>
+                                                                                <td class="lfspn">
+                                                                                    <span class="b">{</span>
+                                                                                    <span class="s">"imgVar"</span>
+                                                                                    <span class="b">:</span>
+                                                                                    <span class="b">[</span>
+                                                                                    <span class="s">"a"</span>
+                                                                                    <span class="b">, </span>
+                                                                                    <span class="s">"asset1"</span>
+                                                                                    <span class="b">, </span>
+                                                                                    <span class="s">"c.."</span>
+                                                                                    <span class="b">]}</span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        <br>
+                                                                        Together with the three variable types, there are three ways of providing an image.
+                                                                        <table class="nicetbl"
+                                                                               style="border-collapse: separate;border-spacing: 0 5px;">
+                                                                            <tr><td class="cntspan lfspn leftradius">
+                                                                                    <b>Remote</b> by providing it as an URL. Please note, the link must be public for this option.
+                                                                                </td>
+                                                                                <td class="lfspn">
+                                                                                    <span class="s">http://...myimage.png</span>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td class="cntspan lfspn leftradius">
+                                                                                    <b>Local</b> by providing the name to the asset in the ZIP.
+                                                                                </td>
+                                                                                <td class="lfspn">
+                                                                                    <span class="s">asset1</span>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td class="cntspan lfspn leftradius">
+                                                                                    <b>Embedded</b> by providing the content as base64.
+                                                                                </td>
+                                                                                <td class="lfspn">
+                                                                                    <span class="s">data:image/png;base64,iV....</span>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span>asset2</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span>asset3</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span>asset4</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr class="responsebg">
+                            <td class="leftradius">
+                                <span class="titlespan">Response</span>
+                            </td>
+                            <td>
+                                <table class="nicetbl"
+                                       style="margin:10px;border-collapse: separate;border-spacing: 0 5px;padding-right: 35px;">
+                                    <tr class="successbg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Success</span>
+                                        </td>
+                                        <td>
+                                            The Content-Type will be the one of the format you requested.
+                                            <table class="nicetbl paramstbl"
+                                                   style="margin:10px;border-collapse: separate;border-spacing: 0 5px;">
+                                                <tr>
+                                                    <th>
+                                                        <span>Status</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Body</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Description</span>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-info m">200</span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>&lt;&lt;the requested document content&gt;&gt;</span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>When ever there is a document in the body, the response code is <span
+                                                                class="label label-info">200</span>, even if it contains the error inside of the document.
+                                                            If you want to receive this error inside the document, you can provide the query parameter <span
+                                                                    class="label label-default"
+                                                                    style="color: lime !important;">error</span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr class="errorbg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Error</span>
+                                        </td>
+                                        <td>
+                                            The Content-Type is always "text/plain; charset=UTF-8" .
+                                            <table class="nicetbl paramstbl"
+                                                   style="margin:10px;border-collapse: separate;border-spacing: 0 5px;">
+                                                <tr>
+                                                    <th>
+                                                        <span>Status</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Body</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Description</span>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-warning m">400</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"any error explanation"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>If you didn't create the request as described.</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-warning m">422</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"any error explanation"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>Error that happened during compilation. If you want to receive this error inside the document, you can provide the query parameter <span
+                                                                class="label label-default"
+                                                                style="color: lime !important;">error</span></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-danger m">501</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"not yet implemented"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>Happens for features that are not ready yet.</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-danger m">503</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"any error explanation"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>This can happen if the service itself is unavailable or some resources inside the service.</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-danger m">500</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"any error explanation"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>This happens on all other errors.</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="_headingTwo">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#_accordion" href="#_collapseTwo"
+                       aria-expanded="false" aria-controls="_collapseTwo">
+                        <span class="label label-primary">POST</span> <span class="label label-default" style="">/vars</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="_collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="_headingTwo">
+                <div class="panel-body">
+                    <table class="nicetbl">
+                        <tr class="requestbg">
+                            <td class="leftradius">
+                                <span class="titlespan">Request</span>
+                            </td>
+                            <td>
+                                <table class="nicetbl" style="border-collapse: separate;border-spacing: 0 5px;padding-right: 35px;">
+                                    <tr class="headerbg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Header</span>
+                                        </td>
+                                        <td>
+                                            <table class="nicetbl" style="border-collapse: separate;border-spacing: 0 5px;">
+                                                <tr class="querypbg">
+                                                    <td class="leftradius">
+                                                        <span class="titlespan">Query Parameter</span>
+                                                    </td>
+                                                    <td>
+                                                        <table class="nicetbl paramstbl"
+                                                               style="border-collapse: separate;border-spacing: 0 5px;">
+                                                            <tr>
+                                                                <th>
+                                                                    <span>Field</span>
+                                                                </th>
+                                                                <th>
+                                                                    <span>Default</span>
+                                                                </th>
+                                                                <th>
+                                                                    <span>Description</span>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="cntspan lfspn leftradius">
+                                                                    <span class="label label-default m"
+                                                                          style="color: lime !important;">prefix</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                    <span>null</span>
+                                                                </td>
+                                                                <td class="cntspan lfspn">
+                                                                    <span>
+                                                                        To filter the vars for the onse you are looking for, you have the possibility to provide a prefix like:
+                                                                        <br>Example call:
+                                                                        <span class="label label-default"
+                                                                              style="">/vars<span
+                                                                                style="color: #ebff00;">?</span><span
+                                                                                class="qn">prefix</span>=<span
+                                                                                class="qv">obj</span></span>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr class="bodybg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Body</span>
+                                        </td>
+                                        <td>
+                                            <table class="nicetbl" style="margin:10px;border-collapse: separate;border-spacing: 0 5px;">
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span>template<b class="ext">.odt</b></span>
+                                                    </td>
+                                                    <td class="cntspan rtspn">
+                                                        <span>
+                                                            You can provide the template directly in the body, no need to wrap it in a ZIP.
+                                                            Other formats like <b class="ext">docx</b> are not available yet.
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr class="responsebg">
+                            <td class="leftradius">
+                                <span class="titlespan">Response</span>
+                            </td>
+                            <td>
+                                <table class="nicetbl"
+                                       style="margin:10px;border-collapse: separate;border-spacing: 0 5px;padding-right: 35px;">
+                                    <tr class="successbg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Success</span>
+                                        </td>
+                                        <td>
+                                            The Content-Type is always "application/json; charset=UTF-8" .
+                                            <table class="nicetbl paramstbl"
+                                                   style="margin:10px;border-collapse: separate;border-spacing: 0 5px;">
+                                                <tr>
+                                                    <th>
+                                                        <span>Status</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Body</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Description</span>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-info m">200</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="b">[</span>
+                                                            <span class="s">"var1"</span>
+                                                            <span class="b">,</span>
+                                                            <span class="s">"var2"</span>
+                                                            <span class="b">,</span>
+                                                            <span class="s">"obj.number"</span>
+                                                            <span class="b">]</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>
+                                                            A set with all vars that have been found in the provided template are returned as a JSON.<br>
+                                                            If you want to query a more specific set, you can provide the <span>prefix</span> parameter to retrieve vars starting with your prefix.<br>
+                                                            <br>Example call:
+                                                            <span class="label label-default"
+                                                                  style="">/vars<span
+                                                                    style="color: #ebff00;">?</span><span
+                                                                    class="qn">prefix</span>=<span
+                                                                    class="qv">obj</span>
+                                                            </span>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr class="errorbg">
+                                        <td class="leftradius">
+                                            <span class="titlespan">Error</span>
+                                        </td>
+                                        <td>
+                                            The Content-Type is always "text/plain; charset=UTF-8" .
+                                            <table class="nicetbl paramstbl"
+                                                   style="margin:10px;border-collapse: separate;border-spacing: 0 5px;">
+                                                <tr>
+                                                    <th>
+                                                        <span>Status</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Body</span>
+                                                    </th>
+                                                    <th>
+                                                        <span>Description</span>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-danger m">501</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"not yet implemented"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>Happens for features that are not ready yet.</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-danger m">503</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"any error explanation"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>This can happen if the service itself is unavailable or some resources inside the service.</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="cntspan lfspn leftradius">
+                                                        <span class="label label-danger m">500</span>
+                                                    </td>
+                                                    <td class="lfspn">
+                                                        <span>
+                                                            <span class="s">"any error explanation"</span>
+                                                        </span>
+                                                    </td>
+                                                    <td class="cntspan lfspn">
+                                                        <span>This happens on all other errors.</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="_headingThree">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#_accordion" href="#_collapseThree"
+                       aria-expanded="false" aria-controls="_collapseThree">
+                        <span class="label label-info">GET</span> <span class="label label-default" style="">/how-it-works</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="_collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="_headingThree">
+                <div class="panel-body">
+                    <table class="nicetbl" style="border-collapse: separate;border-spacing: 0 16px;">
+                        <tr>
+                            <td>
+                                This method response with the PDF document that explains how it works.
+                            </td>
+                            <td class="tdmin" style="text-align:right">
+                                <a title="/how-it-works" href="/how-it-works" target="_blank" type="button"
+                                   class="btn label-success" style="color:#fff;">read it now</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading4">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#_accordion" href="#collapse4"
+                       aria-expanded="false" aria-controls="collapse4">
+                        <span class="label label-info">GET</span> <span class="label label-default" style="">/example</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
+                <div class="panel-body">
+                    <table class="nicetbl" style="border-collapse: separate;border-spacing: 0 16px;">
+                        <tr style="border-bottom:1px solid grey;">
+                            <td>
+                                This method response with the PDF document that explains how to create templates by example.
+                            </td>
+                            <td class="tdmin" style="text-align:right">
+                                <a title="/example" href="/example" target="_blank" type="button" class="btn label-success"
+                                   style="color:#fff;">get the PDF</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                You can request the raw template here too. Just add the query parameter raw like <span
+                                    class="label label-default" style="">/example<span
+                                    style="color: #ebff00;">?</span><span class="qn">raw</span></span>
+                            </td>
+                            <td class="tdmin" style="text-align:right">
+                                <a title="/example?raw" href="/example?raw" target="_blank" type="button"
+                                   class="btn label-success" style="color:#fff;">get the ODT template</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading5">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#_accordion" href="#collapse5"
+                       aria-expanded="false" aria-controls="collapse5">
+                        <span class="label label-info">GET</span> <span class="label label-default" style="">/extension</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading5">
+                <div class="panel-body">
+                    <style>
+                        .tmplasttbl tr:first-child a {
+                            margin-bottom: 15px;
+                        }
+
+                        .tmplasttbl a {
+                            margin: 0px 10px;
+                        }
+
+                        table.tmplasttbl .label-default {
+                            margin: 5px 10px;
+                            display: block !important;
+                        }
+
+                        .tmplasttbl img {
+                            background: #ffffffc7;
+                            border-radius: 30%;
+                            padding: 1px;
+                            height: 20px;
+                            margin-right: 8px;
+                        }
+                    </style>
+                    <table class="nicetbl" style="border-collapse: separate;border-spacing: 0 16px;">
+                        <tr style="border-bottom:1px solid grey;">
+                            This method provides the binaries of the extension called Template-Assistance for LibreOffice. This extension is not necessary for writing
+                            templates. It is just an assistance, that helps you writing variables easier and drag and dropping them from your browser to the editor.
+
+                            <br><b>Please note</b>, this extension is not yet production ready.
+                            It is recommended to use it for test purposes only. In any case, use it at your own risk.
+                        </tr>
+                        <tr>
+                            <td>
+                                <table class="tmplasttbl">
+                                    <tbody>
+                                    <tr>
+                                        <td><span class="libreHub-hlted" style="display: inline-block;float: left;width: auto;"><d>Template</d> <e>Assistance</e></span>
+                                        </td>
+                                        <td>
+                                            <span class="label label-default"
+                                                  style="">/extension<span style="color: #ebff00;">?</span><span class="qn">os</span>=<span
+                                                    class="qv">linux_x86_64</span>&<span class="qn">app</span>=<span
+                                                    class="qv">libreoffice</span></span>
+                                            <a title="/extension?os=linux_x86_64&app=libreoffice" class="btn label-success"
+                                               style="color:#fff;"
+                                               href="/extension?os=linux_x86_64&app=libreoffice"><img alt="linux-logo" height="16"
+                                                                                                      src="/static/img/linux_logo.png"><span
+                                                    style="color:#fff;">Linux x86_64</span></a></td>
+                                        <td>
+                                            <span class="label label-default"
+                                                  style="">/extension<span style="color: #ebff00;">?</span><span class="qn">os</span>=<span
+                                                    class="qv">mac_x86_64</span>&<span class="qn">app</span>=<span
+                                                    class="qv">libreoffice</span></span>
+                                            <a title="/extension?os=mac_x86_64&app=libreoffice" class="btn label-success"
+                                               style="color:#fff;"
+                                               href="/extension?os=mac_x86_64&app=libreoffice"><img alt="mac-logo" height="16"
+                                                                                                    src="/static/img/mac_logo.png"><span
+                                                    style="color:#fff;">Mac x86_64</span></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="libreHub-hlted" style="display: inline-block;float: left;width: auto;"></span></td>
+                                        <td>
+                                            <span class="label label-default"
+                                                  style="">/extension<span style="color: #ebff00;">?</span><span class="qn">os</span>=<span
+                                                    class="qv">win_x86_64</span>&<span class="qn">app</span>=<span
+                                                    class="qv">libreoffice</span></span>
+                                            <a title="/extension?os=win_x86_64&app=libreoffice" class="btn label-success"
+                                               style="color:#fff;" href="/extension?os=win_x86_64&app=libreoffice"><img alt="windows-logo" height="16" src="/static/img/win_logo.png"><span style="color:#fff;">Windows x86_64</span></a></td>
+                                        <td>
+                                            <span class="label label-default"
+                                                  style="">/extension<span style="color: #ebff00;">?</span><span class="qn">os</span>=<span
+                                                    class="qv">win_x86</span>&<span class="qn">app</span>=<span
+                                                    class="qv">libreoffice</span>
+                                            </span>
+                                            <a title="/extension?os=win_x86&app=libreoffice" class="btn label-success" style="color:#fff;"
+                                               href="/extension?os=win_x86&app=libreoffice">
+                                                <img alt="windows-logo" height="16" src="/static/img/win_logo.png"><span style="color:#fff;">Windows x86</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+</body>
+</html>
