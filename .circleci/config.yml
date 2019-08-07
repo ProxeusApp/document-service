@@ -21,9 +21,6 @@ jobs:
           root: .
           paths:
             - ./document-service.jar
-      - run:
-          name: List files in path 
-          command: ls -lh
 
   build-docker:
     executor: docker-publisher
@@ -31,8 +28,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/project/
-      - run:
-          command: ls -lh ~/project
       - setup_remote_docker
       - run:
           name: Build Docker image
