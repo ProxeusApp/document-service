@@ -78,7 +78,7 @@ workflows:
   version: 2
   build-master:
     jobs:
-      - build-jar:
+      - build-jar
 #          filters:
 #            branches:
 #              only: master
