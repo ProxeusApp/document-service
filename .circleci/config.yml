@@ -56,24 +56,6 @@ jobs:
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME
 
-  publish-ci-sha:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Tag docker image  
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:$CIRCLE_SHA1
-
   publish-staging:
     executor: docker-publisher
     steps:
@@ -97,27 +79,21 @@ workflows:
   build-master:
     jobs:
       - build-jar:
-          filters:
-            branches:
-              only: master
+#          filters:
+#            branches:
+#              only: master
       - build-docker:
           requires:
             - build-jar
-          filters:
-            branches:
-              only: master
+#          filters:
+#            branches:
+#              only: master
       - publish-latest:
           requires:
             - build-docker
-          filters:
-            branches:
-              only: master
-      - publish-ci-sha:
-          requires:
-            - build-docker
-          filters:
-            branches:
-              only: master
+#          filters:
+#            branches:
+#              only: master
       - hold:
           type: approval
           requires:
@@ -125,6 +101,6 @@ workflows:
       - publish-staging:
           requires:
             - hold
-          filters:
-            branches:
-              only: master
+#          filters:
+#            branches:
+#              only: master
