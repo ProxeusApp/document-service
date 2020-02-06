@@ -1,0 +1,25 @@
+---
+- - :permit
+  - BSD
+  - :who: emeka.mosanya@blockfactory.com
+    :why: 
+    :versions: []
+    :when: 2020-02-06 00:06:45.020265000 Z
+- - :permit
+  - Apache 2.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why: 
+    :versions: []
+    :when: 2020-02-06 00:07:08.767995000 Z
+- - :permit
+  - MIT
+  - :who: emeka.mosanya@blockfactory.com
+    :why: 
+    :versions: []
+    :when: 2020-02-06 00:07:40.348248000 Z
+- - :permit
+  - Mozilla Public License 2.0
+  - :who: emeka.mosanya@blockfactory.com
+    :why: 
+    :versions: []
+    :when: 2020-02-06 00:11:53.383908000 Z
