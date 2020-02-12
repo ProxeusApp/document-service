@@ -99,6 +99,7 @@ public class LibreOffice implements Closeable {
             //InputStream input = new FileInputStream(src);
             //OOInputStream ooInputStream = new OOInputStream(input);
             String sUrl = src.toURI().toString();
+            System.out.println("DEBUG SURL: " + sUrl);
             XComponent oDocToStore = null;
             try {
                 oDocToStore = con.getCompLoader().loadComponentFromURL(sUrl, "_blank", 0, createProps(
@@ -111,10 +112,10 @@ public class LibreOffice implements Closeable {
                 ));
                 if (oDocToStore == null) {
                     lastReconnect = -1;//force reconnect
-                    throw new ExceptionInInitializerError("Please try again later.");
+                    throw new ExceptionInInitializerError("No doc to store. No Please try again later.");
                 }
             } catch (NullPointerException eee) {
-                throw new ExceptionInInitializerError("Please try again later.");
+                throw new ExceptionInInitializerError("Internal error.  Please try again later.");
             }
 
             try {

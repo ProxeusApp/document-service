@@ -8,15 +8,62 @@ import org.junit.Test;
 import java.util.List;
 
 public class XmlTemplateHandlerTest {
+    //@Test
+    public void parseODTXml() throws Exception{
+        XmlTemplateHandler expected = getXmlTemplateFixer2("odt_content_fixed.xml");
+        XmlTemplateHandler mxf = getXmlTemplateFixer2("odt_content.xml");
+        String fixed_template_with_code = expected.toString();
+        mxf.fixCodeStructures();
+        String fixed = mxf.toString();
+        System.out.println(fixed);
+        Assert.assertEquals(fixed_template_with_code, fixed);
+
+    }
+
+    //@Test
+    public void parseODTBodyXml() throws Exception{
+        XmlTemplateHandler expected = getXmlTemplateFixer2("odt_body_fixed.xml");
+        XmlTemplateHandler mxf = getXmlTemplateFixer2("odt_body.xml");
+        String fixed_template_with_code = expected.toString();
+        mxf.fixCodeStructures();
+        String fixed = mxf.toString();
+        System.out.println(fixed);
+        Assert.assertEquals(fixed_template_with_code, fixed);
+
+    }
+
+    @Test
+    public void parseIfStatementXml() throws Exception{
+        XmlTemplateHandler expected = getXmlTemplateFixer2("if_statement_fixed.xml");
+        XmlTemplateHandler mxf = getXmlTemplateFixer2("if_statement.xml");
+        String fixed_template_with_code = expected.toString();
+        mxf.fixCodeStructures();
+        String fixed = mxf.toString();
+        System.out.println(fixed);
+        Assert.assertEquals(fixed_template_with_code, fixed);
+
+    }
+
     @Test
     public void fixCodeStructures() throws Exception {
-        XmlTemplateHandler expected = getXmlTemplateFixer2("fixed_template_with_code.xml");
-        XmlTemplateHandler mxf = getXmlTemplateFixer2("malformed_template_with_code.xml");
+        XmlTemplateHandler expected = getXmlTemplateFixer2("template_with_code_fixed.xml");
+        XmlTemplateHandler mxf = getXmlTemplateFixer2("template_with_code.xml");
         String fixed_template_with_code = expected.toString();
         List<Element> imgEles = mxf.findElementsByName("imgele");
         imgEles.get(0).attr("name:var", "img123");
         mxf.fixCodeStructures();
         String fixed = mxf.toString();
+        Assert.assertEquals(fixed_template_with_code, fixed);
+    }
+
+    @Test
+    public void fixCodeStructures2() throws Exception {
+        XmlTemplateHandler expected = getXmlTemplateFixer2("template_with_code2_fixed.xml");
+        XmlTemplateHandler mxf = getXmlTemplateFixer2("template_with_code2.xml");
+        String fixed_template_with_code = expected.toString();
+        mxf.fixCodeStructures();
+        String fixed = mxf.toString();
+        System.out.println(fixed);
         Assert.assertEquals(fixed_template_with_code, fixed);
     }
 
@@ -93,7 +140,8 @@ public class XmlTemplateHandlerTest {
         Config configTryToPlaceCodeMoreSuitable = new Config();
         configTryToPlaceCodeMoreSuitable.FixCodeByFindingTheNextCommonParent = true;
         configTryToPlaceCodeMoreSuitable.AddTryToWrapXMLTagWithCode("for", "table:table-row");
-        configTryToPlaceCodeMoreSuitable.Fix_XMLTags = false;
+        configTryToPlaceCodeMoreSuitable.Fix_XMLTags = true;
+        configTryToPlaceCodeMoreSuitable.Fix_RemoveXMLStartTagsWithoutEndTags=true;
         return new XmlTemplateHandler(configTryToPlaceCodeMoreSuitable, TemplateCompiler.class.getClassLoader().getResourceAsStream(filename));
     }
 

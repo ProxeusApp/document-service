@@ -120,7 +120,8 @@ public class ODTCompiler implements DocumentCompilerIF {
                 return result;
             } catch (Exception e) {
                 cfc.waitForImageTasksToFinish();
-                throw new UnavailableException("LibreOffice error during convert to " + cfc.template.format + " please try again.");
+                e.printStackTrace();
+                throw new UnavailableException("LibreOffice error during convert to " + cfc.template.format + ": " + e.getMessage());
             }
         }
         return null;

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+    first line
+    <a>
+        second line
+    </a>
+    <b>
+        third line
+        </b>{% if foobar barfoo %}<e><c>
+    fourth line</c>
+    fifth line </e>{% endif %}
+</doc>

@@ -2,7 +2,13 @@
 /build/
 /.idea/
 /logs/
+out/
 document-service.jar
+**/.DS_Store
+.classpath
+.project
+.settings/
+bin/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -12,5 +18,3 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
-
-.DS_Store

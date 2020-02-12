@@ -23,3 +23,57 @@
     :why: 
     :versions: []
     :when: 2020-02-06 00:11:53.383908000 Z
+- - :permit
+  - MIT
+  - :who:
+    :why:
+    :versions: []
+    :when: 2019-12-20 09:25:04.086031000 Z
+- - :permit
+  - Apache 2.0
+  - :who:
+    :why:
+    :versions: []
+    :when: 2019-12-20 09:25:50.159396000 Z
+- - :permit
+  - Apache 2.0, Eclipse Public License - Version 1.0
+  - :who:
+    :why:
+    :versions: []
+    :when: 2019-12-20 09:26:16.280768000 Z
+- - :approve
+  - juh
+  - :who:
+    :why: LibreOffice MPL 2.0
+    :versions: []
+    :when: 2019-12-20 13:55:54.070224000 Z
+- - :approve
+  - jurt
+  - :who:
+    :why: LibreOffice MPL 2.0
+    :versions: []
+    :when: 2019-12-20 13:55:58.446785000 Z
+- - :approve
+  - ridl
+  - :who:
+    :why: LibreOffice MPL 2.0
+    :versions: []
+    :when: 2019-12-20 13:56:05.186925000 Z
+- - :approve
+  - unoil
+  - :who:
+    :why: LibreOffice MPL 2.0
+    :versions: []
+    :when: 2019-12-20 13:56:10.946673000 Z
+- - :approve
+  - javax.servlet-api
+  - :who:
+    :why: GPLv2 with CPE
+    :versions: []
+    :when: 2019-12-20 13:56:57.264730000 Z
+- - :approve
+  - jaxb-api
+  - :who:
+    :why: GPLv2 with CPE
+    :versions: []
+    :when: 2019-12-20 14:04:55.702653000 Z

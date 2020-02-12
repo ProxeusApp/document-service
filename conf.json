@@ -1,0 +1,24 @@
+{
+  "protocol":"http",
+  "host":"0.0.0.0",
+  "port":2115,
+  "tmpFolder":"docsCache",/** cache during a request, it will be deleted when the request is finished **/
+  "min": 10,/** min workers **/
+  "max": 100,/** max workers **/
+  "timeout":"30s",/** timeout duration **/
+  "logConfig":{
+    "level":"TRACE", /** OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL **/
+    "level_console":"DEBUG", /** OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL **/
+    "maxFileSize": "5MB",
+    "maxBackupIndex": 5,
+    "pattern": "%d{dd.MM.yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n",
+    "filePath":"./logs/document-service.log"
+  },
+  "libreConfig":{
+    "librepath":"/Applications/LibreOffice.app/Contents/MacOS/soffice", /** the libreoffice executable folder path **/
+    "min" : 10, /** default 8 | min executables ready to be ready. An executable is mainly needed to convert to PDF. It is recommended to use one exe for a request at the time.**/
+    "max" : 100, /** default 40 | max capacity of executable running. The next request will be on hold until one is freed or until request timeout..**/
+    "highLoad": 55 /** highLoad defines the percentage of executables in use, when it is reached prepare new ones to be ready for high availability and fast response.**/
+    /** Please note! LibreOffice likes to fail sometimes, to have a stable failover, you might want to keep the highLoad value around 50% or even lower.**/
+  }
+}

@@ -51,13 +51,26 @@ public class LibreOfficeAssistant implements Closeable {
      * @return contentType
      */
     public String Convert(File src, File dst, String format, boolean newFontsInstalled) throws Exception {
+        LibreOffice lo = null;
+        try{
+            lo = libreOfficePool.take(newFontsInstalled);
+            newFontsInstalled = false;
+        }catch(Exception e){
+            throw new UnavailableException("Please try again later.", e);
+        }finally {
+            libreOfficePool.release();
+        }
+       
+        if (lo == null){
+            throw new UnavailableException("Cannot initialize LibreOffice instance. Please try again later.");
+        }
+
         int count = 0;
         do{
             try{
-                LibreOffice lo = libreOfficePool.take(newFontsInstalled);
-                newFontsInstalled = false;
                 return lo.Convert(src, dst, format);
             }catch(ExceptionInInitializerError wiie){
+                wiie.printStackTrace();
                 ++count;
             }catch(Exception e){
                 throw new UnavailableException("Please try again later.", e);
@@ -65,7 +78,7 @@ public class LibreOfficeAssistant implements Closeable {
                 libreOfficePool.release();
             }
         }while(count < 10);
-        throw new UnavailableException("Please try again later.");
+        throw new UnavailableException("Cannot initialize LibreOffice instance. Please try again later.");
     }
 
     /**

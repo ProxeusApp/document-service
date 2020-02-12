@@ -7,6 +7,7 @@ package com.proxeus.office.libre;
 public class LibreConfig {
     /**
      * "/opt/libreoffice5.4/program" "C:/Program Files/LibreOffice 5/program" "/usr/lib/libreoffice/program"
+     * "/Applications/LibreOffice.app/Contents/MacOS/soffice"
      **/
     public String librepath = "/usr/lib/libreoffice/program";
     /**

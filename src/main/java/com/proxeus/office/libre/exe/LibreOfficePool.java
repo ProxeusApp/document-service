@@ -273,7 +273,7 @@ public class LibreOfficePool {
             //looks like the service is under heavy load, lets throw and exceptions saying try again later
             //holding the request longer doesn't make sense as it takes more resources
             if (lo == null) {
-                throw new UnavailableException("Please try again later.");
+                throw new UnavailableException("All LibreOffice instances busy.  Please try again later.");
             }
         } else {
             //try poll
@@ -282,7 +282,7 @@ public class LibreOfficePool {
                 offerNew();
                 lo = executables.poll(8, TimeUnit.SECONDS);
                 if (lo == null) {
-                    throw new UnavailableException("Please try again later.");
+                    throw new UnavailableException("Cannot get LibreOffice instance.  Please try again later.");
                 }
             }
         }
