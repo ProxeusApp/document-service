@@ -10,6 +10,10 @@ import com.proxeus.util.Json;
 import com.proxeus.util.zip.EntryFilter;
 import com.proxeus.util.zip.Zip;
 
+import com.proxeus.xml.template.TemplateHandlerFactory;
+import com.proxeus.xml.template.TemplateVarParserFactory;
+import com.proxeus.xml.template.jtwig.JTwigTemplateHandlerFactory;
+import com.proxeus.xml.template.jtwig.JTwigTemplateVarParserFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -28,54 +32,61 @@ public class TemplateCompiler {
     private ODTCompiler odtCompiler;
     private DOCXCompiler docxCompiler;
     private MyJTwigCompiler compiler;
+    private TemplateHandlerFactory templateHandlerFactory;
+    private TemplateVarParserFactory templateVarParserFactory;
 
-    public TemplateCompiler(String cacheFolder, LibreOfficeAssistant libreOfficeAssistant) throws Exception{
+    public TemplateCompiler(String cacheFolder, LibreOfficeAssistant libreOfficeAssistant) throws Exception {
         compiler = new MyJTwigCompiler();
-        odtCompiler = new ODTCompiler(cacheFolder, compiler, libreOfficeAssistant);
-        docxCompiler = new DOCXCompiler(cacheFolder, compiler, new MicrosoftOfficeAssistant());
+        templateHandlerFactory = new JTwigTemplateHandlerFactory();
+        templateVarParserFactory = new JTwigTemplateVarParserFactory();
+        odtCompiler = new ODTCompiler(cacheFolder, compiler, libreOfficeAssistant, templateHandlerFactory, templateVarParserFactory);
+        docxCompiler = new DOCXCompiler(cacheFolder, compiler, new MicrosoftOfficeAssistant(), templateHandlerFactory);
     }
 
-    public FileResult compile(InputStream zipStream, String format, boolean embedError) throws Exception{
+    public FileResult compile(InputStream zipStream, String format, boolean embedError) throws Exception {
         Template template = provideTemplateFromZIP(zipStream, format);
         template.embedError = embedError;
         return getCompiler(template).Compile(template);
     }
 
-    public Set<String> vars(InputStream odtStream, String varPrefix) throws Exception{
+    public Set<String> vars(InputStream odtStream, String varPrefix) throws Exception {
         Template template = provideTemplateFromODT(odtStream);
         return getCompiler(template).Vars(template, varPrefix);
     }
 
-    private DocumentCompilerIF getCompiler(Template template){
+    private DocumentCompilerIF getCompiler(Template template) {
         switch (template.type) {
-            case ODT:return odtCompiler;
-            case DOCX:return docxCompiler;
+            case ODT:
+                return odtCompiler;
+            case DOCX:
+                return docxCompiler;
 
-            default: return odtCompiler;
+            default:
+                return odtCompiler;
         }
     }
 
     private Template provideTemplateFromZIP(InputStream zipStream, String format) throws Exception {
-        try{
+        try {
             if (format == null) {
                 format = "pdf";
             }
             Template template = extractZIP(zipStream);
             template.format = format;
             return template;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BadRequestException("Please read the specification for creating the request with the zip package. zip[tmpl.odt,data.json,assets1,asset2...]");
         }
     }
 
     private Template provideTemplateFromODT(InputStream zipStream) throws Exception {
-        try{
+        try {
             Template template = new Template();
             template.src = new File(template.tmpDir, "tmpl");
             template.type = TemplateType.ODT;
             FileUtils.copyToFile(zipStream, template.src);
             return template;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BadRequestException("Please read the specification for the vars request.");
         }
     }
@@ -89,6 +100,7 @@ public class TemplateCompiler {
      * ---- asset1 // assets that should be referenced in the json data
      * ---- asset2
      * ---- asset3
+     *
      * @param zipStream ZIP package
      * @return a Template that should be ready to be compiled
      */
@@ -102,14 +114,14 @@ public class TemplateCompiler {
                     template.type = ODT;
                     template.src = Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, "tmpl.odt");
                     if (!template.src.exists() || template.src.isDirectory()) {
-                        throw new BadRequestException("couldn't extract template odt");
+                        throw new BadRequestException("couldn't process template odt");
                     }
                 } else if (zipEntry.getName().toLowerCase().endsWith(".docx")) {
                     //found a docx template inside the zip
                     template.type = DOCX;
                     template.src = Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, "tmpl.docx");
                     if (!template.src.exists() || template.src.isDirectory()) {
-                        throw new BadRequestException("couldn't extract template docx");
+                        throw new BadRequestException("couldn't process template docx");
                     }
                 } else if (zipEntry.getName().toLowerCase().endsWith(".json")) {
                     //the json data the template is going to be resolved with

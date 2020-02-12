@@ -1,23 +1,15 @@
 package com.proxeus.document;
 
-import com.proxeus.document.FileResult;
-import com.proxeus.document.Template;
-import com.proxeus.document.TemplateCompiler;
-import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.odt.ODTCompiler;
 import com.proxeus.office.libre.LibreConfig;
 import com.proxeus.office.libre.LibreOfficeAssistant;
 import com.proxeus.Application;
 import com.proxeus.Config;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -132,7 +124,7 @@ public class TemplateCompilerTest {
     }
 
     private byte[] createZip() throws Exception {
-        List<String> srcFiles = Arrays.asList("simple.odt", "simple.json");
+        List<String> srcFiles = Arrays.asList("old/simple.odt", "old/simple.json");
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         ZipOutputStream zipOut = new ZipOutputStream(os);
         for (String srcFile : srcFiles) {

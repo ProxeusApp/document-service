@@ -81,5 +81,5 @@ dependencies {
     compile "org.libreoffice:juh:6.2.3", ex
     compile "org.libreoffice:ridl:6.2.3", ex
 
-    testCompile "junit:junit:4.10"
+    testCompile "junit:junit:4.13"
 }

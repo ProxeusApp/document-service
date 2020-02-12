@@ -1,34 +1,34 @@
 package com.proxeus.xml;
 
 import com.proxeus.xml.reader.InputStreamReader;
+import com.proxeus.xml.template.TemplateHandler;
+import com.proxeus.xml.template.jtwig.JTwigVarParser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 
 /**
- * XmlTemplateHandler is the entry point and defines the core.
- *
+ * TemplateHandler is the entry point and defines the core.
+ * <p>
  * The InputStreamReader of this handler is charset extendable after initialization.
  * While the XML is being read, this handler extends reader as soon as the charset as been found.
- *
+ * <p>
  * Here a very vague description of the responsibility:
  * 1. reading and structuring content to code
  * 2. cleaning style/formatting tags out of the code
  * 3. placing code meaningful (can be enabled/disabled via config)
  * 4. fixing broken XML nodes (can be enabled/disabled via config)
- *
+ * <p>
  * For more information please checkout the child classes in this packages such as Code, Node, Element or Tag.
  */
-public class XmlTemplateHandler {
+public class TemplateHandlerOld implements TemplateHandler {
     private final static int BUFFER_SIZE = 8192;
+    //enables code escape feature
+    private final static String verbatim = "verbatim";
     private InputStreamReader reader;
     private StringBuffer content;
     private boolean reachedEOF;
@@ -42,35 +42,44 @@ public class XmlTemplateHandler {
     private int[] codePos = new int[3];
     private Node rootNode;
     private Charset charset = null;
-    //enables code escape feature
-    private final static String verbatim = "verbatim";
-
     /**
      * helper for finding the root node containing code
      * to prevent from compiling unnecessary huge XML without code
      */
     private Node firstCodeNode = null;
     private Node lastCodeNode = null;
+    private char[] readBuffer = new char[BUFFER_SIZE];
 
-    public XmlTemplateHandler(Config config, InputStream inStream) throws Exception {
-        this(config, inStream, BUFFER_SIZE*10);
+    public TemplateHandlerOld(Config config, InputStream inStream) throws Exception {
+        this(config, inStream, BUFFER_SIZE * 10);
     }
 
-    public XmlTemplateHandler(Config config, InputStream inStream, long fileSize) throws Exception {
+    public TemplateHandlerOld(Config config, InputStream inStream, long fileSize){
         this.config = config;
-        this.content = new StringBuffer(fileSize<=0?BUFFER_SIZE*10:(int)fileSize);
+        this.content = new StringBuffer(fileSize <= 0 ? BUFFER_SIZE * 10 : (int) fileSize);
         this.reader = new InputStreamReader(inStream, BUFFER_SIZE);
+    }
+
+    @Override
+    public void process(InputStream input) throws Exception {
         rootNode = parse();
     }
 
-    public boolean containsCode(){
-        return rootNode != null && codesRelated.size()>0;
+    @Override
+    public void render(OutputStream output, Map<String, Object> data) throws Exception {
+
+    }
+
+    @Override
+    public boolean containsCode() {
+        return rootNode != null && codesRelated.size() > 0;
     }
 
     /**
      * Fixes code structures that are cutting across.
      * Fixes code relations that have different parents.
      */
+    @Override
     public void fixCodeStructures() throws Exception {
         if (rootNode != null) {
             boolean removeEmptyXMLWrappersAroundCode = config.HasRemoveEmptyXMLWrappersAroundCodeEntries();
@@ -80,13 +89,13 @@ public class XmlTemplateHandler {
                 Code code = null;
                 while (codeIterator.hasNext()) {
                     code = codeIterator.next();
-                    if(firstMacroCode == null && code.isMacroBlock()){
+                    if (firstMacroCode == null && code.isMacroBlock()) {
                         firstMacroCode = code;
                     }
                     fixCode(removeEmptyXMLWrappersAroundCode, code);
                 }
             }
-            if(firstMacroCode != null){
+            if (firstMacroCode != null) {
                 //to support simple macro usage by {{macros.function...}}
                 //and to recognize it via *macros.* so we can remove the empty wrappers safely on {{..}} too
                 //the removal is import to support inline paragraph templates
@@ -99,7 +108,8 @@ public class XmlTemplateHandler {
     }
 
     /**
-     * Parse the input.
+     * parse the input.
+     *
      * @return root node
      */
     private Node parse() throws Exception {
@@ -109,15 +119,15 @@ public class XmlTemplateHandler {
         Tag tag = null;
         Node rootNode = null;
         boolean ignoreCode = false;
-        if((tag = nextTag(ignoreCode, false)) != null){
+        if ((tag = nextTag(ignoreCode, false)) != null) {
             targetNode = rootNode = new Node(tag);
             //expected <?xml version="1.0" encoding="UTF-8"?>
             //if such a header is not provided, there could be encoding issues
-            if(tag.type == TagType.HEADER){
+            if (tag.type == TagType.HEADER) {
                 String encoding = rootNode.attr("encoding");
-                if(encoding != null){
+                if (encoding != null) {
                     encoding = encoding.trim();
-                    if(Charset.isSupported(encoding)){
+                    if (Charset.isSupported(encoding)) {
                         charset = Charset.forName(encoding);
                         reader.initCharset(charset);
                     }
@@ -126,7 +136,7 @@ public class XmlTemplateHandler {
                 rootNode.type = ElementType.TEXT;
             }
         }
-        if(rootNode == null){
+        if (rootNode == null) {
             throw new Exception("could'n parse a root node");
         }
         Node childNode;
@@ -146,7 +156,7 @@ public class XmlTemplateHandler {
                 childNode = new Node(tag);
                 targetNode.addChild(childNode);
                 if (tag.isCode()) {
-                    if(tag.name.equals(verbatim)){
+                    if (tag.name.equals(verbatim)) {
                         ignoreCode = true;
                     }
                     //might need to look after this node if we get the corresponding end tag
@@ -198,13 +208,13 @@ public class XmlTemplateHandler {
                         }
                     }
                     lastCodeNode = endCode;
-                    if(handled){
-                        if(tag.name.equals(verbatim)){
+                    if (handled) {
+                        if (tag.name.equals(verbatim)) {
                             ignoreCode = false;
                         }
                         //found the relations for this targetCode, add it to the codesRelated list for fixing patterns that are cutting across and so on
                         codesRelated.add(targetCode);
-                    }else{
+                    } else {
                         //this will cause an exception during compilation, trying to fix this will lead to unexpected behaviours
                         //just add it to the unrelated code list although we are not going to do anything with it
                         //might need it in a later version for anything...
@@ -262,14 +272,14 @@ public class XmlTemplateHandler {
             }
         }
         codesToRelate.clear();
-        if(lastCodeNode == null && firstCodeNode != null){
-             lastCodeNode = firstCodeNode;
+        if (lastCodeNode == null && firstCodeNode != null) {
+            lastCodeNode = firstCodeNode;
         }
         return rootNode;
     }
 
-    private void mightBeFirst(Node n){
-        if(firstCodeNode == null){
+    private void mightBeFirst(Node n) {
+        if (firstCodeNode == null) {
             firstCodeNode = n;
         }
     }
@@ -289,6 +299,7 @@ public class XmlTemplateHandler {
 
     /**
      * Loop recursively through the DOM and check/fix broken XML tags.
+     *
      * @param root element
      */
     private void fixXMLElements(Element root) {
@@ -306,6 +317,7 @@ public class XmlTemplateHandler {
 
     /**
      * Fix the provided XML element.
+     *
      * @param ele the might need to be fixed
      */
     private void fixXMLElement(Element ele) {
@@ -326,24 +338,25 @@ public class XmlTemplateHandler {
 
     /**
      * Fix code that would break the XML structure after compilation, if we would leave it as is.
+     *
      * @param removeEmptyXMLWrappersAroundCode whether to do further checks for removal or not
-     * @param code that we fix if neccessary
+     * @param code                             that we fix if neccessary
      */
     private void fixCode(boolean removeEmptyXMLWrappersAroundCode, Code code) {
         if (removeEmptyXMLWrappersAroundCode && code.shouldRemoveEmptyXMLWrappersAroundThisCode()) {
-            for(Node codeNode : code.relations){
+            for (Node codeNode : code.relations) {
                 codeNode.removeEmptyXMLWrappers(config.RemoveEmptyXMLWrappersAroundCode);
             }
         }
 
         //try complicated fixes only on code blocks or blocks who doesn't have the same parent
         //code with one relation are either bad written blocks or single blocks
-        if(code.isComment || code.relations.size()==1 || code.haveTheSameParent()){
+        if (code.isComment || code.relations.size() == 1 || code.haveTheSameParent()) {
             return;
         }
         //try to wrap feature is only supported for usual blocks with a staring and an ending code
         //assuming size == 2 is {%start%}...{%endstart%}
-        if(code.relations.size()==2 && config.HasTryToWrapXMLTagWithCodeFor(code.relations.get(0).name())){
+        if (code.relations.size() == 2 && config.HasTryToWrapXMLTagWithCodeFor(code.relations.get(0).name())) {
             code.tryToWrapXMLTag(
                     config.TryToWrapXMLTagWithCode.get(code.relations.get(0).name()),
                     config.TrialCountForWrappingTagWithCode);
@@ -355,9 +368,10 @@ public class XmlTemplateHandler {
 
     /**
      * nextTag provides the next tag from the current position.
-     *
+     * <p>
      * Text content is handled internally if breakOnText is false.
-     * @param ignoreCode whether to start ignoring or not. Code is only being ignored if wrapped with {% verbatim %} .. ignored code .. {% endverbatim %}
+     *
+     * @param ignoreCode  whether to start ignoring or not. Code is only being ignored if wrapped with {% verbatim %} .. ignored code .. {% endverbatim %}
      * @param breakOnText false means it adds the text content silently to the targetNode, true means it breaks the lookup if it reaches a text element with null
      * @return the parsed tag. The tag can be <any>, </any>, <any/>, {{any..}}, {% any ..%} or {# any ..#} .
      */
@@ -372,7 +386,7 @@ public class XmlTemplateHandler {
         boolean insideAttrVal = false;
         ElementType currentType = ElementType.TEXT;
         Tag t = null;
-        for (;hasMore(currentIndex); ++currentIndex) {
+        for (; hasMore(currentIndex); ++currentIndex) {
             char cc = content.charAt(currentIndex);
             char nc;
             if (hasMore(currentIndex + 1)) {
@@ -397,16 +411,16 @@ public class XmlTemplateHandler {
                         codePos[2] = currentIndex;
                     }
                     if (t != null && t.isCode()) {
-                        if(ignoreCode && (t.codeType != CodeType.CodeBlock || !t.name.equals(verbatim))){
+                        if (ignoreCode && (t.codeType != CodeType.CodeBlock || !t.name.equals(verbatim))) {
                             //escape code inside {% verbatim %} code {% endverbatim %}
                             styleTagsInsideCode.clear();
                             currentIndex = startIndex = codePos[0];
                             currentType = ElementType.TEXT;
                             continue;
                         }
-                        if(styleTagsInsideCode.size()>0){
+                        if (styleTagsInsideCode.size() > 0) {
                             Tag firstNoneSpaceTag = styleTagsInsideCode.get(0);
-                            Tag lastStyleTagInsideCode = styleTagsInsideCode.get(styleTagsInsideCode.size()-1);
+                            Tag lastStyleTagInsideCode = styleTagsInsideCode.get(styleTagsInsideCode.size() - 1);
                             if (firstNoneSpaceTag != null && firstNoneSpaceTag.type == TagType.END
                                     || (lastStyleTagInsideCode != null && lastStyleTagInsideCode.type == TagType.START)) {
                                 //must have close
@@ -417,7 +431,7 @@ public class XmlTemplateHandler {
                                     currentIndex = currInd;
                                 } else {
                                     //skip this tag and reorganize targetNode to ensure it is well formed
-                                    if(targetNode.parent!= null){
+                                    if (targetNode.parent != null) {
                                         Node tn = targetNode;
                                         tn.moveChildsToParentAtTheSamePosition();
                                         setTargetNodeToOuterWithNoEndTagNode(tn.parent);
@@ -430,7 +444,7 @@ public class XmlTemplateHandler {
                         }
                         return t;
                     }
-                }else if (cc == '<' && (nc == '/' || Character.isLetter(nc))) {
+                } else if (cc == '<' && (nc == '/' || Character.isLetter(nc))) {
                     //if start or end tag, it has to be a style tag inside code
                     //collect it separately
                     Tag dirtyStyleTag = nextTag(ignoreCode, false);
@@ -484,7 +498,7 @@ public class XmlTemplateHandler {
                 }
             } else if (cc == '<') {
                 if (startIndex != -1) {
-                    if(breakOnText){
+                    if (breakOnText) {
                         return null;
                     }
                     createTextElement(startIndex, currentIndex);
@@ -499,21 +513,21 @@ public class XmlTemplateHandler {
                 insideAttrVal = false;
                 currentType = ElementType.XML;
                 //for code
-            } else if (cc == '{'){
+            } else if (cc == '{') {
                 int currIndexForReset = currentIndex;
                 CodeResult cr = nextCharWithoutStyleTags(ignoreCode, true);
                 //make sure {%, {# and {{ are next to each other by skipping style tags between the first and the second char that look like "{<dirtystyletag>{"
-                if((cr.nextChar == '{' || cr.nextChar == '%' || cr.nextChar == '#') && currIndexForReset + 1 == indexWithoutStyleTagsBetweenCodeChars(currIndexForReset, cr.styleTagsInsideCode)){
+                if ((cr.nextChar == '{' || cr.nextChar == '%' || cr.nextChar == '#') && currIndexForReset + 1 == indexWithoutStyleTagsBetweenCodeChars(currIndexForReset, cr.styleTagsInsideCode)) {
                     if (startIndex != -1) {
-                        if(breakOnText){
+                        if (breakOnText) {
                             return null;
                         }
                         createTextElement(startIndex, currIndexForReset);
                     }
-                    if(cr.styleTagsInsideCode!= null){
+                    if (cr.styleTagsInsideCode != null) {
                         styleTagsInsideCode = cr.styleTagsInsideCode;
                         cr.styleTagsInsideCode = null;
-                    }else{
+                    } else {
                         styleTagsInsideCode.clear();
                     }
                     startIndex = currIndexForReset;
@@ -536,7 +550,7 @@ public class XmlTemplateHandler {
                 }
                 //reset because of nextCharWithoutStyleTags
                 currentIndex = currIndexForReset;
-                if(startIndex == -1){
+                if (startIndex == -1) {
                     startIndex = currentIndex;
                     currentType = ElementType.TEXT;
                 }
@@ -551,23 +565,25 @@ public class XmlTemplateHandler {
 
     /**
      * This method prevents from compiling unnecessary parts of the XML which are very heavy but do not contain any code.
-     *
+     * <p>
      * Retrieves the root node containing code pieces, like:
      * <a>
-     *    <b> <----- root node containing code
-     *        <c>
-     *            {{..}}
-     *        </c>
-     *        <c>
-     *            {%if%}..{%endif%}
-     *            {{..}}
-     *        </c>
-     *    </b>
+     * <b> <----- root node containing code
+     * <c>
+     * {{..}}
+     * </c>
+     * <c>
+     * {%if%}..{%endif%}
+     * {{..}}
+     * </c>
+     * </b>
      * </a>
+     *
      * @return the root node containing code
      */
-    public Node getRootNodeContainingCode(){
-        if(firstCodeNode == null){
+    @Override
+    public Node getRootNodeContainingCode() {
+        if (firstCodeNode == null) {
             return null;
         }
         return new Code(CodeType.CodeBlock, firstCodeNode, lastCodeNode).findTheCommonParent();
@@ -575,13 +591,14 @@ public class XmlTemplateHandler {
 
     /**
      * Find code element by name
+     *
      * @return list of the findings
      */
     public List<Element> findCodeElementsByName(String nameRegex) {
         List<Element> codeElements = new ArrayList<>();
-        for(Code code : codesRelated){
-            for(Node relatedCode : code.relations){
-                if(relatedCode.name().matches(nameRegex)){
+        for (Code code : codesRelated) {
+            for (Node relatedCode : code.relations) {
+                if (relatedCode.name().matches(nameRegex)) {
                     codeElements.add(relatedCode);
                 }
             }
@@ -591,13 +608,14 @@ public class XmlTemplateHandler {
 
     /**
      * Find code by name.
+     *
      * @return the list of the findings
      */
     public List<Code> findCodeByName(String nameRegex) {
         List<Code> codeElements = new ArrayList<>();
-        for(Code code : codesRelated){
-            for(Node relatedCode : code.relations){
-                if(relatedCode.name().matches(nameRegex)){
+        for (Code code : codesRelated) {
+            for (Node relatedCode : code.relations) {
+                if (relatedCode.name().matches(nameRegex)) {
                     codeElements.add(code);
                     break;
                 }
@@ -608,33 +626,36 @@ public class XmlTemplateHandler {
 
     /**
      * Find vars with prefix.
+     *
      * @param varPrefix can be null or ""
      * @return the variable set
      */
     public Set<String> findVars(String varPrefix) throws Exception {
-        VarParser varParser = new VarParser(varPrefix);
+        JTwigVarParser varParser = new JTwigVarParser(varPrefix);
         findVars(varParser);
-        return varParser.Vars();
+        return varParser.getVars();
     }
 
     /**
      * Find vars.
+     *
      * @param varParser will be filled with the vars
      */
-    public void findVars(VarParser varParser) throws Exception {
-        for(Code code : codesRelated){
-            if(code.isComment){
+    @Override
+    public void findVars(JTwigVarParser varParser) throws Exception {
+        for (Code code : codesRelated) {
+            if (code.isComment) {
                 continue;
             }
-            for(Node relatedCode : code.relations){
-                if(!relatedCode.isEndTagOnly()){
-                    varParser.Parse(relatedCode.toString());
+            for (Node relatedCode : code.relations) {
+                if (!relatedCode.isEndTagOnly()) {
+                    varParser.parse(relatedCode.toString());
                 }
             }
         }
     }
 
-    public List<Code> codes(){
+    public List<Code> codes() {
         return codesRelated;
     }
 
@@ -646,23 +667,15 @@ public class XmlTemplateHandler {
     }
 
     /**
-     * Look ahead helper class
-     */
-    private class CodeResult {
-        char nextChar;
-        int nextCharIndex;
-        List<Tag> styleTagsInsideCode;
-    }
-
-    /**
      * Look ahead for the next char without tags. Tags are being collected in #styleTagsInsideCode.
-     * @param ignoreCode true if we are inside a verbatim block
+     *
+     * @param ignoreCode  true if we are inside a verbatim block
      * @param breakOnText true if we should break on text element
      * @return the findings
      */
     private CodeResult nextCharWithoutStyleTags(boolean ignoreCode, boolean breakOnText) throws Exception {
         CodeResult cr = new CodeResult();
-        for (++currentIndex;hasMore(currentIndex); ++currentIndex) {
+        for (++currentIndex; hasMore(currentIndex); ++currentIndex) {
             cr.nextChar = content.charAt(currentIndex);
             cr.nextCharIndex = currentIndex;
             char nc;
@@ -675,15 +688,15 @@ public class XmlTemplateHandler {
             if (cr.nextChar == '<' && (nc == '/' || Character.isLetter(nc))) {
                 //collect it separately
                 Tag dirtyStyleTag = nextTag(ignoreCode, breakOnText);
-                if(dirtyStyleTag == null){
+                if (dirtyStyleTag == null) {
                     break;
                 }
-                if(cr.styleTagsInsideCode==null){
+                if (cr.styleTagsInsideCode == null) {
                     cr.styleTagsInsideCode = new ArrayList<>(2);
                 }
                 cr.styleTagsInsideCode.add(dirtyStyleTag);
                 --currentIndex;
-            }else{
+            } else {
                 break;
             }
         }
@@ -694,27 +707,27 @@ public class XmlTemplateHandler {
      * hasMore checks the content buffer if it is higher than the current index.
      * If we reached the end of the current buffer, it loads more.
      * If we reached the end of the file, it returns false.
+     *
      * @param currentIndex calc from this index
      * @return true if index is not at the end of the buffer or if we can load more. False if we reached the end.
      */
     private boolean hasMore(int currentIndex) throws Exception {
-        if(currentIndex<content.length()){
+        if (currentIndex < content.length()) {
             return true;
         }
-        if(reachedEOF) {
+        if (reachedEOF) {
             return false;
         }
         readMore();
         return hasMore(currentIndex);
     }
 
-    private char[] readBuffer = new char[BUFFER_SIZE];
     /**
      * readMore fills the main buffer to keep the process flowing
      */
     public void readMore() throws Exception {
         int len = reader.read(readBuffer);
-        if(len == -1){
+        if (len == -1) {
             reachedEOF = true;
             return;
         }
@@ -723,15 +736,16 @@ public class XmlTemplateHandler {
 
     /**
      * Calculate the index by skipping style tags, so we can tell if for example the first '{' is followed by '%'.
-     * @param startIndex start calculation from this index
+     *
+     * @param startIndex          start calculation from this index
      * @param styleTagsInsideCode the style tags that have been collected so far
      * @return the index without style tags
      */
     private int indexWithoutStyleTagsBetweenCodeChars(int startIndex, List<Tag> styleTagsInsideCode) {
-        if(styleTagsInsideCode != null){
+        if (styleTagsInsideCode != null) {
             int indexWithoutStyleTags = currentIndex;
             for (Tag t : styleTagsInsideCode) {
-                if(t.startIndex>startIndex){
+                if (t.startIndex > startIndex) {
                     indexWithoutStyleTags -= t.endIndex - t.startIndex;
                 }
             }
@@ -747,15 +761,15 @@ public class XmlTemplateHandler {
         targetNode.addChild(new Element(new Tag(content, startIndex, currentIndex, TagType.TEXT)));
     }
 
-    public int length(){
-        if(rootNode!=null){
+    public int length() {
+        if (rootNode != null) {
             return rootNode.length();
         }
         return 0;
     }
 
-    public String toString(){
-        if(rootNode != null){
+    public String toString() {
+        if (rootNode != null) {
             StringBuilder sb = new StringBuilder(length());
             rootNode.toString(sb);
             return sb.toString();
@@ -763,14 +777,14 @@ public class XmlTemplateHandler {
         return "";
     }
 
-    public void toString(StringBuilder sb){
-        if(rootNode != null){
+    public void toString(StringBuilder sb) {
+        if (rootNode != null) {
             rootNode.toString(sb);
         }
     }
 
-    public InputStream toInputStream(){
-        if(rootNode != null){
+    public InputStream toInputStream() {
+        if (rootNode != null) {
             StringBuilder sb = new StringBuilder(length());
             rootNode.toString(sb);
             return new ByteArrayInputStream(sb.toString().getBytes(charset));
@@ -778,20 +792,23 @@ public class XmlTemplateHandler {
         return null;
     }
 
+    @Override
     public void toOutputStream(OutputStream outputStream) throws IOException {
-        if(rootNode != null){
+        if (rootNode != null) {
             rootNode.toOutputStream(outputStream, charset);
         }
     }
 
-    public Charset getCharset(){
+    @Override
+    public Charset getCharset() {
         return charset;
     }
 
     /**
      * help gc
      */
-    public void free(){
+    @Override
+    public void free() {
         reader = null;
         content = null;
         codesToRelate = null;
@@ -800,6 +817,15 @@ public class XmlTemplateHandler {
         config = null;
         targetNode = null;
         rootNode = null;
+    }
+
+    /**
+     * Look ahead helper class
+     */
+    private class CodeResult {
+        char nextChar;
+        int nextCharIndex;
+        List<Tag> styleTagsInsideCode;
     }
 
 }

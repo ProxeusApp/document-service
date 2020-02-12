@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Config for XmlTemplateHandler
+ * Config for TemplateHandler
  */
 public class Config {
 

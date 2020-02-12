@@ -54,7 +54,6 @@ public class LibreOfficeAssistant implements Closeable {
         LibreOffice lo = null;
         try{
             lo = libreOfficePool.take(newFontsInstalled);
-            newFontsInstalled = false;
         }catch(Exception e){
             throw new UnavailableException("Please try again later.", e);
         }finally {

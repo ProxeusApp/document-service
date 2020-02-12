@@ -1,0 +1,23 @@
+---
+version: '3.7'
+
+networks:
+  xes-platform-network:
+    name: xes-platform-network
+
+services:
+  document-service:
+    image: proxeus/document-service:latest
+    container_name: xes_document_service
+    networks:
+      - xes-platform-network
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Zurich
+    ports:
+      - "2115:2115"
+      - "58082:58082"
+    volumes:
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/logs:/document-service/logs
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/fonts:/document-service/fonts
+      - ${PROXEUS_DATA_DIR:-./data}/document-service/tmp:/tmp

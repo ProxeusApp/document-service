@@ -26,7 +26,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Zip extract and pack helper.
+ * Zip process and pack helper.
  */
 public class Zip {
     public static void extract(InputStream zipStream, EntryFilter ef) throws Exception {
@@ -106,7 +106,7 @@ public class Zip {
         if (zipEntry.isDirectory()) {
             if (!file.exists()) {
                 if (!file.mkdirs()) {
-                    throw new IOException("Could not extract asset(image?) from ZIP:" + file.getAbsolutePath());
+                    throw new IOException("Could not process asset(image?) from ZIP:" + file.getAbsolutePath());
                 }
             }
         } else {

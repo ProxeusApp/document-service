@@ -1,20 +1,5 @@
 package com.proxeus.document.odt;
 
-import com.proxeus.document.FileResult;
-import com.proxeus.document.Template;
-import com.proxeus.document.TemplateCompiler;
-import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.odt.ODTCompiler;
-import com.proxeus.office.libre.LibreConfig;
-import com.proxeus.office.libre.LibreOfficeAssistant;
-
-import com.proxeus.Config;
-
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.List;
-
 /*
  *
  *

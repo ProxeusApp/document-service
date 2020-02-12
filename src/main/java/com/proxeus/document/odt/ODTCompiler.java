@@ -5,48 +5,51 @@ import com.proxeus.document.DocumentCompilerIF;
 import com.proxeus.document.FileResult;
 import com.proxeus.document.FontInstaller;
 import com.proxeus.document.Template;
-import com.proxeus.error.CompilationException;
-import com.proxeus.error.InternalException;
-import com.proxeus.error.UnavailableException;
+import com.proxeus.document.odt.img.ImageVarProcessor;
 import com.proxeus.office.libre.LibreOfficeAssistant;
+import com.proxeus.util.zip.EntryFileFilter;
+import com.proxeus.util.zip.Zip;
 import com.proxeus.xml.Config;
-import com.proxeus.xml.VarParser;
-
+import com.proxeus.xml.template.*;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Enumeration;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import static com.proxeus.document.odt.ODTContext.CONTENT_XML;
+import static com.proxeus.document.odt.ODTRenderer.CONTENT_XML;
+import static com.proxeus.document.odt.ODTRenderer.STYLE_XML;
 
 /**
  * ODTCompiler implements the actual odt specifics to compile it and convert it to the requested format.
  * It makes it possible to parse the vars only and it can print errors readable in the ODT.
  */
 public class ODTCompiler implements DocumentCompilerIF {
+    private Logger log = Logger.getLogger(this.getClass());
+
     //only used for error
     public final static Charset UTF_8 = StandardCharsets.UTF_8;
     private File cacheDir;
     private final FontInstaller fontInstaller;
-    private ODTReadableErrorHandler odtReadableRrrorHandler = new ODTReadableErrorHandler();
     private Config conf;
     private LibreOfficeAssistant libreOfficeAssistant;
     private MyJTwigCompiler compiler;
+    private TemplateHandlerFactory templateHandlerFactory;
+    private TemplateVarParserFactory templateVarParserFactory;
 
-    public ODTCompiler(String cacheFolder, MyJTwigCompiler compiler, LibreOfficeAssistant libreOfficeAssistant) throws Exception {
+    public ODTCompiler(String cacheFolder,
+                       MyJTwigCompiler compiler,
+                       LibreOfficeAssistant libreOfficeAssistant,
+                       TemplateHandlerFactory templateHandlerFactory,
+                       TemplateVarParserFactory templateVarParserFactory) throws Exception {
         this.libreOfficeAssistant = libreOfficeAssistant;
+        this.templateHandlerFactory = templateHandlerFactory;
+        this.templateVarParserFactory = templateVarParserFactory;
+
         fontInstaller = new FontInstaller();
         if (cacheFolder == null || cacheFolder.equals("")) {
             cacheFolder = "odtCache";
@@ -63,6 +66,9 @@ public class ODTCompiler implements DocumentCompilerIF {
          * This is only useful if you provide a broken XML that can not be read anymore.
          */
         conf.Fix_XMLTags = false;
+
+
+        // TODO: Replace this one and create a remove empty element processor
         /**
          * Add tag names for removal around code.
          * They will be removed if they wrap single code blocks only.
@@ -72,6 +78,9 @@ public class ODTCompiler implements DocumentCompilerIF {
          * Make code placement meaningful in the document.
          */
         conf.FixCodeByFindingTheNextCommonParent = true;
+
+
+        // TODO: Need to improve the parser to handle table rows, i.e. extending the block instead of splitting it.
         /**
          * Try to find more suitable nodes to wrap if possible.
          */
@@ -81,84 +90,35 @@ public class ODTCompiler implements DocumentCompilerIF {
     }
 
     public FileResult Compile(Template template) throws Exception {
-        return compile(template, null);
+        return compile(template);
     }
 
     public Set<String> Vars(Template template, String varPrefix) throws Exception {
-        VarParser varParser = new VarParser(varPrefix);
-        compile(template, varParser);
-        return varParser.Vars();
+        TemplateVarParser varParser = templateVarParserFactory.newInstance();
+        findVars(template, varParser);
+        // TODO: Handle prefix
+        return varParser.getVars();
     }
 
-    private FileResult compile(Template template, VarParser varParser) throws Exception {
-        ODTContext cfc = new ODTContext(template, varParser);
-        try {
-            cfc.extractAndCompile(conf, compiler);
-        } catch (CompilationException e) {
-            cfc.waitForImageTasksToFinish();
-            if(template.embedError){
-                return renderOdtError(cfc.template, e.getMessage(), cfc.template.tmpDir);
-            }else{
-                throw e;
-            }
-        } catch (Exception e) {
-            cfc.waitForImageTasksToFinish();
-            throw e;
-        }
-        if (!cfc.readVarsOnly()) {
-            try{
-                cfc.finish();
-            }catch (Exception e){
-                throw new InternalException("Couldn't finish up, error during pack to zip.", e);
-            }
-            try {
-                FileResult result = new FileResult(template);
-                result.target = new File(cfc.template.tmpDir, "final");
-                result.template = cfc.template;
-                boolean newFontsInstalled = cfc.extractedFonts && fontInstaller.installDir(cfc.getFontsDir());
-                result.contentType = libreOfficeAssistant.Convert(cfc.template.src, result.target, cfc.template.format, newFontsInstalled);
-                return result;
-            } catch (Exception e) {
-                cfc.waitForImageTasksToFinish();
-                e.printStackTrace();
-                throw new UnavailableException("LibreOffice error during convert to " + cfc.template.format + ": " + e.getMessage());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Printing error inside the document.
-     * TODO refactor string manipulation
-     */
-    private FileResult renderOdtError(Template template, String error, File userTmpDir) throws Exception {
-        String contentXml = "";
-        try (ZipFile zipFile = new ZipFile(template.src)) {
-            Enumeration<? extends ZipEntry> entries = zipFile.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                if (entry.getName().equalsIgnoreCase(CONTENT_XML)) {
-                    contentXml = IOUtils.toString(zipFile.getInputStream(entry), UTF_8);
-                    break;
+    private void findVars(Template template, TemplateVarParser varParser) throws Exception {
+        ImageVarProcessor imageVarProcessor = new ImageVarProcessor(varParser);
+        TemplateVarProcessor templateVarProcessor = new TemplateVarProcessor(varParser);
+        log.debug(String.format("DEBUG FIND VARS TEMPLATE %s\n", template));
+        Zip.extract(template.src, new EntryFileFilter() {
+            public void next(ZipEntry entry, ZipFile zf) throws Exception {
+                if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
+                    TemplateHandler xml = templateHandlerFactory.newInstance(
+                            imageVarProcessor,
+                            templateVarProcessor
+                    );
+                    xml.process(zf.getInputStream(entry));
                 }
             }
-        }
-        contentXml = odtReadableRrrorHandler.setErrorMessage(contentXml, error);
-        File tmp = new File(userTmpDir, "odterror");
-        try (FileOutputStream fos = new FileOutputStream(tmp)) {
-            fos.write(contentXml.getBytes(UTF_8));
-            fos.flush();
-        }
-        try (FileSystem fs = FileSystems.newFileSystem(template.src.toPath(), null)) {
-            Path fileInsideZipPath = fs.getPath("/" + CONTENT_XML);
-            Files.copy(tmp.toPath(), fileInsideZipPath, StandardCopyOption.REPLACE_EXISTING);
-        }
-        if (!tmp.delete()) {
-            System.out.println("renderOdtError tmp.delete() failed for " + tmp.getAbsolutePath());
-        }
-        FileResult result = new FileResult(template);
-        result.target = new File(template.tmpDir, "error");
-        result.contentType = libreOfficeAssistant.Convert(template.src, result.target, "pdf", false);
-        return result;
+        });
+    }
+
+    private FileResult compile(Template template) throws Exception {
+        ODTRenderer cfc = new ODTRenderer(template, templateHandlerFactory, libreOfficeAssistant);
+        return cfc.compile(conf, compiler, fontInstaller);
     }
 }

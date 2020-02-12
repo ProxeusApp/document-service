@@ -3,6 +3,8 @@
 /.idea/
 /logs/
 out/
+/data
+
 document-service.jar
 **/.DS_Store
 .classpath

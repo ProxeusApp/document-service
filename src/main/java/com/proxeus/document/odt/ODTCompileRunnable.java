@@ -3,11 +3,9 @@ package com.proxeus.document.odt;
 import com.proxeus.compiler.jtwig.MyJTwigCompiler;
 import com.proxeus.xml.Compiled;
 import com.proxeus.xml.Node;
-import com.proxeus.xml.XmlTemplateHandler;
+import com.proxeus.xml.template.TemplateHandler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Map;
 import java.util.Queue;
 
@@ -16,12 +14,12 @@ import java.util.Queue;
  */
 public class ODTCompileRunnable implements Runnable {
     private File xmlFile;
-    private XmlTemplateHandler xml;
+    private TemplateHandler xml;
     private Map<String, Object> data;
     private MyJTwigCompiler compiler;
     private Queue<Exception> exceptions;
 
-    public ODTCompileRunnable(MyJTwigCompiler compiler, File xmlFile, XmlTemplateHandler xml, Map<String, Object> data, Queue<Exception> exceptions){
+    public ODTCompileRunnable(MyJTwigCompiler compiler, File xmlFile, TemplateHandler xml, Map<String, Object> data, Queue<Exception> exceptions) {
         this.compiler = compiler;
         //copy data as it will be executed async
         this.data = data;
@@ -33,7 +31,9 @@ public class ODTCompileRunnable implements Runnable {
     }
 
     public void run() {
-        try(FileOutputStream fos = new FileOutputStream(xmlFile)){
+        try (FileOutputStream fos = new FileOutputStream(xmlFile)) {
+
+            /*
             if(xml.containsCode()){
                 xml.fixCodeStructures();
                 Node rootNodeContainingCode = xml.getRootNodeContainingCode();
@@ -45,7 +45,14 @@ public class ODTCompileRunnable implements Runnable {
                     rootNodeContainingCode.replaceWith(compiled);
                 }
             }
-            xml.toOutputStream(fos);
+            */
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            xml.toOutputStream(out);
+            System.out.printf("DEBUG XML OUTPUT %s\n", xmlFile);
+            InputStream in = new ByteArrayInputStream(out.toByteArray());
+            compiler.Compile(in, data, fos, xml.getCharset());
+
             fos.flush();
             xml.free();
             xmlFile = null;

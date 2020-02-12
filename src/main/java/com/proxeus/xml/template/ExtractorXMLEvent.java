@@ -1,6 +1,7 @@
-package com.proxeus.xml.jtwig;
+package com.proxeus.xml.template;
 
-import sun.nio.cs.ext.ISCII91;
+import com.proxeus.xml.template.parser.TagType;
+import com.proxeus.xml.template.parser.ParserState;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
@@ -14,21 +15,31 @@ import java.io.Writer;
 public class ExtractorXMLEvent implements XMLEvent {
 
     private XMLEvent event;
-    private ExtractorState state;
-    private IslandType islandType;
+    private ParserState state;
+    private TagType tagType;
+    private int blockId;
 
-    public ExtractorXMLEvent(XMLEvent event, ExtractorState state, IslandType islandType) {
+    public ExtractorXMLEvent(XMLEvent event, ParserState state, TagType tagType, int blockId) {
         this.event = event;
         this.state = state;
-        this.islandType = islandType;
+        this.tagType = tagType;
+        this.blockId = blockId;
     }
 
     public XMLEvent getEvent() {
         return event;
     }
 
-    public ExtractorState getState() {
+    public ParserState getState() {
         return state;
+    }
+
+    public int getBlockId() {
+        return blockId;
+    }
+
+    public TagType getTagType() {
+        return tagType;
     }
 
     @Override
@@ -114,4 +125,6 @@ public class ExtractorXMLEvent implements XMLEvent {
     public String toString() {
         return event.toString();
     }
+
+
 }

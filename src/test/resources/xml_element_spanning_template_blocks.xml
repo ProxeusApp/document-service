@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+    <a>
+        <f>
+        first line
+        {% if foobar %}
+        second line
+        <b><e>
+            third line
+            {<d>% elseif barfoo %}
+            <c>
+                fourth line
+                {{ barfoo + foobar }}
+            </c>
+            {% elseif foofoo %}
+            {# comment</d> #}
+        </e>
+        </b>
+        fifth line
+        {% endif %}
+
+        sixth line
+        {% if barbar %}
+            seventh line
+        </f>
+        {% endif %}
+    </a>
+</doc>

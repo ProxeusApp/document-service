@@ -1,4 +1,13 @@
-FROM eu.gcr.io/blockfactory-01/document-service-base
+FROM ubuntu:18.04
+
+## Fix installation of openjdk-8-jre-headless (https://github.com/nextcloud/docker/issues/380)
+RUN mkdir -p /usr/share/man/man1
+RUN apt-get update && apt-get install -y \
+        software-properties-common \
+        language-pack-en-base \
+        openjdk-8-jre-headless \
+        libreoffice \
+    && apt-get clean && rm -rf /var/cache/* /var/lib/apt/lists/*
 
 #font configuration
 COPY ./00-fontconfig.conf /etc/fonts/conf.d/

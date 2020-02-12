@@ -1,14 +1,16 @@
-package com.proxeus.xml;
+package com.proxeus.xml.template.jtwig;
+
+import com.proxeus.xml.template.TemplateVarParser;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * VarParser parses all kind of vars provided in output blocks like {{...}} or code blocks like {%...%}.
+ * JTwigVarParser parses all kind of vars provided in output blocks like {{...}} or code blocks like {%...%}.
  * It ensures the natural alphabetic order in the returned set and it is possible to filter variables by a prefix.
  */
-public class VarParser {
+public class JTwigVarParser implements TemplateVarParser {
     //use TreeSet to deliver sorted vars
     private Set<String> vars = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     private String prefix = null;
@@ -40,13 +42,14 @@ public class VarParser {
         reservedWordsStartsWith.add(reserved);
     }
 
-    public VarParser(String varPrefix) {
+    public JTwigVarParser(String varPrefix) {
         if (varPrefix != null && varPrefix.length() > 0) {
             this.prefix = varPrefix;
         }
     }
 
-    public Set<String> Vars() {
+    @Override
+    public Set<String> getVars() {
         return vars;
     }
 
@@ -55,7 +58,8 @@ public class VarParser {
      *
      * @param content must either start with {{ .. }} or with {% .. %}
      */
-    public void Parse(String content) {
+    @Override
+    public void parse(String content) {
         char currentChar = 0;
         char nextChar = 0;
         boolean insideString = false;
@@ -109,7 +113,7 @@ public class VarParser {
                             pipe = -1;
                         } else {
                             //ensure we close the inline condition
-                            if(currentChar == ':'){
+                            if (currentChar == ':') {
                                 inlineCondition = false;
                             }
                             //found a var('s)
@@ -188,4 +192,6 @@ public class VarParser {
         }
         return -1;
     }
+
+
 }

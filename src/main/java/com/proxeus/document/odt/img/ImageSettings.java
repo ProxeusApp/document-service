@@ -1,11 +1,12 @@
 package com.proxeus.document.odt.img;
 
-import com.proxeus.document.odt.ODTContext;
+import com.proxeus.document.AssetFile;
 
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,9 +38,10 @@ public class ImageSettings {
     public Object localRemoteOrEmbeddedFileObject;
     private final static Pattern imageOptionsRegex = Pattern.compile("(.*)\\[([^\\[\\]]*)\\]");
     private boolean containerDimensionSet = false;
-    protected ODTContext cfc;
+    protected File tmpDir;
+    protected Queue<AssetFile> assetFilesToInclude;
 
-    public ImageSettings(String xmlDirPath, String refFileName, String varWithOptions, String containerWidth, String containerHeight, ODTContext cfc) {
+    public ImageSettings(String xmlDirPath, String refFileName, String varWithOptions, String containerWidth, String containerHeight, File tmpDir, Queue<AssetFile> assetFilesToInclude) {
         this.xmlDirPath = xmlDirPath;
         this.refFileName = refFileName;
         this.varOnly = varWithOptions;
@@ -80,8 +82,8 @@ public class ImageSettings {
                 //no need to throw it up as it is handled by readyToBeExecuted()
             }
         }
-        this.cfc = cfc;
-        this.dst = new File(cfc.template.tmpDir, ID());
+        this.tmpDir = tmpDir;
+        this.dst = new File(tmpDir, ID());
     }
 
     public String ID() {

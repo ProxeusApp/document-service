@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-    <a><b></b></a>{% set abc="% } {{}}" %}<c></c>
-    <a><b></b></a>{% if abc=="% } {{}}" %}<c></c>
+    <a><b></b></a>{% set abc="% } {{}}" %}<c><a></a></c>{% endif %}
+    <a><b></b></a>{% if abc=="% } {{}}" %}<c><a></a></c>{% endif %}
 </root>
