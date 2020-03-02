@@ -1,7 +1,7 @@
 package com.proxeus.document.odt;
 
 import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.DocumentCompilerIF;
+import com.proxeus.document.DocumentCompiler;
 import com.proxeus.document.FileResult;
 import com.proxeus.document.FontInstaller;
 import com.proxeus.document.Template;
@@ -28,7 +28,7 @@ import static com.proxeus.document.odt.ODTRenderer.STYLE_XML;
  * ODTCompiler implements the actual odt specifics to compile it and convert it to the requested format.
  * It makes it possible to parse the vars only and it can print errors readable in the ODT.
  */
-public class ODTCompiler implements DocumentCompilerIF {
+public class ODTCompiler implements DocumentCompiler {
     private Logger log = Logger.getLogger(this.getClass());
 
     //only used for error

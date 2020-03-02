@@ -1,7 +1,7 @@
 package com.proxeus.document.docx;
 
 import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.DocumentCompilerIF;
+import com.proxeus.document.DocumentCompiler;
 import com.proxeus.document.FileResult;
 import com.proxeus.document.Template;
 import com.proxeus.error.NotImplementedException;
@@ -10,7 +10,7 @@ import com.proxeus.xml.template.TemplateHandlerFactory;
 
 import java.util.Set;
 
-public class DOCXCompiler implements DocumentCompilerIF {
+public class DOCXCompiler implements DocumentCompiler {
     private MyJTwigCompiler compiler;
     private MicrosoftOfficeAssistant microsoftOfficeAssistant;
     private TemplateHandlerFactory templateHandlerFactory;

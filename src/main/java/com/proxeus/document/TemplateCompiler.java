@@ -54,12 +54,11 @@ public class TemplateCompiler {
         return getCompiler(template).Vars(template, varPrefix);
     }
 
-    private DocumentCompilerIF getCompiler(Template template) {
+    private DocumentCompiler getCompiler(Template template) {
         switch (template.type) {
-            case ODT:
-                return odtCompiler;
             case DOCX:
                 return docxCompiler;
+            case ODT:
 
             default:
                 return odtCompiler;

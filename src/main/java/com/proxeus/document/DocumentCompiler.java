@@ -7,9 +7,7 @@ import java.util.Set;
  * If other formats based on XML are going to be implemented, they can simply use this
  * interface to communicate with the underlying format specific compiler.
  */
-public interface DocumentCompilerIF {
+public interface DocumentCompiler {
     FileResult Compile(Template template) throws Exception;
     Set<String> Vars(Template template, String varPrefix) throws Exception;
 }
-
-
