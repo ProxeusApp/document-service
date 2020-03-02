@@ -42,7 +42,6 @@ public class ODTRenderer {
 
     final static String CONTENT_XML = "content.xml";
     final static String STYLE_XML = "styles.xml";
-    public final static String META_XML = "meta.xml";
     public Template template;
     private boolean extractedFonts;
     private TemplateHandler manifest = null;
@@ -59,7 +58,7 @@ public class ODTRenderer {
         this.template = template;
         this.templateHandlerFactory = templateHandlerFactory;
         this.libreOfficeAssistant = libreOfficeAssistant;
-        this.imageAdjuster = new ImageAdjustProcessorFactory(template.tmpDir, template.getDataCopy());
+        this.imageAdjuster = new ImageAdjustProcessorFactory(template.getTmpDir(), template.getDataCopy());
     }
 
 
@@ -68,8 +67,8 @@ public class ODTRenderer {
             List<File> extractedFiles = extractAndCompile(conf, compiler);
             assembleZipFile(extractedFiles);
         } catch (CompilationException e) {
-            if (template.embedError) {
-                return renderOdtError(template, e.getMessage(), template.tmpDir);
+            if (template.isEmbedError()) {
+                return renderOdtError(template, e.getMessage(), template.getTmpDir());
             } else {
                 throw e;
             }
@@ -85,36 +84,34 @@ public class ODTRenderer {
         List<File> extractedFiles = new ArrayList<>(2);
         Queue<Exception> compileExceptions = new ConcurrentLinkedQueue<>();
         try {
-            Zip.extract(template.src, new EntryFileFilter() {
-                public void next(ZipEntry entry, ZipFile zf) throws Exception {
-                    if (entry.getName().startsWith("Fonts/")) {
-                        extractedFonts = true;
-                        File toExtract = new File(template.tmpDir, entry.getName());
-                        FileUtils.copyToFile(zf.getInputStream(entry), toExtract);
-                    } else if (entry.getName().equals("META-INF/manifest.xml")) {
-                        manifest = templateHandlerFactory.newInstance();
-                        manifest.process(zf.getInputStream(entry));
-                        manifestDest = new File(template.tmpDir, entry.getName());
-                    } else if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
-                        TemplateHandler xml = templateHandlerFactory.newInstance(
-                                imageAdjuster.newInstance(entry.getName())
-                        );
-                        xml.process(zf.getInputStream(entry));
+            Zip.extract(template.getSrc(), (entry, zf) -> {
+                if (entry.getName().startsWith("Fonts/")) {
+                    extractedFonts = true;
+                    File toExtract = new File(template.getTmpDir(), entry.getName());
+                    FileUtils.copyToFile(zf.getInputStream(entry), toExtract);
+                } else if (entry.getName().equals("META-INF/manifest.xml")) {
+                    manifest = templateHandlerFactory.newInstance();
+                    manifest.process(zf.getInputStream(entry));
+                    manifestDest = new File(template.getTmpDir(), entry.getName());
+                } else if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
+                    TemplateHandler xml = templateHandlerFactory.newInstance(
+                            imageAdjuster.newInstance(entry.getName())
+                    );
+                    xml.process(zf.getInputStream(entry));
 
 
-                        File toExtract = new File(template.tmpDir, entry.getName());
-                        log.debug(String.format("DEBUG TO EXTRACT %s\n", toExtract));
-                        extractedFiles.add(toExtract);
+                    File toExtract = new File(template.getTmpDir(), entry.getName());
+                    log.debug(String.format("DEBUG TO EXTRACT %s\n", toExtract));
+                    extractedFiles.add(toExtract);
 
-                        FileOutputStream output = new FileOutputStream(toExtract);
-                        compileExecutor.submit(() -> {
-                            try {
-                                xml.render(output, template.getDataCopy());
-                            } catch (Exception e) {
-                                compileExceptions.offer(e);
-                            }
-                        });
-                    }
+                    FileOutputStream output = new FileOutputStream(toExtract);
+                    compileExecutor.submit(() -> {
+                        try {
+                            xml.render(output, template.getDataCopy());
+                        } catch (Exception e) {
+                            compileExceptions.offer(e);
+                        }
+                    });
                 }
             });
 
@@ -134,11 +131,11 @@ public class ODTRenderer {
 
     void assembleZipFile(List<File> extractedFiles) throws Exception {
         Set<String> collectedEmbeddedObjects = new HashSet<>();
-        log.debug(String.format("DEBUG FINISH FILESYSTEM PATH %s\n", template.src.toPath()));
-        try (FileSystem fs = FileSystems.newFileSystem(template.src.toPath(), null)) {
+        log.debug(String.format("DEBUG FINISH FILESYSTEM PATH %s\n", template.getSrc().toPath()));
+        try (FileSystem fs = FileSystems.newFileSystem(template.getSrc().toPath(), null)) {
             for (File newPath : extractedFiles) {
                 log.debug(String.format("DEBUG FINISH EXTRACTED FILE %s\n", newPath));
-                String zipPath = getZipPath(template.tmpDir, newPath.getAbsolutePath());
+                String zipPath = getZipPath(template.getTmpDir(), newPath.getAbsolutePath());
                 try {
                     if (zipPath.startsWith(File.separator + "Object")) {
                         collectedEmbeddedObjects.add(zipPath.split(File.separator)[1]);
@@ -169,19 +166,19 @@ public class ODTRenderer {
     private FileResult convertToformat(FontInstaller fontInstaller) throws UnavailableException {
         try {
             FileResult result = new FileResult(template);
-            result.target = new File(template.tmpDir, "final");
+            result.target = new File(template.getTmpDir(), "final");
             result.template = template;
             boolean newFontsInstalled = extractedFonts && fontInstaller.installDir(getFontsDir());
-            result.contentType = libreOfficeAssistant.Convert(template.src, result.target, template.format, newFontsInstalled);
+            result.contentType = libreOfficeAssistant.Convert(template.getSrc(), result.target, template.getFormat(), newFontsInstalled);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new UnavailableException("LibreOffice error during convert to " + template.format + ": " + e.getMessage());
+            throw new UnavailableException("LibreOffice error during convert to " + template.getFormat() + ": " + e.getMessage());
         }
     }
 
     File getFontsDir() {
-        return new File(template.tmpDir, "Fonts");
+        return new File(template.getTmpDir(), "Fonts");
     }
 
     Queue<AssetFile> waitForImageTasksToFinish() throws Exception {
@@ -236,7 +233,7 @@ public class ODTRenderer {
 
     private void insertManifest(FileSystem fs) {
         try {
-            Files.move(manifestDest.toPath(), fs.getPath(getZipPath(template.tmpDir, manifestDest.getAbsolutePath())), StandardCopyOption.REPLACE_EXISTING);
+            Files.move(manifestDest.toPath(), fs.getPath(getZipPath(template.getTmpDir(), manifestDest.getAbsolutePath())), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             //not important as it will work without it
         }
@@ -269,7 +266,7 @@ public class ODTRenderer {
      */
     private FileResult renderOdtError(Template template, String error, File userTmpDir) throws Exception {
         String contentXml = "";
-        try (ZipFile zipFile = new ZipFile(template.src)) {
+        try (ZipFile zipFile = new ZipFile(template.getSrc())) {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
@@ -287,7 +284,7 @@ public class ODTRenderer {
             fos.write(contentXml.getBytes(UTF_8));
             fos.flush();
         }
-        try (FileSystem fs = FileSystems.newFileSystem(template.src.toPath(), null)) {
+        try (FileSystem fs = FileSystems.newFileSystem(template.getSrc().toPath(), null)) {
             Path fileInsideZipPath = fs.getPath("/" + CONTENT_XML);
             Files.copy(tmp.toPath(), fileInsideZipPath, StandardCopyOption.REPLACE_EXISTING);
         }
@@ -295,8 +292,8 @@ public class ODTRenderer {
             System.out.println("renderOdtError tmp.delete() failed for " + tmp.getAbsolutePath());
         }
         FileResult result = new FileResult(template);
-        result.target = new File(template.tmpDir, "error");
-        result.contentType = libreOfficeAssistant.Convert(template.src, result.target, "pdf", false);
+        result.target = new File(template.getTmpDir(), "error");
+        result.contentType = libreOfficeAssistant.Convert(template.getSrc(), result.target, "pdf", false);
         return result;
     }
 }

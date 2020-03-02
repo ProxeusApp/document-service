@@ -9,15 +9,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 
 /**
  * AssetFile makes it possible to transform a file out of:
@@ -37,7 +32,6 @@ public class AssetFile {
     public String newZipPath;
     public File src;
     public File dst;
-    //public String ext; activate when needed
 
     public static AssetFile find(Object localRemoteOrEmbeddedFileObject, File tmpDir){
         try{
@@ -112,7 +106,6 @@ public class AssetFile {
                 while (localOrRemotePath.startsWith("/")) {
                     localOrRemotePath = localOrRemotePath.substring(1);
                 }
-                //return getLocalFileToResultMap(localFile);  ---activate when needed---
                 AssetFile result = new AssetFile();
                 result.src = new File(cacheDir, localOrRemotePath);
                 return result;
@@ -121,65 +114,18 @@ public class AssetFile {
             }
         } else {//remote url
             try {
-                //boolean needToReadFileForExt = false;
                 URL url = new URL(localOrRemotePath);
-                /** ---activate when needed---
-                String fileExt = localOrRemotePath.substring(localOrRemotePath.lastIndexOf('/')).toLowerCase();
-                if (fileExt.contains("?")) {
-                    fileExt = fileExt.substring(0, fileExt.indexOf('?'));
-                }*/
                 String fileName = UUID.randomUUID().toString();
-                /* ---activate when needed---
-                try {
-                    fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
-                    if (isImageExtValid(fileExt)) {
-                        fileName = fileName + fileExt;
-                    } else {
-                        needToReadFileForExt = true;
-                    }
-                } catch (Exception e) {
-                    needToReadFileForExt = true;
-                }*/
                 File downloadedImage = new File(cacheDir, fileName);
                 copyURLToFile(url, downloadedImage);
                 AssetFile result = new AssetFile();
                 result.src = downloadedImage;
-                /* ---activate when needed---
-                if (needToReadFileForExt) {
-                    fileExt = getImageExt(downloadedImage);
-                }
-                if (fileExt == null) {
-                    result.src.delete();
-                    // we weren't able to determine the extension
-                    // let's break here as the file is either corrupt or not an image
-                    return null;
-                }*/
-                //result.ext = fileExt;
                 return result;
             } catch (Exception dontCare) {
                 dontCare.printStackTrace();
             }
         }
         return null;
-    }
-
-    /**
-     * Gets image ext.
-     *
-     * @param file the file
-     * @return .png, .jpg etc..
-     * @throws Exception the exception
-     */
-    private static String getImageExt(File file) throws Exception {
-        ImageInputStream iis = ImageIO.createImageInputStream(file);
-        Iterator<ImageReader> imageReaders = ImageIO.getImageReaders(iis);
-        String fileExt = null;
-        if (imageReaders.hasNext()) {
-            ImageReader reader = imageReaders.next();
-            fileExt = "." + reader.getFormatName().toLowerCase();
-        }
-        iis.close();
-        return fileExt;
     }
 
     /**
@@ -230,32 +176,6 @@ public class AssetFile {
         }
 
         return new FileOutputStream(file);
-    }
-
-    private static AssetFile getLocalFileToResultMap(AssetFile result, File localFile) throws Exception {
-        if (localFile.exists()) {
-            String fileExt = localFile.getName().toLowerCase();
-            try {
-                fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
-                if (!isImageExtValid(fileExt)) {
-                    fileExt = getImageExt(localFile);
-                }
-            } catch (StringIndexOutOfBoundsException e) {
-                fileExt = getImageExt(localFile);
-            }
-            if (isImageExtValid(fileExt)) {
-                if(result == null){
-                    result = new AssetFile();
-                }
-                result.src = localFile;
-                //result.ext = fileExt;  ---activate when needed---
-            }
-        }
-        return result;
-    }
-
-    private static boolean isImageExtValid(String fileExt) {
-        return fileExt.length() >= 4 && fileExt.length() <= 5;
     }
 
 }

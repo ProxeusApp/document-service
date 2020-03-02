@@ -45,7 +45,7 @@ public class TemplateCompiler {
 
     public FileResult compile(InputStream zipStream, String format, boolean embedError) throws Exception {
         Template template = provideTemplateFromZIP(zipStream, format);
-        template.embedError = embedError;
+        template.setEmbedError(embedError);
         return getCompiler(template).Compile(template);
     }
 
@@ -55,7 +55,7 @@ public class TemplateCompiler {
     }
 
     private DocumentCompiler getCompiler(Template template) {
-        switch (template.type) {
+        switch (template.getType()) {
             case DOCX:
                 return docxCompiler;
             case ODT:
@@ -71,7 +71,7 @@ public class TemplateCompiler {
                 format = "pdf";
             }
             Template template = extractZIP(zipStream);
-            template.format = format;
+            template.setFormat(format);
             return template;
         } catch (Exception e) {
             throw new BadRequestException("Please read the specification for creating the request with the zip package. zip[tmpl.odt,data.json,assets1,asset2...]");
@@ -81,9 +81,9 @@ public class TemplateCompiler {
     private Template provideTemplateFromODT(InputStream zipStream) throws Exception {
         try {
             Template template = new Template();
-            template.src = new File(template.tmpDir, "tmpl");
-            template.type = TemplateType.ODT;
-            FileUtils.copyToFile(zipStream, template.src);
+            template.setSrc(new File(template.getTmpDir(), "tmpl"));
+            template.setType(TemplateType.ODT);
+            FileUtils.copyToFile(zipStream, template.getSrc());
             return template;
         } catch (Exception e) {
             throw new BadRequestException("Please read the specification for the vars request.");
@@ -110,16 +110,16 @@ public class TemplateCompiler {
             public void next(ZipEntry zipEntry, InputStream zipInputStream) throws Exception {
                 if (zipEntry.getName().toLowerCase().endsWith(".odt")) {
                     //found an odt template inside the zip
-                    template.type = ODT;
-                    template.src = Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, "tmpl.odt");
-                    if (!template.src.exists() || template.src.isDirectory()) {
+                    template.setType(ODT);
+                    template.setSrc(Zip.zipEntryToFile(zipEntry, zipInputStream, template.getTmpDir(), "tmpl.odt"));
+                    if (!template.getSrc().exists() || template.getSrc().isDirectory()) {
                         throw new BadRequestException("couldn't process template odt");
                     }
                 } else if (zipEntry.getName().toLowerCase().endsWith(".docx")) {
                     //found a docx template inside the zip
-                    template.type = DOCX;
-                    template.src = Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, "tmpl.docx");
-                    if (!template.src.exists() || template.src.isDirectory()) {
+                    template.setType(DOCX);
+                    template.setSrc(Zip.zipEntryToFile(zipEntry, zipInputStream, template.getTmpDir(), "tmpl.docx"));
+                    if (!template.getSrc().exists() || template.getSrc().isDirectory()) {
                         throw new BadRequestException("couldn't process template docx");
                     }
                 } else if (zipEntry.getName().toLowerCase().endsWith(".json")) {
@@ -132,18 +132,18 @@ public class TemplateCompiler {
                     } else {
                         jsonBuffer = IOUtils.toByteArray(zipInputStream);
                     }
-                    template.data = Json.fromJson(jsonBuffer, Map.class);
+                    template.setData(Json.fromJson(jsonBuffer, Map.class));
                 } else {
                     //other assets that should be referenced in the json data
-                    Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, zipEntry.getName());
+                    Zip.zipEntryToFile(zipEntry, zipInputStream, template.getTmpDir(), zipEntry.getName());
                 }
             }
         });
-        if (template.src == null) {
+        if (template.getSrc() == null) {
             throw new BadRequestException("template not found inside the ZIP");
         }
-        if (template.data == null) {
-            template.data = new HashMap();
+        if (template.getData() == null) {
+            template.setData(new HashMap());
         }
         return template;
     }

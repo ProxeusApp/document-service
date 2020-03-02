@@ -104,15 +104,13 @@ public class ODTCompiler implements DocumentCompiler {
         ImageVarProcessor imageVarProcessor = new ImageVarProcessor(varParser);
         TemplateVarProcessor templateVarProcessor = new TemplateVarProcessor(varParser);
         log.debug(String.format("DEBUG FIND VARS TEMPLATE %s\n", template));
-        Zip.extract(template.src, new EntryFileFilter() {
-            public void next(ZipEntry entry, ZipFile zf) throws Exception {
-                if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
-                    TemplateHandler xml = templateHandlerFactory.newInstance(
-                            imageVarProcessor,
-                            templateVarProcessor
-                    );
-                    xml.process(zf.getInputStream(entry));
-                }
+        Zip.extract(template.getSrc(), (entry, zf) -> {
+            if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
+                TemplateHandler xml = templateHandlerFactory.newInstance(
+                        imageVarProcessor,
+                        templateVarProcessor
+                );
+                xml.process(zf.getInputStream(entry));
             }
         });
     }

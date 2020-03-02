@@ -14,12 +14,15 @@ import java.util.UUID;
  * Template simplifies the compile interface.
  */
 public class Template {
-    public TemplateType type;
-    public File src;
-    public Map<String, Object> data;
-    public File tmpDir;
-    public String format;
-    public boolean embedError;
+    private TemplateType type;
+    private File src;
+    private Map<String, Object> data;
+    private File tmpDir;
+    private String format;
+    private boolean embedError;
+    private String cacheDir = System.getProperty("document.template.cache.dir");
+    private String alternateCacheDir = System.getProperty("java.io.tmpdir");
+
 
     public Template() throws Exception {
         createCacheDir();
@@ -37,11 +40,7 @@ public class Template {
     }
 
     private void createCacheDir() throws Exception {
-        String cacheDir = System.getProperty("document.template.cache.dir");
-        if(cacheDir == null || cacheDir.isEmpty()){
-            cacheDir = System.getProperty("java.io.tmpdir");
-        }
-        tmpDir = new File(cacheDir, UUID.randomUUID().toString());
+        tmpDir = new File(getCacheDir(), UUID.randomUUID().toString());
         ensureDirs();
     }
 
@@ -49,6 +48,10 @@ public class Template {
         if (!tmpDir.exists() && !tmpDir.mkdirs()) {
             throw new Exception("couldn't create cache dir" + tmpDir.getAbsolutePath());
         }
+    }
+
+    private String getCacheDir() {
+        return (cacheDir == null || cacheDir.isEmpty()) ? alternateCacheDir : cacheDir;
     }
 
     public Map<String, Object> getDataCopy(){
@@ -108,6 +111,50 @@ public class Template {
             }
             newMap.put(entry.getKey(), o);
         }
+    }
+
+    public File getSrc() {
+        return src;
+    }
+
+    public void setSrc(File src) {
+        this.src = src;
+    }
+
+    public File getTmpDir() {
+        return tmpDir;
+    }
+
+    public TemplateType getType() {
+        return type;
+    }
+
+    public void setType(TemplateType type) {
+        this.type = type;
+    }
+
+    public boolean isEmbedError() {
+        return embedError;
+    }
+
+    public void setEmbedError(boolean embedError) {
+        this.embedError = embedError;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, Object> data) {
+        this.data = data;
     }
 }
 

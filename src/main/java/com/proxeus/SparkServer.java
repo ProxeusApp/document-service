@@ -78,7 +78,7 @@ public class SparkServer {
         get("/how-it-works", (request, response) -> {
             try{
                 boolean inline = request.queryMap().hasKey("inline");
-                response.raw().setContentType(LibreOfficeFormat.PDF.contentType);
+                response.raw().setContentType(LibreOfficeFormat.PDF.getContentType());
                 response.raw().setHeader("Content-Disposition", (inline?"inline":"attachment")+"; filename=\"how.it.works.pdf\"");
                 streamAndClose(getODTAsPDFFromResources(config, "how.it.works.odt"), response.raw().getOutputStream());
             }catch (Exception e){
@@ -98,8 +98,8 @@ public class SparkServer {
                     is = getDirAsPDFFromResources(config, "example");
                 }
                 boolean inline = request.queryMap().hasKey("inline");
-                response.raw().setContentType(format.contentType);
-                response.raw().setHeader("Content-Disposition", (inline?"inline":"attachment")+"; filename=\"example."+format.ext+"\"");
+                response.raw().setContentType(format.getContentType());
+                response.raw().setHeader("Content-Disposition", (inline?"inline":"attachment")+"; filename=\"example."+format.getExt()+"\"");
                 streamAndClose(is, response.raw().getOutputStream());
             }catch (Exception e){
                 notFound(response);
@@ -141,9 +141,9 @@ public class SparkServer {
                 //app is meant for future releases
                 //right now there is just libre so we can ignore this param
                 Extension extension = libreOfficeAssistant.getExtension(request.queryParams("os"));
-                response.raw().setContentType(extension.contentType);
-                response.raw().setHeader("Content-Disposition", "attachment; filename=\"" + extension.fileName+"\"");
-                streamAndClose(extension.inputStream, response.raw().getOutputStream());
+                response.raw().setContentType(extension.getContentType());
+                response.raw().setHeader("Content-Disposition", "attachment; filename=\"" + extension.getFileName()+"\"");
+                streamAndClose(extension.getInputStream(), response.raw().getOutputStream());
             } catch (Exception e) {
                 notFound(response);
             }

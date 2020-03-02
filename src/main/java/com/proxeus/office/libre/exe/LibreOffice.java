@@ -66,7 +66,7 @@ public class LibreOffice implements Closeable {
     public String Convert(File src, File dst, String format) throws java.lang.Exception {
         LibreOfficeFormat lof = LibreOfficeFormat.get(format);
         exportDocument(src, dst, lof);
-        return lof.contentType;
+        return lof.getContentType();
     }
 
     /**
@@ -79,8 +79,7 @@ public class LibreOffice implements Closeable {
             if (con != null) {
                 con.disconnect();
             }
-            //BootstrapPipeConnector c = new BootstrapPipeConnector(exeDir);
-            //c.connect();
+
             BootstrapSocketConnector c = new BootstrapSocketConnector(exeDir);
             c.connect();
             con = c;
@@ -96,11 +95,9 @@ public class LibreOffice implements Closeable {
 
     private void exportDocument(File src, File dst, LibreOfficeFormat outputFormat) throws java.lang.Exception {
         try {
-            //InputStream input = new FileInputStream(src);
-            //OOInputStream ooInputStream = new OOInputStream(input);
             String sUrl = src.toURI().toString();
             System.out.println("DEBUG SURL: " + sUrl);
-            XComponent oDocToStore = null;
+            XComponent oDocToStore;
             try {
                 oDocToStore = con.getCompLoader().loadComponentFromURL(sUrl, "_blank", 0, createProps(
                         p("Hidden", Boolean.TRUE),
@@ -153,7 +150,7 @@ public class LibreOffice implements Closeable {
             }
             xStorable.storeToURL(sUrl, createProps(
                     p("Overwrite", Boolean.TRUE),
-                    p("FilterName", outputFormat.filterName),
+                    p("FilterName", outputFormat.getFilterName()),
                     p("Hidden", Boolean.TRUE)
                     //p("OutputStream", out)
             ));

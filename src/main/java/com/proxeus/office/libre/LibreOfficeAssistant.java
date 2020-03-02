@@ -21,14 +21,12 @@ public class LibreOfficeAssistant implements Closeable {
         }
         libreOfficePool = new LibreOfficePool(libreConfig);
         final Thread mainThread = Thread.currentThread();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-            libreOfficePool.close();
-            try{
-                mainThread.join();
-            }catch (Exception e){}
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        libreOfficePool.close();
+        try{
+            mainThread.join();
+        }catch (Exception e){}
+        }));
     }
 
     /**
@@ -87,14 +85,12 @@ public class LibreOfficeAssistant implements Closeable {
      */
     public Extension getExtension(String os){
         try {
-            Extension ext = new Extension();
-            ext.contentType = "application/octet-stream";
-            ext.fileName = "ProxeusTemplateAssistance_" + os + ".oxt";
-            InputStream fis = LibreOfficeAssistant.class.getResourceAsStream("/" + ext.fileName);
+            Extension ext = new Extension("ProxeusTemplateAssistance_" + os + ".oxt", "application/octet-stream");
+            InputStream fis = LibreOfficeAssistant.class.getResourceAsStream("/" + ext.getFileName());
             if (fis == null) {
                 return null;
             }
-            ext.inputStream = fis;
+            ext.setInputStream(fis);
             return ext;
         } catch (Exception e) {}
         return null;
