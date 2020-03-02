@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
  */
 public class Code {
     protected boolean isComment;
-    protected CodeType codeType;
-    protected List<Node> relations;
+    private CodeType codeType;
+    private List<Node> relations;
     private boolean needsToMatchParentExactly = false;
 
     protected Code(CodeType codeType, Node...n) {
@@ -39,14 +39,14 @@ public class Code {
      * @return true if the parents are the same otherwise false
      */
     protected boolean haveTheSameParent(){
-        Node p = relations.get(0);
-        if(p == null){
+        if(relations.size() == 0){
             return false;
         }
+
+        Node p = relations.get(0);
         p = p.parent;
-        Node loopNode = null;
-        for (int i = 1; i < relations.size(); ++i) {
-            loopNode = relations.get(i);
+
+        for (Node loopNode : relations) {
             if(loopNode == null || p != loopNode.parent){
                 return false;
             }
@@ -58,7 +58,16 @@ public class Code {
      * Check wether it is a macro block like {% macro ...%}
      */
     protected boolean isMacroBlock(){
-        return codeType == CodeType.CodeBlock && relations.get(0).name().equals("macro");
+        if(relations.isEmpty()) {
+            return false;
+        }
+
+        Node firstRelation = relations.get(0);
+        if(firstRelation.name() == null) {
+            return false;
+        }
+
+        return codeType == CodeType.CodeBlock && firstRelation.name().equals("macro");
     }
 
     /**
@@ -113,7 +122,7 @@ public class Code {
         //calculate depth
         int i = 0;
         int c = relatedNodes.size();
-        Node p = null;
+        Node p;
         int min = Integer.MAX_VALUE;
         int max = -1;
 
@@ -239,19 +248,6 @@ public class Code {
     }
 
     /**
-     * Are there any children?
-     * @return true if there are otherwise false
-     */
-    protected boolean hasChilds() {
-         for(Node n : relations){
-             if(n.hasChildren()){
-                 return true;
-             }
-         }
-         return false;
-    }
-
-    /**
      * Try to find the best suited tags for this code to wrap.
      * @param xmlTagNames the configured and best suited tags
      * @param maxRange when to give up for end and start code
@@ -262,13 +258,11 @@ public class Code {
         ms[0].measureDistanceOutsideUp(relations.get(0), xmlTagNames, maxRange);
         ms[1].measureDistanceOutsideDown(relations.get(0), xmlTagNames, maxRange);
         ms[2].measureDistanceInsideDown(relations.get(0), xmlTagNames, maxRange);
-        Arrays.sort(ms, new Comparator<Measurement>() {
-            public int compare(Measurement left, Measurement right) {
-                if(left.isXMLThatNeedsToBeWrapped && (left.distance<right.distance || !right.isXMLThatNeedsToBeWrapped)){
-                    return -1;
-                }else{
-                    return 1;
-                }
+        Arrays.sort(ms, (left, right) -> {
+            if(left.isXMLThatNeedsToBeWrapped && (left.distance<right.distance || !right.isXMLThatNeedsToBeWrapped)){
+                return -1;
+            }else{
+                return 1;
             }
         });
         for(int i = 0; i < ms.length; ++i){
@@ -332,20 +326,6 @@ public class Code {
     }
 
     /**
-     * Retrieve the first node.
-     */
-    protected Node firstNode(){
-        return relations.get(0);
-    }
-
-    /**
-     * Retrieve the first node.
-     */
-    protected Node lastNode(){
-        return relations.get(relations.size()-1);
-    }
-
-    /**
      * As code will be written as document content, it gets messed up.
      * This method is the initial method that ensures it gets moved to the next suitable and meaningful place.
      */
@@ -396,5 +376,13 @@ public class Code {
             codeNode.toString(sb);
             lastRelatedNode = codeNode;
         }
+    }
+
+    public List<Node> getRelations() {
+        return relations;
+    }
+
+    public CodeType getCodeType() {
+        return codeType;
     }
 }

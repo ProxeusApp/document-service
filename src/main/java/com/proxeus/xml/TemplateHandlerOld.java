@@ -344,21 +344,21 @@ public class TemplateHandlerOld implements TemplateHandler {
      */
     private void fixCode(boolean removeEmptyXMLWrappersAroundCode, Code code) {
         if (removeEmptyXMLWrappersAroundCode && code.shouldRemoveEmptyXMLWrappersAroundThisCode()) {
-            for (Node codeNode : code.relations) {
+            for (Node codeNode : code.getRelations()) {
                 codeNode.removeEmptyXMLWrappers(config.RemoveEmptyXMLWrappersAroundCode);
             }
         }
 
         //try complicated fixes only on code blocks or blocks who doesn't have the same parent
         //code with one relation are either bad written blocks or single blocks
-        if (code.isComment || code.relations.size() == 1 || code.haveTheSameParent()) {
+        if (code.isComment || code.getRelations().size() == 1 || code.haveTheSameParent()) {
             return;
         }
         //try to wrap feature is only supported for usual blocks with a staring and an ending code
         //assuming size == 2 is {%start%}...{%endstart%}
-        if (code.relations.size() == 2 && config.HasTryToWrapXMLTagWithCodeFor(code.relations.get(0).name())) {
+        if (code.getRelations().size() == 2 && config.HasTryToWrapXMLTagWithCodeFor(code.getRelations().get(0).name())) {
             code.tryToWrapXMLTag(
-                    config.TryToWrapXMLTagWithCode.get(code.relations.get(0).name()),
+                    config.TryToWrapXMLTagWithCode.get(code.getRelations().get(0).name()),
                     config.TrialCountForWrappingTagWithCode);
         }
         if (config.FixCodeByFindingTheNextCommonParent) {
@@ -597,7 +597,7 @@ public class TemplateHandlerOld implements TemplateHandler {
     public List<Element> findCodeElementsByName(String nameRegex) {
         List<Element> codeElements = new ArrayList<>();
         for (Code code : codesRelated) {
-            for (Node relatedCode : code.relations) {
+            for (Node relatedCode : code.getRelations()) {
                 if (relatedCode.name().matches(nameRegex)) {
                     codeElements.add(relatedCode);
                 }
@@ -614,7 +614,7 @@ public class TemplateHandlerOld implements TemplateHandler {
     public List<Code> findCodeByName(String nameRegex) {
         List<Code> codeElements = new ArrayList<>();
         for (Code code : codesRelated) {
-            for (Node relatedCode : code.relations) {
+            for (Node relatedCode : code.getRelations()) {
                 if (relatedCode.name().matches(nameRegex)) {
                     codeElements.add(code);
                     break;
@@ -647,7 +647,7 @@ public class TemplateHandlerOld implements TemplateHandler {
             if (code.isComment) {
                 continue;
             }
-            for (Node relatedCode : code.relations) {
+            for (Node relatedCode : code.getRelations()) {
                 if (!relatedCode.isEndTagOnly()) {
                     varParser.parse(relatedCode.toString());
                 }

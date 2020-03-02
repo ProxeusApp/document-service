@@ -53,7 +53,7 @@ public class Config {
         }
     }
     public boolean NeedsToMatchParentExactly(Code code){
-        return code.codeType==CodeType.CodeBlock && MatchParentExactlyCodes.contains(code.relations.get(0).name());
+        return code.getCodeType() == CodeType.CodeBlock && MatchParentExactlyCodes.contains(code.getRelations().get(0).name());
     }
 
     //false means tags are not going to be fixed with an end or start tag close to the wrong tag
