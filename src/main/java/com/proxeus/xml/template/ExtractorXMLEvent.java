@@ -1,7 +1,7 @@
 package com.proxeus.xml.template;
 
-import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.template.parser.ParserState;
+import com.proxeus.xml.template.parser.TagType;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
@@ -26,10 +26,6 @@ public class ExtractorXMLEvent implements XMLEvent {
         this.blockId = blockId;
     }
 
-    public XMLEvent getEvent() {
-        return event;
-    }
-
     public ParserState getState() {
         return state;
     }
@@ -40,6 +36,10 @@ public class ExtractorXMLEvent implements XMLEvent {
 
     public TagType getTagType() {
         return tagType;
+    }
+
+    public XMLEvent getEvent() {
+        return event;
     }
 
     @Override
@@ -125,6 +125,5 @@ public class ExtractorXMLEvent implements XMLEvent {
     public String toString() {
         return event.toString();
     }
-
 
 }

@@ -44,7 +44,7 @@ public class NoOpEventProcessorTest {
 
             List<String> result = new ArrayList<>();
             while (out.hasNext()) {
-                result.add(out.nextEvent().asCharacters().toString());
+                result.add(out.nextEvent().asCharacters().getData());
             }
             Assert.assertArrayEquals(test.toArray(), result.toArray());
         } catch (Exception e) {

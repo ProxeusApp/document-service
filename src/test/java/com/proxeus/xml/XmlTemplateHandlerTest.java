@@ -3,10 +3,12 @@ package com.proxeus.xml;
 import com.proxeus.document.TemplateCompiler;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
+@Ignore
 public class XmlTemplateHandlerTest {
     //@Test
     public void parseODTXml() throws Exception{

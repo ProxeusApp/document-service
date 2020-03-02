@@ -42,7 +42,7 @@ public class DefaultTemplateHandlerTest {
             handler.process(input);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-            handler.toOutputStream(output);
+            handler.render(output, null);
 
             InputStream expected = JTwigParser.class.getClassLoader().getResourceAsStream(test + "_fixed.xml");
             Assert.assertEquals(convert(expected, Charset.defaultCharset()), output.toString());

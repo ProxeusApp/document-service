@@ -59,7 +59,7 @@ public class DefaultTemplateHandler implements TemplateHandler {
                 StartDocument sd = (StartDocument) e;
                 charset = Charset.forName(sd.getCharacterEncodingScheme());
             }
-            writer.add(it.next());
+            writer.add(e);
         }
 
         InputStream input = new ByteArrayInputStream(xmlOutput.toByteArray());

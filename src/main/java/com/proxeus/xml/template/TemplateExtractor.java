@@ -6,14 +6,18 @@ import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.template.parser.TemplateParser;
 import org.apache.log4j.Logger;
 
-import javax.xml.stream.*;
-import javax.xml.stream.events.*;
-
-import java.nio.charset.Charset;
+import javax.xml.stream.XMLEventFactory;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLEventWriter;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Characters;
+import javax.xml.stream.events.EndElement;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
 import java.util.*;
 
-import static com.proxeus.xml.template.parser.TagType.*;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static com.proxeus.xml.template.parser.TagType.CODE;
+import static com.proxeus.xml.template.parser.TagType.NONE;
 
 /**
  * This class process JTwig template code island (http://jtwig.org/documentation/reference/syntax/code-islands)
@@ -98,7 +102,7 @@ public class TemplateExtractor implements XMLEventProcessor {
 
         resultQueue.forEach(event -> {
             try {
-                writer.add(event);
+                writer.add(event.getEvent());
             } catch (XMLStreamException e) {
                 throw new RuntimeException((e));
             }

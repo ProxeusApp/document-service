@@ -47,7 +47,7 @@ public class XMLEventProcessorChainTest {
 
             List<String> result = new ArrayList<>();
             while (out.hasNext()) {
-                result.add(out.nextEvent().asCharacters().toString());
+                result.add(out.nextEvent().asCharacters().getData());
             }
             Assert.assertArrayEquals(test.toArray(), result.toArray());
         } catch (Exception e) {
@@ -72,7 +72,7 @@ public class XMLEventProcessorChainTest {
 
             List<String> result = new ArrayList<>();
             while (out.hasNext()) {
-                result.add(out.nextEvent().asCharacters().toString());
+                result.add(out.nextEvent().asCharacters().getData());
             }
             Assert.assertArrayEquals(test.toArray(), result.toArray());
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class XMLEventProcessorChainTest {
 
             List<String> result = new ArrayList<>();
             while (out.hasNext()) {
-                result.add(out.nextEvent().asCharacters().toString());
+                result.add(out.nextEvent().asCharacters().getData());
             }
             Assert.assertArrayEquals(test.toArray(), result.toArray());
         } catch (Exception e) {
