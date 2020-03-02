@@ -56,7 +56,7 @@ public class SparkServer {
     public SparkServer(Config config) {
         removeTheDiskCacheOfDocs();
         Logger log = Logger.getLogger(this.getClass());
-        threadPool(config.max, config.min, config.timeoutMillis);
+        threadPool(config.getMax(), config.getMin(), config.getTimeoutMillis());
         port(config.getPort());
         ipAddress(config.getHost());
         try {

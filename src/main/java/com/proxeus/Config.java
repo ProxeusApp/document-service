@@ -11,22 +11,22 @@ import java.util.regex.Pattern;
  * Server config
  */
 public class Config {
-	public String protocol = "http";
-	public String host = "localhost";
-	public Integer port = 2115;
-	public String tmpFolder = "docsCache";
-	public String timeout = "10s";
+	private String protocol = "http";
+	private String host = "localhost";
+	private Integer port = 2115;
+	private String tmpFolder = "docsCache";
+	private String timeout = "10s";
 
 	//workers
-	public int min = 8;
-	public int max = 100;
-	public int timeoutMillis = 100000;
+	private int min = 8;
+	private int max = 100;
+	private int timeoutMillis = 100000;
 
 	private static Map<String, Object> config;
 
 	public Config(){}
 
-	public static Config create(Map<String, Object> params){
+	public static Config create(Map<String, Object> params) {
 		config = params;
 		Config conf = root(Config.class);
 		System.setProperty("document.template.cache", conf.tmpFolder);
@@ -56,7 +56,20 @@ public class Config {
 				return TimeUnit.DAYS.toMillis(dur);
 			}
 		}
-		return 0;
+
+		throw new RuntimeException("parsing " + duration + ". Please provide duration in the following format: '3s'");
+	}
+
+	public int getTimeoutMillis() {
+		return timeoutMillis;
+	}
+
+	public int getMin() {
+		return min;
+	}
+
+	public int getMax() {
+		return max;
 	}
 
 	public String getProtocol() {
@@ -74,25 +87,6 @@ public class Config {
 
 	public String toString(){
 		return Json.toJson(config);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getConfigOf(String module){
-		try{
-			return (Map<String, Object>)config.get(module);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public static <T> T fromJson(byte[] json, Class<T> clazz){
-		try {
-
-		}  catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public static  <T> T by(Class<T> clazz){
