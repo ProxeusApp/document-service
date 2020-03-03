@@ -75,10 +75,10 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:2.9.9", ex
     compile "com.sparkjava:spark-core:2.9.1", ex
 
-    compile "org.libreoffice:unoil:6.2.3", ex
-    compile "org.libreoffice:jurt:6.2.3", ex
-    compile "org.libreoffice:juh:6.2.3", ex
-    compile "org.libreoffice:ridl:6.2.3", ex
+    compile "org.openoffice:unoil:4.1.2", ex
+    compile "org.openoffice:jurt:4.1.2", ex
+    compile "org.openoffice:juh:4.1.2", ex
+    compile "org.openoffice:ridl:4.1.2", ex
 
     testCompile "junit:junit:4.10"
 }
