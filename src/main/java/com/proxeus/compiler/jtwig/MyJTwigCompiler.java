@@ -1,7 +1,6 @@
 package com.proxeus.compiler.jtwig;
 
 import com.proxeus.error.CompilationException;
-
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 import org.jtwig.environment.Environment;

@@ -2,7 +2,6 @@ package com.proxeus.document;
 
 import com.proxeus.document.odt.ODTCompiler;
 import com.proxeus.error.BadRequestException;
-import com.proxeus.office.libre.LibreOfficeAssistant;
 import com.proxeus.util.Json;
 import com.proxeus.util.zip.EntryFilter;
 import com.proxeus.util.zip.Zip;

@@ -1,9 +1,7 @@
 package com.proxeus.document.odt;
 
-import com.proxeus.compiler.jtwig.MyJTwigCompiler;
 import com.proxeus.document.*;
 import com.proxeus.document.odt.img.ImageVarProcessor;
-import com.proxeus.office.libre.LibreOfficeAssistant;
 import com.proxeus.util.zip.EntryFileFilter;
 import com.proxeus.util.zip.Zip;
 import com.proxeus.xml.Config;

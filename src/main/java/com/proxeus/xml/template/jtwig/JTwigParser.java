@@ -2,8 +2,7 @@ package com.proxeus.xml.template.jtwig;
 
 import com.proxeus.xml.template.parser.*;
 
-import javax.xml.stream.*;
-
+import javax.xml.stream.XMLStreamException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;

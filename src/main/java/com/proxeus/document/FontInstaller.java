@@ -2,7 +2,7 @@ package com.proxeus.document;
 
 import org.apache.log4j.Logger;
 
-import java.awt.Font;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Files;

@@ -52,9 +52,6 @@ public class Config {
             MatchParentExactlyCodes.add(codeName);
         }
     }
-    public boolean NeedsToMatchParentExactly(Code code){
-        return code.getCodeType() == CodeType.CodeBlock && MatchParentExactlyCodes.contains(code.getRelations().get(0).name());
-    }
 
     //false means tags are not going to be fixed with an end or start tag close to the wrong tag
     public boolean Fix_XMLTags;

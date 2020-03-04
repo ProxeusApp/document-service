@@ -4,7 +4,6 @@ import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.processor.XMLEventProcessorChain;
 import com.proxeus.xml.template.jtwig.JTwigParser;
 import com.proxeus.xml.template.jtwig.JTwigVarParser;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.junit.Assert;
 import org.junit.Test;

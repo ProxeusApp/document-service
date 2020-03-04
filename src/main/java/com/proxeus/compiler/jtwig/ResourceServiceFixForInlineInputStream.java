@@ -1,7 +1,6 @@
 package com.proxeus.compiler.jtwig;
 
 import com.google.common.base.Optional;
-
 import org.jtwig.resource.ResourceService;
 import org.jtwig.resource.loader.ResourceLoader;
 import org.jtwig.resource.loader.TypedResourceLoader;

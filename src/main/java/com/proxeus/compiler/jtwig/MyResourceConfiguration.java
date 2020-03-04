@@ -1,7 +1,6 @@
 package com.proxeus.compiler.jtwig;
 
 import com.google.common.collect.ImmutableList;
-
 import org.jtwig.resource.config.DefaultResourceConfiguration;
 import org.jtwig.resource.config.ResourceConfiguration;
 import org.jtwig.resource.loader.ClasspathResourceLoader;

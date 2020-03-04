@@ -6,7 +6,6 @@ import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.template.parser.TemplateParser;
 import org.apache.log4j.Logger;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -15,7 +14,8 @@ import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 import static com.proxeus.xml.template.parser.TagType.CODE;
 import static com.proxeus.xml.template.parser.TagType.NONE;

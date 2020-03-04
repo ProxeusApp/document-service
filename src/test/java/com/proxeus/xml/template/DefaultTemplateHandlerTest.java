@@ -1,6 +1,5 @@
 package com.proxeus.xml.template;
 
-import com.proxeus.document.TemplateCompiler;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.template.jtwig.JTwigParser;
 import org.junit.Assert;

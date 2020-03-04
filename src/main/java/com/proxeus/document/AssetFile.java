@@ -2,6 +2,9 @@ package com.proxeus.document;
 
 import org.apache.commons.io.IOUtils;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

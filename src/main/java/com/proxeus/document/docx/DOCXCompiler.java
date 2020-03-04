@@ -9,6 +9,9 @@ import com.proxeus.xml.template.TemplateHandlerFactory;
 
 import java.util.Set;
 
+/**
+ * This is a placeholder.
+ */
 public class DOCXCompiler implements DocumentCompiler {
     private MicrosoftOfficeAssistant microsoftOfficeAssistant;
     private TemplateHandlerFactory templateHandlerFactory;

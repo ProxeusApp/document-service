@@ -1,7 +1,6 @@
 package com.proxeus.xml.template;
 
 import com.proxeus.xml.processor.XMLEventProcessor;
-import com.proxeus.xml.template.jtwig.JTwigParser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +16,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
 
 
 @RunWith(Parameterized.class)

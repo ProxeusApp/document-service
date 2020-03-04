@@ -1,7 +1,5 @@
 package com.proxeus.xml.template;
 
-import com.proxeus.xml.Node;
-import com.proxeus.xml.template.jtwig.JTwigVarParser;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import org.apache.log4j.Logger;
 
@@ -11,7 +9,10 @@ import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -68,26 +69,6 @@ public class DefaultTemplateHandler implements TemplateHandler {
     }
 
     @Override
-    public boolean containsCode() {
-        return true;
-    }
-
-    @Override
-    public void fixCodeStructures() throws Exception {
-
-    }
-
-    @Override
-    public Node getRootNodeContainingCode() {
-        return null;
-    }
-
-    @Override
-    public void findVars(JTwigVarParser varParser) throws Exception {
-
-    }
-
-    @Override
     public Charset getCharset() {
         return Charset.defaultCharset();
     }
@@ -101,7 +82,6 @@ public class DefaultTemplateHandler implements TemplateHandler {
     public void free() {
 
     }
-
 
     private class TemplateXMLEventWriter implements XMLEventWriter {
         private LinkedList<XMLEvent> events = new LinkedList<>();

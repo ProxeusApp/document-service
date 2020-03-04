@@ -5,7 +5,6 @@ import com.proxeus.document.odt.img.ImageAdjustProcessorFactory;
 import com.proxeus.error.CompilationException;
 import com.proxeus.error.InternalException;
 import com.proxeus.error.UnavailableException;
-import com.proxeus.office.libre.LibreOfficeAssistant;
 import com.proxeus.util.zip.EntryFileFilter;
 import com.proxeus.util.zip.Zip;
 import com.proxeus.xml.Config;

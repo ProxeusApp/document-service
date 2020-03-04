@@ -1,9 +1,8 @@
 package com.proxeus.util;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 /**
  * Image helps us to create a container in which it places the actual image as configured with the parameters.

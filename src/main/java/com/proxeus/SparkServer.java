@@ -13,7 +13,6 @@ import com.proxeus.office.libre.exe.Extension;
 import com.proxeus.office.libre.exe.LibreOfficeFormat;
 import com.proxeus.util.Json;
 import com.proxeus.util.zip.Zip;
-
 import com.proxeus.xml.template.TemplateHandlerFactory;
 import com.proxeus.xml.template.TemplateVarParserFactory;
 import com.proxeus.xml.template.jtwig.JTwigTemplateHandlerFactory;
@@ -24,12 +23,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.io.EofException;
+import spark.Response;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -37,15 +33,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
 
-import spark.Response;
-
 import static com.proxeus.Application.config;
-import static spark.Spark.get;
-import static spark.Spark.ipAddress;
-import static spark.Spark.port;
-import static spark.Spark.post;
-import static spark.Spark.staticFiles;
-import static spark.Spark.threadPool;
+import static spark.Spark.*;
 
 /**
  * SparkServer defines the protocol of this services.

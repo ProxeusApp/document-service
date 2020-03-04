@@ -1,7 +1,6 @@
 package com.proxeus.document.odt.img;
 
 import com.proxeus.document.AssetFile;
-
 import org.apache.commons.codec.binary.Hex;
 
 import java.io.File;

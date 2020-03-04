@@ -7,10 +7,6 @@ import com.proxeus.xml.template.TemplateExtractor;
 import com.proxeus.xml.template.TemplateHandler;
 import com.proxeus.xml.template.TemplateHandlerFactory;
 
-import javax.xml.namespace.QName;
-import java.util.List;
-import java.util.Set;
-
 public class JTwigTemplateHandlerFactory implements TemplateHandlerFactory {
 
     @Override

@@ -1,7 +1,6 @@
 package com.proxeus.compiler.jtwig;
 
 import com.google.common.collect.ImmutableMap;
-
 import org.jtwig.environment.EnvironmentConfiguration;
 import org.jtwig.environment.initializer.EnvironmentInitializer;
 import org.jtwig.escape.EscapeEngine;

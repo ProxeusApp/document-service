@@ -1,13 +1,12 @@
 package com.proxeus.document.odt;
 
+import com.proxeus.Application;
+import com.proxeus.Config;
 import com.proxeus.IntegrationTest;
 import com.proxeus.document.FileResult;
 import com.proxeus.document.TemplateCompiler;
 import com.proxeus.office.libre.LibreConfig;
 import com.proxeus.office.libre.LibreOfficeAssistant;
-import com.proxeus.Application;
-import com.proxeus.Config;
-
 import com.proxeus.xml.template.jtwig.JTwigTemplateHandlerFactory;
 import com.proxeus.xml.template.jtwig.JTwigTemplateVarParserFactory;
 import org.junit.Assert;
