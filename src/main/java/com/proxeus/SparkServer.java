@@ -2,6 +2,7 @@ package com.proxeus;
 
 import com.proxeus.document.FileResult;
 import com.proxeus.document.TemplateCompiler;
+import com.proxeus.document.TemplateFormatter;
 import com.proxeus.error.BadRequestException;
 import com.proxeus.error.CompilationException;
 import com.proxeus.error.NotImplementedException;
@@ -13,6 +14,10 @@ import com.proxeus.office.libre.exe.LibreOfficeFormat;
 import com.proxeus.util.Json;
 import com.proxeus.util.zip.Zip;
 
+import com.proxeus.xml.template.TemplateHandlerFactory;
+import com.proxeus.xml.template.TemplateVarParserFactory;
+import com.proxeus.xml.template.jtwig.JTwigTemplateHandlerFactory;
+import com.proxeus.xml.template.jtwig.JTwigTemplateVarParserFactory;
 import org.apache.commons.fileupload.MultipartStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -46,7 +51,11 @@ import static spark.Spark.threadPool;
  * SparkServer defines the protocol of this services.
  */
 public class SparkServer {
-    private LibreOfficeAssistant libreOfficeAssistant;
+    private Logger log = Logger.getLogger(this.getClass());
+
+    private TemplateFormatter templateFormatter;
+    private TemplateHandlerFactory templateHandlerFactory;
+    private TemplateVarParserFactory  templateVarParserFactory;
     private TemplateCompiler templateCompiler;
 
     private final Charset defaultCharset = StandardCharsets.UTF_8;
@@ -60,8 +69,10 @@ public class SparkServer {
         port(config.getPort());
         ipAddress(config.getHost());
         try {
-            libreOfficeAssistant = new LibreOfficeAssistant(Config.by(LibreConfig.class));
-            templateCompiler = new TemplateCompiler(config.getTmpFolder(), libreOfficeAssistant);
+            templateFormatter = new LibreOfficeAssistant(Config.by(LibreConfig.class));
+            templateHandlerFactory = new JTwigTemplateHandlerFactory();
+            templateVarParserFactory = new JTwigTemplateVarParserFactory();
+            templateCompiler = new TemplateCompiler(config.getTmpFolder(), templateFormatter, templateHandlerFactory, templateVarParserFactory);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
@@ -117,7 +128,7 @@ public class SparkServer {
                 } finally {
                     result.release();
                 }
-                System.out.println("request took: " + sw.getTime(TimeUnit.MILLISECONDS));
+                log.info("request took: " + sw.getTime(TimeUnit.MILLISECONDS));
             } catch(EofException | MultipartStream.MalformedStreamException eof){
                 try{
                     response.raw().getOutputStream().close();
@@ -140,7 +151,7 @@ public class SparkServer {
                 //request.queryParams("app")
                 //app is meant for future releases
                 //right now there is just libre so we can ignore this param
-                Extension extension = libreOfficeAssistant.getExtension(request.queryParams("os"));
+                Extension extension = templateFormatter.getExtension(request.queryParams("os"));
                 response.raw().setContentType(extension.getContentType());
                 response.raw().setHeader("Content-Disposition", "attachment; filename=\"" + extension.getFileName()+"\"");
                 streamAndClose(extension.getInputStream(), response.raw().getOutputStream());
@@ -194,7 +205,7 @@ public class SparkServer {
             return new FileInputStream(f);
         } else {
             streamAndClose(SparkServer.class.getResourceAsStream("/" + name), new FileOutputStream(f));
-            libreOfficeAssistant.Convert(f, f, "pdf");
+            templateFormatter.Convert(f, f, "pdf", false);
             return new FileInputStream(f);
         }
     }

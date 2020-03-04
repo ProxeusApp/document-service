@@ -1,12 +1,12 @@
 package com.proxeus.xml.template;
 
-import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import org.apache.log4j.Logger;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Characters;
 import javax.xml.stream.events.XMLEvent;
 
 public class TemplateVarProcessor implements XMLEventProcessor {
@@ -29,7 +29,8 @@ public class TemplateVarProcessor implements XMLEventProcessor {
                 continue;
             }
 
-            varParser.parse(event.asCharacters().getData());
+            Characters c = event.asCharacters();
+            varParser.parse(c.getData());
         }
     }
 }

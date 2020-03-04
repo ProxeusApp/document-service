@@ -1,5 +1,6 @@
 package com.proxeus.office.libre;
 
+import com.proxeus.document.TemplateFormatter;
 import com.proxeus.error.UnavailableException;
 import com.proxeus.office.libre.exe.Extension;
 import com.proxeus.office.libre.exe.LibreOffice;
@@ -12,7 +13,7 @@ import java.io.InputStream;
 /**
  * LibreOfficeAssistant makes the communication between LibreOffice and the Document-Service easier and safely.
  */
-public class LibreOfficeAssistant implements Closeable {
+public class LibreOfficeAssistant implements TemplateFormatter, Closeable {
     private LibreOfficePool libreOfficePool;
 
     public LibreOfficeAssistant(LibreConfig libreConfig) throws Exception {
@@ -34,20 +35,10 @@ public class LibreOfficeAssistant implements Closeable {
      * @param src srouce file
      * @param dst destination file
      * @param format pdf, odt, docx or doc
-     * @return contentType
-     */
-    public String Convert(File src, File dst, String format) throws Exception {
-        return Convert(src, dst, format, false);
-    }
-
-    /**
-     * Convert src as the provided format at dst.
-     * @param src srouce file
-     * @param dst destination file
-     * @param format pdf, odt, docx or doc
      * @param newFontsInstalled signal new fonts are installed, to restart the executables so the font can be used
      * @return contentType
      */
+    @Override
     public String Convert(File src, File dst, String format, boolean newFontsInstalled) throws Exception {
         LibreOffice lo = null;
         try{

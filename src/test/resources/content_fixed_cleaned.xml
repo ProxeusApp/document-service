@@ -579,7 +579,7 @@
                 <text:sequence-decl text:name="Figure" text:display-outline-level="0"></text:sequence-decl>
             </text:sequence-decls>
             <text:p text:style-name="P5">Anmeldung an das Handelsregisteramt</text:p>
-            <text:p text:style-name="P4"></text:p>
+            
             <text:list text:style-name="WWNum6" xml:id="list47114456">
                 <text:list-item>
                     <text:p text:style-name="P35">
@@ -591,10 +591,10 @@
                     </text:p>
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P38"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P38"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P6">Firma</text:p>
@@ -603,11 +603,11 @@
                     <text:p text:style-name="P9">
                         <text:bookmark-start text:name="FirmaGerman"></text:bookmark-start>
                         <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8"></text:span></text:span>{{ input.FirmaGerman }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T10"></text:span>
+                            </text:span>{{ input.FirmaGerman }}<text:span text:style-name="Absatz-Standardschriftart">
                         </text:span>
                         <text:bookmark-end text:name="FirmaGerman"></text:bookmark-end>
                         <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T10"></text:span>
+                            
                         </text:span>
                         <text:span text:style-name="Absatz-Standardschriftart">
                             <text:span text:style-name="T8">AG</text:span>
@@ -615,7 +615,7 @@
                     </text:p>
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P7"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P6">Übersetzungen der Firma</text:p>
@@ -623,19 +623,19 @@
                 <text:list-item>
                     <text:p text:style-name="P9">
                         <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8"></text:span></text:span>{{ input.FirmaGerman }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> SA</text:span>
+                            </text:span>{{ input.FirmaGerman }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> SA</text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P9">
                         <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8"></text:span></text:span>{{ input.FirmaGerman }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> Ltd</text:span>
+                            </text:span>{{ input.FirmaGerman }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> Ltd</text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P7"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P6">Sitz</text:p>
@@ -643,12 +643,12 @@
                 <text:list-item>
                     <text:p text:style-name="P9">
                         <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8"></text:span></text:span>{{ input.HeadquarterRegisteredOffice }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> / </text:span></text:span>{{ input.HeadquarterCanton }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"></text:span>
+                            </text:span>{{ input.HeadquarterRegisteredOffice }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> / </text:span></text:span>{{ input.HeadquarterCanton }}<text:span text:style-name="Absatz-Standardschriftart">
                         </text:span>
                     </text:p>
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P7"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P6">Domizil</text:p>
@@ -656,12 +656,12 @@
                 <text:list-item>
                     <text:p text:style-name="P14">
                         <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8"></text:span></text:span>{{ input.HeadquarterZIP }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> </text:span></text:span>{{ input.HeadquarterCity }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8">, </text:span></text:span>{{ input.HeadquarterStreet }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> </text:span></text:span>{{ input.HeadquarterStreetNumber }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> (eigenes Rechtsdomizil)</text:span>
+                            </text:span>{{ input.HeadquarterZIP }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> </text:span></text:span>{{ input.HeadquarterCity }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8">, </text:span></text:span>{{ input.HeadquarterStreet }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> </text:span></text:span>{{ input.HeadquarterStreetNumber }}<text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> (eigenes Rechtsdomizil)</text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P6"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P6">Rechtsform</text:p>
@@ -670,7 +670,7 @@
                     <text:p text:style-name="P7">Aktiengesellschaft</text:p>
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P7"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P6">Statutendatum</text:p>
@@ -678,12 +678,12 @@
                 <text:list-item>
                     <text:p text:style-name="P9">
                         <text:span text:style-name="Fett">
-                            <text:span text:style-name="T11"></text:span></text:span>{{ input.DateOfStatutes }}<text:span text:style-name="Fett"><text:span text:style-name="T11"></text:span>
+                            </text:span>{{ input.DateOfStatutes }}<text:span text:style-name="Fett">
                         </text:span>
                     </text:p>
                 </text:list-item>
                 <text:list-item>
-                    <text:p text:style-name="P7"></text:p>
+                    
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P6">Zweck</text:p>
@@ -691,16 +691,16 @@
                 <text:list-item>
                     <text:p text:style-name="P36">
                         <text:span text:style-name="Fett">
-                            <text:span text:style-name="T25"></text:span></text:span>{% if input.PurposeDETemplate == ‘Other‘ %}<text:span text:style-name="ProxeusFormula"></text:span>
+                            </text:span>{% if input.PurposeDETemplate == ‘Other‘ %}
                         <text:span text:style-name="Fett">
-                            <text:span text:style-name="T25"></text:span></text:span>{{ input.PurposeDE }}<text:span text:style-name="Fett"><text:span text:style-name="T25"> </text:span></text:span>{% else %}<text:span text:style-name="ProxeusFormula"></text:span>
+                            </text:span>{{ input.PurposeDE }}<text:span text:style-name="Fett"><text:span text:style-name="T25"> </text:span></text:span>{% else %}
                         <text:span text:style-name="Fett">
-                            <text:span text:style-name="T25"></text:span></text:span>{{ input.PurposeDETemplate }}<text:span text:style-name="Fett"><text:span text:style-name="T25"> </text:span></text:span>{% endif %}<text:span text:style-name="ProxeusFormula"></text:span>
+                            </text:span>{{ input.PurposeDETemplate }}<text:span text:style-name="Fett"><text:span text:style-name="T25"> </text:span></text:span>{% endif %}
                     </text:p>
                 </text:list-item>
             </text:list>
             <text:p text:style-name="P37">
-                <text:span text:style-name="ProxeusFormula"></text:span>
+                
             </text:p>
         </office:text>
     </office:body>

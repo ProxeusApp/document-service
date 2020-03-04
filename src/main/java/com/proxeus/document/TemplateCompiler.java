@@ -1,21 +1,16 @@
 package com.proxeus.document;
 
-import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.docx.DOCXCompiler;
 import com.proxeus.document.odt.ODTCompiler;
 import com.proxeus.error.BadRequestException;
 import com.proxeus.office.libre.LibreOfficeAssistant;
-import com.proxeus.office.microsoft.MicrosoftOfficeAssistant;
 import com.proxeus.util.Json;
 import com.proxeus.util.zip.EntryFilter;
 import com.proxeus.util.zip.Zip;
-
 import com.proxeus.xml.template.TemplateHandlerFactory;
 import com.proxeus.xml.template.TemplateVarParserFactory;
-import com.proxeus.xml.template.jtwig.JTwigTemplateHandlerFactory;
-import com.proxeus.xml.template.jtwig.JTwigTemplateVarParserFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -29,18 +24,12 @@ import static com.proxeus.document.TemplateType.ODT;
 
 
 public class TemplateCompiler {
-    private ODTCompiler odtCompiler;
-    private DOCXCompiler docxCompiler;
-    private MyJTwigCompiler compiler;
-    private TemplateHandlerFactory templateHandlerFactory;
-    private TemplateVarParserFactory templateVarParserFactory;
+    private Logger log = Logger.getLogger(this.getClass());
 
-    public TemplateCompiler(String cacheFolder, LibreOfficeAssistant libreOfficeAssistant) throws Exception {
-        compiler = new MyJTwigCompiler();
-        templateHandlerFactory = new JTwigTemplateHandlerFactory();
-        templateVarParserFactory = new JTwigTemplateVarParserFactory();
-        odtCompiler = new ODTCompiler(cacheFolder, compiler, libreOfficeAssistant, templateHandlerFactory, templateVarParserFactory);
-        docxCompiler = new DOCXCompiler(cacheFolder, compiler, new MicrosoftOfficeAssistant(), templateHandlerFactory);
+    private ODTCompiler odtCompiler;
+
+    public TemplateCompiler(String cacheFolder, TemplateFormatter templateFormatter, TemplateHandlerFactory templateHandlerFactory, TemplateVarParserFactory templateVarParserFactory) throws Exception {
+        this.odtCompiler = new ODTCompiler(cacheFolder, templateFormatter, templateHandlerFactory, templateVarParserFactory);
     }
 
     public FileResult compile(InputStream zipStream, String format, boolean embedError) throws Exception {
@@ -56,10 +45,7 @@ public class TemplateCompiler {
 
     private DocumentCompiler getCompiler(Template template) {
         switch (template.getType()) {
-            case DOCX:
-                return docxCompiler;
             case ODT:
-
             default:
                 return odtCompiler;
         }

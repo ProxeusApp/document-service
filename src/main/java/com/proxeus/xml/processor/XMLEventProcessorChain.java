@@ -5,23 +5,22 @@ import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class XMLEventProcessorChain implements XMLEventProcessor {
 
-    private List<XMLEventProcessor> processors;
+    private List<XMLEventProcessor> processors = new LinkedList<>();
 
     public XMLEventProcessorChain(XMLEventProcessor... processors) {
-        this.processors = Arrays.asList(processors);
+        this.processors.addAll(Arrays.asList(processors));
         if (processors.length == 0) {
-            this.processors = Arrays.asList(new NoOpEventProcessor());
+            this.processors.add(new NoOpEventProcessor());
         }
     }
 
     public void addProcessor(XMLEventProcessor... processors) {
-        for(XMLEventProcessor p:processors){
-            this.processors.add(p);
-        }
+        this.processors.addAll(Arrays.asList(processors));
     }
 
     @Override
@@ -31,10 +30,9 @@ public class XMLEventProcessorChain implements XMLEventProcessor {
             XMLEventReadWriter in = new XMLEventBuffer(input);
             XMLEventReadWriter out = null;
 
-            Iterator<XMLEventProcessor> it = processors.iterator();
-            while (it.hasNext()) {
+            for (XMLEventProcessor processor : processors) {
                 out = new XMLEventBuffer();
-                it.next().process(in, out);
+                processor.process(in, out);
                 in = out;
             }
 

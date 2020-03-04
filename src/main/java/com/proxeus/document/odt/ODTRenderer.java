@@ -1,10 +1,6 @@
 package com.proxeus.document.odt;
 
-import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.AssetFile;
-import com.proxeus.document.FileResult;
-import com.proxeus.document.FontInstaller;
-import com.proxeus.document.Template;
+import com.proxeus.document.*;
 import com.proxeus.document.odt.img.ImageAdjustProcessorFactory;
 import com.proxeus.error.CompilationException;
 import com.proxeus.error.InternalException;
@@ -13,15 +9,16 @@ import com.proxeus.office.libre.LibreOfficeAssistant;
 import com.proxeus.util.zip.EntryFileFilter;
 import com.proxeus.util.zip.Zip;
 import com.proxeus.xml.Config;
+import com.proxeus.xml.template.CleanEmptyElementProcessor;
 import com.proxeus.xml.template.TemplateHandler;
 import com.proxeus.xml.template.TemplateHandlerFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.xml.namespace.QName;
+import java.io.*;
+import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -40,31 +37,37 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class ODTRenderer {
     private Logger log = Logger.getLogger(this.getClass());
 
+    private static String TEXT = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+    private static QName TEXT_SPAN = new QName(TEXT, "span");
+
+    private static List<QName> EMPTY_XML_ELEMENT_TO_REMOVE = Arrays.asList(TEXT_SPAN);
+
     final static String CONTENT_XML = "content.xml";
     final static String STYLE_XML = "styles.xml";
     public Template template;
     private boolean extractedFonts;
     private TemplateHandler manifest = null;
     private File manifestDest = null;
+    private ByteArrayOutputStream manifestContent = null;
     private Queue<String> fileToRemoveFromZip = new ConcurrentLinkedQueue<>();
 
 
     private ImageAdjustProcessorFactory imageAdjuster;
     private TemplateHandlerFactory templateHandlerFactory;
 
-    private LibreOfficeAssistant libreOfficeAssistant;
+    private TemplateFormatter templateFormatter;
 
-    ODTRenderer(Template template, TemplateHandlerFactory templateHandlerFactory, LibreOfficeAssistant libreOfficeAssistant) {
+    ODTRenderer(Template template, TemplateHandlerFactory templateHandlerFactory, TemplateFormatter templateFormatter) {
         this.template = template;
         this.templateHandlerFactory = templateHandlerFactory;
-        this.libreOfficeAssistant = libreOfficeAssistant;
+        this.templateFormatter = templateFormatter;
         this.imageAdjuster = new ImageAdjustProcessorFactory(template.getTmpDir(), template.getDataCopy());
     }
 
 
-    protected FileResult compile(Config conf, MyJTwigCompiler compiler, FontInstaller fontInstaller) throws Exception {
+    protected FileResult compile(Config conf, FontInstaller fontInstaller) throws Exception {
         try {
-            List<File> extractedFiles = extractAndCompile(conf, compiler);
+            List<File> extractedFiles = extractAndCompile(conf);
             assembleZipFile(extractedFiles);
         } catch (CompilationException e) {
             if (template.isEmbedError()) {
@@ -73,45 +76,53 @@ public class ODTRenderer {
                 throw e;
             }
         }
-        return convertToformat(fontInstaller);
+        return format(fontInstaller);
     }
 
 
-    private List<File> extractAndCompile(Config conf, MyJTwigCompiler compiler) throws Exception {
+    private List<File> extractAndCompile(Config conf) throws Exception {
         log.debug(String.format("DEBUG TEMPLATE %s\n", template));
 
         ExecutorService compileExecutor = Executors.newFixedThreadPool(2);
         List<File> extractedFiles = new ArrayList<>(2);
         Queue<Exception> compileExceptions = new ConcurrentLinkedQueue<>();
         try {
-            Zip.extract(template.getSrc(), (entry, zf) -> {
-                if (entry.getName().startsWith("Fonts/")) {
-                    extractedFonts = true;
-                    File toExtract = new File(template.getTmpDir(), entry.getName());
-                    FileUtils.copyToFile(zf.getInputStream(entry), toExtract);
-                } else if (entry.getName().equals("META-INF/manifest.xml")) {
-                    manifest = templateHandlerFactory.newInstance();
-                    manifest.process(zf.getInputStream(entry));
-                    manifestDest = new File(template.getTmpDir(), entry.getName());
-                } else if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
-                    TemplateHandler xml = templateHandlerFactory.newInstance(
-                            imageAdjuster.newInstance(entry.getName())
-                    );
-                    xml.process(zf.getInputStream(entry));
+            Zip.extract(template.getSrc(), new EntryFileFilter() {
+                public void next(ZipEntry entry, ZipFile zf) throws Exception {
+                    if (entry.getName().startsWith("Fonts/")) {
+                        extractedFonts = true;
+                        File toExtract = new File(template.getTmpDir(), entry.getName());
+                        toExtract.getParentFile().mkdirs();
+                        FileUtils.copyToFile(zf.getInputStream(entry), toExtract);
+                    } else if (entry.getName().equals("META-INF/manifest.xml")) {
+                        manifestDest = new File(template.getTmpDir(), entry.getName());
+                        manifestDest.getParentFile().mkdirs();
+                        manifestContent = new ByteArrayOutputStream();
+                        IOUtils.copy(zf.getInputStream(entry), manifestContent);
+                    } else if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
+                        TemplateHandler xml = templateHandlerFactory.newInstance(
+                                new CleanEmptyElementProcessor(EMPTY_XML_ELEMENT_TO_REMOVE),
+                                imageAdjuster.newInstance(entry.getName())
+
+                        );
+                        xml.process(zf.getInputStream(entry));
 
 
-                    File toExtract = new File(template.getTmpDir(), entry.getName());
-                    log.debug(String.format("DEBUG TO EXTRACT %s\n", toExtract));
-                    extractedFiles.add(toExtract);
+                        File toExtract = new File(template.getTmpDir(), entry.getName());
+                        toExtract.getParentFile().mkdirs();
+                        log.debug(String.format("DEBUG TO EXTRACT %s\n", toExtract));
+                        extractedFiles.add(toExtract);
 
-                    FileOutputStream output = new FileOutputStream(toExtract);
-                    compileExecutor.submit(() -> {
-                        try {
-                            xml.render(output, template.getDataCopy());
-                        } catch (Exception e) {
-                            compileExceptions.offer(e);
-                        }
-                    });
+                        compileExecutor.submit(() -> {
+                            try {
+                                FileOutputStream output = new FileOutputStream(toExtract);
+                                xml.render(output, template.getDataCopy());
+                                output.flush();
+                            } catch (Exception e) {
+                                compileExceptions.offer(e);
+                            }
+                        });
+                    }
                 }
             });
 
@@ -163,13 +174,13 @@ public class ODTRenderer {
         }
     }
 
-    private FileResult convertToformat(FontInstaller fontInstaller) throws UnavailableException {
+    private FileResult format(FontInstaller fontInstaller) throws UnavailableException {
         try {
             FileResult result = new FileResult(template);
             result.target = new File(template.getTmpDir(), "final");
             result.template = template;
             boolean newFontsInstalled = extractedFonts && fontInstaller.installDir(getFontsDir());
-            result.contentType = libreOfficeAssistant.Convert(template.getSrc(), result.target, template.getFormat(), newFontsInstalled);
+            result.contentType = templateFormatter.Convert(template.getSrc(), result.target, template.getFormat(), newFontsInstalled);
             return result;
         } catch (Exception e) {
             e.printStackTrace();
@@ -184,50 +195,35 @@ public class ODTRenderer {
     Queue<AssetFile> waitForImageTasksToFinish() throws Exception {
         ImageAdjustProcessorFactory.Result result = imageAdjuster.finish();
         if (result.getExceptions().size() > 0) {
-            throw result.getExceptions().poll();
+            Exception e = result.getExceptions().poll();
+            if (e != null) {
+                throw e;
+            }
         }
         return result.getAssetFiles();
     }
 
-    private void processManifest(Queue<AssetFile> assetFiles) {
-        // TODO: Implement
-        /*
-        if (manifest != null) {
-            try {
-                List<Element> manifestFileEntries = manifest.findElementsByName("manifest:file-entry");
-                ListIterator<Element> elementListIterator = manifestFileEntries.listIterator();
-                for (AssetFile f : assetFilesToInclude) {
-                    if (f.orgZipPath != null) {
-                        while (elementListIterator.hasNext()) {
-                            Element element = elementListIterator.next();
-                            if (element.toString().contains(f.orgZipPath)) {
-                                element.remove();//remove from dom
-                                elementListIterator.remove();//remove from this list
-                                break;
-                            }
-                        }
-                    }
-                }
-                List<Element> manifestMain = manifest.findElementsByName("manifest:manifest");
-                if (manifestMain != null && manifestMain.size() > 0) {
-                    for (AssetFile f : assetFilesToInclude) {
-                        String newImgTag = "<manifest:file-entry manifest:full-path=\"" + f.newZipPath.substring(1) + "\" manifest:media-type=\"image/png\"/>";
-                        ((Node) manifestMain.get(0)).addChild(new Node(new Tag(newImgTag, TagType.START_AND_END)));
-                    }
-                }
-                FileOutputStream manifestOs = new FileOutputStream(manifestDest);
-                manifest.toOutputStream(manifestOs);
-                manifestOs.flush();
-                manifestOs.close();
-                manifest.free();
-                manifest = null;
-            } catch (Exception e) {
-                //not important as libre will handle it with the repair feature
-                System.err.println("couldn't modify the manifest");
+    private void processManifest(Queue<AssetFile> assetFiles) throws Exception {
+        try {
+            log.debug(String.format("DEBUG PROCESS MANIFEST %s\n", assetFiles));
+            if (manifestContent == null) {
+                return;
             }
-        }
 
-         */
+            TemplateHandler manifest = templateHandlerFactory.newInstance(
+                    new ODTManifestProcessor(assetFiles)
+            );
+            manifest.process(new ByteArrayInputStream(manifestContent.toByteArray()));
+
+
+            log.debug(String.format("DEBUG PROCESS MANIFEST DEST %s\n", manifestDest));
+            FileOutputStream output = new FileOutputStream(manifestDest);
+
+            manifest.render(output, Collections.emptyMap());
+        } catch (Exception e) {
+            log.debug("DEBUG PROCESS MANIFEST EXCEPTION", e);
+            throw e;
+        }
     }
 
 
@@ -235,12 +231,12 @@ public class ODTRenderer {
         try {
             Files.move(manifestDest.toPath(), fs.getPath(getZipPath(template.getTmpDir(), manifestDest.getAbsolutePath())), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
-            //not important as it will work without it
+            log.debug("DEBUG INSERT MANIFEST EXCEPTION", e);
         }
     }
 
-    private void includeAssets(Queue<AssetFile> assetFilesToInclude, FileSystem fs) throws IOException {
-        for (AssetFile f : assetFilesToInclude) {
+    private void includeAssets(Queue<AssetFile> assetFiles, FileSystem fs) throws IOException {
+        for (AssetFile f : assetFiles) {
             if (!f.dst.exists()) {
                 //looks like it as been already moved to the zip
                 continue;
@@ -262,7 +258,6 @@ public class ODTRenderer {
 
     /**
      * Printing error inside the document.
-     * TODO refactor string manipulation
      */
     private FileResult renderOdtError(Template template, String error, File userTmpDir) throws Exception {
         String contentXml = "";
@@ -289,11 +284,11 @@ public class ODTRenderer {
             Files.copy(tmp.toPath(), fileInsideZipPath, StandardCopyOption.REPLACE_EXISTING);
         }
         if (!tmp.delete()) {
-            System.out.println("renderOdtError tmp.delete() failed for " + tmp.getAbsolutePath());
+            log.error("renderOdtError tmp.delete() failed for " + tmp.getAbsolutePath());
         }
         FileResult result = new FileResult(template);
         result.target = new File(template.getTmpDir(), "error");
-        result.contentType = libreOfficeAssistant.Convert(template.getSrc(), result.target, "pdf", false);
+        result.contentType = templateFormatter.Convert(template.getSrc(), result.target, "pdf", false);
         return result;
     }
 }

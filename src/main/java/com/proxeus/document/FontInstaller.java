@@ -1,5 +1,7 @@
 package com.proxeus.document;
 
+import org.apache.log4j.Logger;
+
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,6 +13,8 @@ import java.util.concurrent.TimeUnit;
  * Installs fonts on a Linux system.
  */
 public class FontInstaller {
+    private Logger log = Logger.getLogger(this.getClass());
+
     private File userFontsDir;
     private int lastFontCount = 0;
     private int currentFontCount = 0;
@@ -109,7 +113,7 @@ public class FontInstaller {
         try {
             Runtime.getRuntime().exec("fc-cache -f " + userFontsDir.getAbsolutePath()).waitFor(5, TimeUnit.SECONDS);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("Cannot execute fc-cache -f");
         }
     }
 }

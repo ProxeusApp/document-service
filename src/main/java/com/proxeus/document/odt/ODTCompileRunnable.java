@@ -32,21 +32,6 @@ public class ODTCompileRunnable implements Runnable {
 
     public void run() {
         try (FileOutputStream fos = new FileOutputStream(xmlFile)) {
-
-            /*
-            if(xml.containsCode()){
-                xml.fixCodeStructures();
-                Node rootNodeContainingCode = xml.getRootNodeContainingCode();
-                if (rootNodeContainingCode != null) {
-                    //need to compile
-                    InputStream forCompilation = rootNodeContainingCode.toInputStream(xml.getCharset());
-                    Compiled compiled = new Compiled();
-                    compiler.Compile(forCompilation, data, compiled.getOutputStream(), xml.getCharset());
-                    rootNodeContainingCode.replaceWith(compiled);
-                }
-            }
-            */
-
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             xml.toOutputStream(out);
             System.out.printf("DEBUG XML OUTPUT %s\n", xmlFile);

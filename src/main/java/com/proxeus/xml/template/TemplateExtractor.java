@@ -6,6 +6,7 @@ import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.template.parser.TemplateParser;
 import org.apache.log4j.Logger;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -78,26 +79,21 @@ public class TemplateExtractor implements XMLEventProcessor {
     private LinkedList<ExtractorXMLEvent> elementStack;
     private LinkedList<ExtractorXMLEvent> resultQueue;
 
-    private XMLEventFactory eventFactory;
-
-    // TODO: This should be a parameter as it is dependent on the XML schema
-    private static Set<String> removeEmptyBody = new HashSet<>(Arrays.asList("{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span"));
+    private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
     public TemplateExtractor(TemplateParser parser) {
         this.parser = parser;
         this.tmpQueue = new LinkedList<>();
         this.elementStack = new LinkedList<>();
         this.resultQueue = new LinkedList<>();
-
-        this.eventFactory = XMLEventFactory.newInstance();
-
     }
 
     @Override
     @SuppressWarnings({"unchecked", "null"})
     public void process(XMLEventReader reader, XMLEventWriter writer) throws XMLStreamException, IllegalStateException {
         while (reader.hasNext()) {
-            processEvent(reader.nextEvent());
+            XMLEvent event = reader.nextEvent();
+            processEvent(event);
         }
 
         resultQueue.forEach(event -> {
@@ -117,7 +113,6 @@ public class TemplateExtractor implements XMLEventProcessor {
                 pushResult(event);
                 pushResult(eventFactory.createCharacters(System.lineSeparator()));
                 break;
-
             case XMLEvent.END_DOCUMENT:
                 if (this.parser.getState() != ParserState.XML) {
                     throw new IllegalStateException("Template code island not terminated");
@@ -221,17 +216,9 @@ public class TemplateExtractor implements XMLEventProcessor {
                 elementStack.push(e);
                 break;
             case XMLEvent.END_ELEMENT:
-                ExtractorXMLEvent lastResult = resultQueue.getLast();
-                if (lastResult.isStartElement()
-                        && lastResult.asStartElement().getName().equals(e.asEndElement().getName())
-                        && removeEmptyBody.contains(lastResult.asStartElement().getName().toString())) {
-                    resultQueue.removeLast();
-                    elementStack.pop();
-                } else {
-                    resultQueue.add(e);
-                    ExtractorXMLEvent stacktHead = elementStack.pop();
-                    splitSpanningElement(stacktHead, e);
-                }
+                resultQueue.add(e);
+                ExtractorXMLEvent stacktHead = elementStack.pop();
+                splitSpanningElement(stacktHead, e);
                 break;
             default:
                 resultQueue.add(e);

@@ -1,5 +1,6 @@
 package com.proxeus.xml.template;
 
+import com.proxeus.document.TemplateCompiler;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.template.jtwig.JTwigParser;
 import org.junit.Assert;
@@ -11,7 +12,9 @@ import org.junit.runners.Parameterized.Parameters;
 import javax.xml.stream.*;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @RunWith(Parameterized.class)
@@ -31,13 +34,12 @@ public class TemplateExtractorTest {
                 "if_statement",
                 "input1",
                 "xml_element_spanning_template_blocks",
-                "content");
+                "content",
+                "content_with_error");
     }
 
     @Test
-    public void test() {
-
-
+    public void test() throws Exception{
         XMLEventProcessor extractor = new TemplateExtractor(new JTwigParser());
 
         InputStream input = JTwigParser.class.getClassLoader().getResourceAsStream(test + ".xml");
@@ -55,15 +57,18 @@ public class TemplateExtractorTest {
             e.printStackTrace();
         }
 
-        System.out.println(output.toString());
+        String result = output.toString();
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/content_with_error_fixed.xml"));
+        writer.write(result);
+        writer.close();
 
         try {
             InputStream expected = JTwigParser.class.getClassLoader().getResourceAsStream(test + "_fixed.xml");
-            Assert.assertEquals(convert(expected, Charset.defaultCharset()), output.toString());
+            Assert.assertEquals(convert(expected, Charset.defaultCharset()), result);
         } catch (IOException e) {
 
         }
-
     }
 
     private String convert(InputStream inputStream, Charset charset) throws IOException {

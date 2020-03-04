@@ -2,6 +2,7 @@ package com.proxeus.office.libre.exe;
 
 import com.proxeus.error.UnavailableException;
 import com.proxeus.office.libre.LibreConfig;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.security.InvalidParameterException;
@@ -31,6 +32,8 @@ import java.util.concurrent.TimeUnit;
  * This class makes the horror more than just acceptable.
  */
 public class LibreOfficePool {
+    private Logger log = Logger.getLogger(this.getClass());
+
     private LinkedBlockingDeque<LibreOffice> executables;
     private LinkedBlockingQueue<Long> toBeReleased;
     private LinkedBlockingQueue<LibreOffice> toReconnect;
@@ -154,7 +157,7 @@ public class LibreOfficePool {
                         }
                     }
                 } catch (Exception e) {
-                    System.out.println("shutting down libre pool cleanup");
+                    log.info("shutting down libre pool cleanup");
                 }
 
                 //shutdown

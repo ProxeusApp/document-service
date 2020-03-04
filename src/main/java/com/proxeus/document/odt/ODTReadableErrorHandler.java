@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 /**
  * This class helps to make complicated errors inside an ODT document visible. This way it is easier to track the mistakes and fix them.
- * TODO improve the performance and memory usage by avoiding string modifications as much as possible
  */
 public class ODTReadableErrorHandler {
     private String errFrame;

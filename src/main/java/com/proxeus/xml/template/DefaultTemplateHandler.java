@@ -11,9 +11,7 @@ import javax.xml.stream.events.StartDocument;
 import javax.xml.stream.events.XMLEvent;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -62,6 +60,9 @@ public class DefaultTemplateHandler implements TemplateHandler {
             writer.add(e);
         }
 
+        if (data == null){
+            data = Collections.emptyMap();
+        }
         InputStream input = new ByteArrayInputStream(xmlOutput.toByteArray());
         this.renderer.render(input, output, data, charset);
     }

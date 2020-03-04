@@ -1,6 +1,7 @@
 package com.proxeus.document;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +24,16 @@ public class Template {
     private String cacheDir = System.getProperty("document.template.cache.dir");
     private String alternateCacheDir = System.getProperty("java.io.tmpdir");
 
+
+    public String toString(){
+        return new ToStringBuilder(this).
+                append("type", type).
+                append("src", src).
+                append("data", data).
+                append("tmpDir", tmpDir).
+                append("format", format).
+                append("embedError", embedError).toString();
+    }
 
     public Template() throws Exception {
         createCacheDir();

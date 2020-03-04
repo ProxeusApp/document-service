@@ -1,10 +1,7 @@
 package com.proxeus.document.odt;
 
 import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.DocumentCompiler;
-import com.proxeus.document.FileResult;
-import com.proxeus.document.FontInstaller;
-import com.proxeus.document.Template;
+import com.proxeus.document.*;
 import com.proxeus.document.odt.img.ImageVarProcessor;
 import com.proxeus.office.libre.LibreOfficeAssistant;
 import com.proxeus.util.zip.EntryFileFilter;
@@ -18,6 +15,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -36,17 +34,15 @@ public class ODTCompiler implements DocumentCompiler {
     private File cacheDir;
     private final FontInstaller fontInstaller;
     private Config conf;
-    private LibreOfficeAssistant libreOfficeAssistant;
-    private MyJTwigCompiler compiler;
+    private TemplateFormatter templateFormatter;
     private TemplateHandlerFactory templateHandlerFactory;
     private TemplateVarParserFactory templateVarParserFactory;
 
     public ODTCompiler(String cacheFolder,
-                       MyJTwigCompiler compiler,
-                       LibreOfficeAssistant libreOfficeAssistant,
+                       TemplateFormatter templateFormatter,
                        TemplateHandlerFactory templateHandlerFactory,
                        TemplateVarParserFactory templateVarParserFactory) throws Exception {
-        this.libreOfficeAssistant = libreOfficeAssistant;
+        this.templateFormatter = templateFormatter;
         this.templateHandlerFactory = templateHandlerFactory;
         this.templateVarParserFactory = templateVarParserFactory;
 
@@ -67,13 +63,6 @@ public class ODTCompiler implements DocumentCompiler {
          */
         conf.Fix_XMLTags = false;
 
-
-        // TODO: Replace this one and create a remove empty element processor
-        /**
-         * Add tag names for removal around code.
-         * They will be removed if they wrap single code blocks only.
-         */
-        conf.AddTagNamesForRemovalAroundCode("text:span", "text:p");
         /**
          * Make code placement meaningful in the document.
          */
@@ -85,19 +74,16 @@ public class ODTCompiler implements DocumentCompiler {
          * Try to find more suitable nodes to wrap if possible.
          */
         conf.AddTryToWrapXMLTagWithCode("for", "table:table-row");
-
-        this.compiler = compiler;
     }
 
     public FileResult Compile(Template template) throws Exception {
         return compile(template);
     }
 
-    public Set<String> Vars(Template template, String varPrefix) throws Exception {
+    public Set<String> Vars(Template template, String prefix) throws Exception {
         TemplateVarParser varParser = templateVarParserFactory.newInstance();
         findVars(template, varParser);
-        // TODO: Handle prefix
-        return varParser.getVars();
+        return varParser.getVars().stream().filter(var -> var.startsWith(prefix)).collect(Collectors.toSet());
     }
 
     private void findVars(Template template, TemplateVarParser varParser) throws Exception {
@@ -116,7 +102,7 @@ public class ODTCompiler implements DocumentCompiler {
     }
 
     private FileResult compile(Template template) throws Exception {
-        ODTRenderer cfc = new ODTRenderer(template, templateHandlerFactory, libreOfficeAssistant);
-        return cfc.compile(conf, compiler, fontInstaller);
+        ODTRenderer cfc = new ODTRenderer(template, templateHandlerFactory, templateFormatter);
+        return cfc.compile(conf, fontInstaller);
     }
 }

@@ -24,21 +24,27 @@ import java.util.concurrent.TimeUnit;
 public class ImageAdjustProcessorFactory {
 
     private final static String DRAW = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
+    private final static QName DRAW_FRAME = new QName(DRAW, "frame");
+    private final static QName DRAW_IMAGE = new QName(DRAW, "image");
+    private final static QName DRAW_NAME = new QName(DRAW, "name");
     private final static String XLINK = "http://www.w3.org/1999/xlink";
+    private final static QName XLINK_HREF = new QName(XLINK, "href");
     private final static String SVG = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
+    private final static QName SVG_WIDTH = new QName(SVG, "width");
+    private final static QName SVG_HEIGHT = new QName(SVG, "height");
     private final static String LOEXT = "urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0";
+    private final static QName LOEXT_MIMETYPE = new QName(LOEXT, "mime-type");
 
     private Map<String, Object> data;
     private ExecutorService imgExecutor = Executors.newFixedThreadPool(4);
     private Queue<AssetFile> assetFiles = new ConcurrentLinkedQueue<>();
     private Queue<Exception> exceptions = new ConcurrentLinkedQueue<>();
     private File tmpDir;
-    private XMLEventFactory eventFactory;
+    private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
     public ImageAdjustProcessorFactory(File tmpDir, Map<String, Object> data) {
         this.data = data;
         this.tmpDir = tmpDir;
-        this.eventFactory = XMLEventFactory.newInstance();
     }
 
     public XMLEventProcessor newInstance(String entryName) {
@@ -76,11 +82,11 @@ public class ImageAdjustProcessorFactory {
                 switch (event.getEventType()) {
                     case XMLEvent.START_ELEMENT:
                         StartElement start = event.asStartElement();
-                        if (start.getName().equals(new QName(DRAW, "frame"))) {
+                        if (start.getName().equals(DRAW_FRAME)) {
                             frameEvents.add(start);
                             continue;
                         }
-                        if (start.getName().equals(new QName(DRAW, "image"))) {
+                        if (start.getName().equals(DRAW_IMAGE)) {
                             frameEvents.add(start);
                             continue;
                         }
@@ -88,7 +94,7 @@ public class ImageAdjustProcessorFactory {
                         continue;
                     case XMLEvent.END_ELEMENT:
                         EndElement end = event.asEndElement();
-                        if (end.getName().equals(new QName(DRAW, "frame"))) {
+                        if (end.getName().equals(DRAW_FRAME)) {
                             frameEvents.add(end);
                             for (XMLEvent e : assetFileReplacement(frameEvents, xmlDirPath)) {
                                 writer.add(e);
@@ -96,7 +102,7 @@ public class ImageAdjustProcessorFactory {
                             frameEvents.clear();
                             continue;
                         }
-                        if (end.getName().equals(new QName(DRAW, "image"))) {
+                        if (end.getName().equals(DRAW_IMAGE)) {
                             frameEvents.add(end);
                             continue;
                         }
@@ -119,7 +125,7 @@ public class ImageAdjustProcessorFactory {
         Queue<XMLEvent> assetFileReplacement(Queue<XMLEvent> frameEvents, String xmlDirPath) {
             StartElement frame = frameEvents.peek().asStartElement();
 
-            String varWithOptions = attr(frame, DRAW, "name");
+            String varWithOptions = attr(frame, DRAW_NAME);
             if (!(varWithOptions.startsWith("{{") && varWithOptions.endsWith("}}"))) {
                 //continue as there is no valid var expression and therefore nothing for us to do on this image tag
                 return frameEvents;
@@ -129,17 +135,19 @@ public class ImageAdjustProcessorFactory {
 
             Queue<XMLEvent> result = new LinkedList<>();
 
-            result.add(update(frame, DRAW, "name", "img" + System.nanoTime()));
+            result.add(update(frame, Arrays.asList(
+                    eventFactory.createAttribute(DRAW_NAME, "img" + System.nanoTime()))
+            ));
 
             //take away the expression >{{< * >}}<
             varWithOptions = varWithOptions.substring(2, varWithOptions.length() - 2).trim();
             StartElement image = frameEvents.peek().asStartElement();
             ImageSettings imgStngs = new ImageSettings(
                     xmlDirPath,
-                    attr(image, XLINK, "href"),
+                    attr(image, XLINK_HREF),
                     varWithOptions,
-                    attr(frame, SVG, "width"),
-                    attr(frame, SVG, "height"),
+                    attr(frame, SVG_WIDTH),
+                    attr(frame, SVG_HEIGHT),
                     tmpDir,
                     assetFiles
             );
@@ -168,11 +176,14 @@ public class ImageAdjustProcessorFactory {
             // consume the image start event
             frameEvents.poll();
             //the adjusted image will be always a png
-            image = update(image, LOEXT, "mime-type", "image/png");
-            //make sure it is embedded by forcing the path Pictures/imageSettingsID
-            //this path must be relative
-            //if there is an embedded object like Object 1/Pictures.., the path in the content.xml is still Pictures/.. but not in the root manifest
-            image = update(image, XLINK, "href", "Pictures/" + imgStngs.ID());
+            image = update(image,Arrays.asList(
+                    //the adjusted image will be always a png
+                    eventFactory.createAttribute(LOEXT_MIMETYPE, "image/png"),
+                    //make sure it is embedded by forcing the path Pictures/imageSettingsID
+                    //this path must be relative
+                    //if there is an embedded object like Object 1/Pictures.., the path in the content.xml is still Pictures/.. but not in the root manifest
+                    eventFactory.createAttribute(XLINK_HREF, "Pictures/" + imgStngs.ID())
+            ));
 
             result.add(image);
             result.addAll(frameEvents);
@@ -183,23 +194,24 @@ public class ImageAdjustProcessorFactory {
         }
     }
 
-    private String attr(StartElement start, String namespace, String name) {
-        Attribute attribute = start.getAttributeByName(new QName(namespace, name));
+    private String attr(StartElement start, QName name) {
+        Attribute attribute = start.getAttributeByName(name);
         if (attribute == null) {
             return "";
         }
         return attribute.getValue().trim();
     }
 
-    private StartElement update(StartElement start, String namespace, String name, String value) {
+    private StartElement update(StartElement start, List<Attribute> updatedAttributes) {
         Map<QName, Attribute> attributes = new HashMap<>();
         Iterator it = start.getAttributes();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Attribute a = (Attribute) it.next();
             attributes.put(a.getName(), a);
         }
-        QName qname = new QName(namespace, name);
-        attributes.put(qname, eventFactory.createAttribute(qname, value));
+        for(Attribute updated : updatedAttributes){
+            attributes.put(updated.getName(), updated);
+        }
 
         return eventFactory.createStartElement(start.getName(), attributes.values().iterator(), null);
     }
@@ -216,7 +228,7 @@ public class ImageAdjustProcessorFactory {
         private Queue<AssetFile> assetFiles;
         private Queue<Exception> exceptions;
 
-        public Result(Queue<AssetFile> assetFiles, Queue<Exception> exceptions) {
+        Result(Queue<AssetFile> assetFiles, Queue<Exception> exceptions) {
             this.assetFiles = assetFiles;
             this.exceptions = exceptions;
         }
