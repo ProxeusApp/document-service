@@ -1,11 +1,9 @@
 package com.proxeus.xml.template.jtwig;
 
+import com.proxeus.compiler.jtwig.MyJTwigCompiler;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.processor.XMLEventProcessorChain;
-import com.proxeus.xml.template.DefaultTemplateHandler;
-import com.proxeus.xml.template.TemplateExtractor;
-import com.proxeus.xml.template.TemplateHandler;
-import com.proxeus.xml.template.TemplateHandlerFactory;
+import com.proxeus.xml.template.*;
 
 public class JTwigTemplateHandlerFactory implements TemplateHandlerFactory {
 

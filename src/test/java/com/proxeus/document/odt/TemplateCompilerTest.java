@@ -29,9 +29,6 @@ import java.util.zip.ZipOutputStream;
  */
 public class TemplateCompilerTest {
 
-    private String format;
-    boolean restart;
-
     @Test
     public void testCompile() throws Exception {
 
@@ -42,9 +39,6 @@ public class TemplateCompilerTest {
 
         FileResult result = templateCompiler.compile(inputStream, "pdf", false);
         System.out.printf("DEBUG %s\n", result);
-
-        Assert.assertEquals(false, restart);
-        Assert.assertEquals("pdf", format);
 
         OutputStream content= new ByteArrayOutputStream();
         Zip.extract(result.target, new EntryFileFilter() {
@@ -94,9 +88,13 @@ public class TemplateCompilerTest {
     private class TestTemplateFormatter implements TemplateFormatter {
 
         @Override
-        public String Convert(File src, File dst, String f, boolean r) throws Exception {
-            format = f;
-            restart = r;
+        public String Convert(File src, File dst, String format, boolean restart) throws Exception {
+            Assert.assertEquals(false, restart);
+            Assert.assertEquals("pdf", format);
+
+            Assert.assertEquals(src.getParentFile(), dst.getParentFile());
+            Assert.assertEquals("tmpl.odt", src.getName());
+            Assert.assertEquals("final", dst.getName());
             Files.copy(src.toPath(), dst.toPath());
             return "test";
         }
