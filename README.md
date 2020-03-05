@@ -87,4 +87,4 @@ If you are looking for an example implementation of the API please checkout the 
 
 ## License
 
-Document Service is licensed under @BlockFactory AG.
+See the LICENSE file
