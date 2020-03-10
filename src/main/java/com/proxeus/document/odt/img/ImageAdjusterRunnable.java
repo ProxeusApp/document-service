@@ -42,6 +42,14 @@ public class ImageAdjusterRunnable implements Runnable {
         }
     }
 
+    protected ImageSettings getSettings() {
+        return this.imageSettings;
+    }
+
+    protected Queue<Exception> getExceptions() {
+        return this.exceptions;
+    }
+
     private static String joinZipPath(String a, String b) {
         if (a.length() == 0) {
             return b;

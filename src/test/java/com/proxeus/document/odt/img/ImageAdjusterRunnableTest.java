@@ -1,0 +1,56 @@
+package com.proxeus.document.odt.img;
+
+import com.proxeus.document.AssetFile;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+/**
+ * Project: document-service
+ * User: awerffeli
+ * Date: 06.03.20
+ * Time: 13:59
+ **/
+public class ImageAdjusterRunnableTest {
+
+    private static File tmpDir;
+
+
+    @BeforeClass
+    public static void setTmpDir() {
+        String property = "java.io.tmpdir";
+        String tempDir = System.getProperty(property);
+        tmpDir = new File(tempDir);
+    }
+
+    @Test
+    public void testRun() {
+        Queue<AssetFile> assetFiles = new ConcurrentLinkedQueue<>();
+        Queue<Exception> exceptions = new ConcurrentLinkedQueue<>();
+
+        ImageSettings imageSettings = new ImageSettings("1", "2", "3", "4cm", "5cm", tmpDir, assetFiles);
+        imageSettings.assetFilesToInclude = new ConcurrentLinkedQueue<>();
+
+        String png = "data:image/png;base64,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";
+
+        imageSettings.localRemoteOrEmbeddedFileObject = png;
+
+        ImageAdjusterRunnable imageAdjusterRunnable = new ImageAdjusterRunnable(imageSettings, exceptions);
+
+        imageAdjusterRunnable.run();
+
+
+        Assert.assertEquals(0, imageAdjusterRunnable.getExceptions().size());
+
+        ImageSettings settings = imageAdjusterRunnable.getSettings();
+        Assert.assertEquals(300.0,  settings.dpi, 0);
+        Assert.assertEquals(3048,  settings.containerWidth);
+        Assert.assertEquals(3810,  settings.containerHeight);
+        Assert.assertEquals(png,  settings.localRemoteOrEmbeddedFileObject);
+    }
+
+}
