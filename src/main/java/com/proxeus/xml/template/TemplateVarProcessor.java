@@ -30,7 +30,9 @@ public class TemplateVarProcessor implements XMLEventProcessor {
             }
 
             Characters c = event.asCharacters();
+            log.debug(String.format("DEBUG CHARACTERS %s\n", c.getData()));
             varParser.parse(c.getData());
+            log.debug(String.format("DEBUG VARS %s\n", varParser.getVars()));
         }
     }
 }

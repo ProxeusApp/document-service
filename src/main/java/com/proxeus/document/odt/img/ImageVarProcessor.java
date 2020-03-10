@@ -27,35 +27,34 @@ public class ImageVarProcessor implements XMLEventProcessor {
     public void process(XMLEventReader reader, XMLEventWriter writer) throws XMLStreamException, IllegalStateException {
         while (reader.hasNext()) {
             XMLEvent e = reader.nextEvent();
+            writer.add(e);
 
             if (!e.isStartElement()) {
                 continue;
             }
 
             StartElement s = e.asStartElement();
-
-            if (s.getName().equals(new QName(NAME_SPACE, "frame"))) {
-                extractVars(s);
+            if (!s.getName().equals(new QName(NAME_SPACE, "frame"))) {
+                continue;
             }
-            writer.add(reader.nextEvent());
-        }
-    }
+            Attribute attribute = s.getAttributeByName(new QName(NAME_SPACE, "name"));
+            if (attribute == null) {
+                continue;
+            }
 
-    public void extractVars(StartElement imgEle) {
-        Attribute attribute = imgEle.getAttributeByName(new QName(NAME_SPACE, "name"));
-        if (attribute == null) {
-            return;
-        }
-        String varWithOptions = attribute.getValue().trim();
-        if (!(varWithOptions.startsWith("{{") && varWithOptions.endsWith("}}"))) {
-            //continue as there is no valid var expression and therefore nothing for us to do on this image tag
-            return;
-        }
+            String varWithOptions = attribute.getValue().trim();
+            if (!(varWithOptions.startsWith("{{") && varWithOptions.endsWith("}}"))) {
+                //continue as there is no valid var expression and therefore nothing for us to do on this image tag
+                continue;
+            }
 
-        Matcher alignMatcher = imageOptionsRegex.matcher(varWithOptions);
-        if (alignMatcher.find()) {
+            Matcher alignMatcher = imageOptionsRegex.matcher(varWithOptions);
+            if (!alignMatcher.find()) {
+                continue;
+            }
             varWithOptions = alignMatcher.group(1).trim();
+
+            varParser.parse(varWithOptions);
         }
-        varParser.parse(varWithOptions);
     }
 }

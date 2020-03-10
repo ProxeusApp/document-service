@@ -1,6 +1,7 @@
 package com.proxeus;
 
 import com.proxeus.document.FileResult;
+import com.proxeus.document.Template;
 import com.proxeus.document.TemplateCompiler;
 import com.proxeus.document.TemplateFormatter;
 import com.proxeus.error.BadRequestException;
@@ -25,12 +26,14 @@ import org.apache.log4j.Logger;
 import org.eclipse.jetty.io.EofException;
 import spark.Response;
 
+import javax.servlet.MultipartConfigElement;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static com.proxeus.Application.config;
@@ -44,14 +47,14 @@ public class SparkServer {
 
     private TemplateFormatter templateFormatter;
     private TemplateHandlerFactory templateHandlerFactory;
-    private TemplateVarParserFactory  templateVarParserFactory;
+    private TemplateVarParserFactory templateVarParserFactory;
     private TemplateCompiler templateCompiler;
 
     private final Charset defaultCharset = StandardCharsets.UTF_8;
     private final String JSON_CONTENT_TYPE = "application/json; charset=UTF-8";
     private final String TEXT_CONTENT_TYPE = "text/plain; charset=UTF-8";
 
-    public SparkServer(Config config) {
+    SparkServer(Config config) {
         removeTheDiskCacheOfDocs();
         Logger log = Logger.getLogger(this.getClass());
         threadPool(config.getMax(), config.getMin(), config.getTimeoutMillis());
@@ -76,40 +79,49 @@ public class SparkServer {
             return 0;
         });
         get("/how-it-works", (request, response) -> {
-            try{
+            try {
                 boolean inline = request.queryMap().hasKey("inline");
                 response.raw().setContentType(LibreOfficeFormat.PDF.getContentType());
-                response.raw().setHeader("Content-Disposition", (inline?"inline":"attachment")+"; filename=\"how.it.works.pdf\"");
+                response.raw().setHeader("Content-Disposition", (inline ? "inline" : "attachment") + "; filename=\"how.it.works.pdf\"");
                 streamAndClose(getODTAsPDFFromResources(config, "how.it.works.odt"), response.raw().getOutputStream());
-            }catch (Exception e){
+            } catch (Exception e) {
                 notFound(response);
             }
             return 0;
         });
         get("/example", (request, response) -> {
-            try{
+            try {
                 InputStream is;
                 LibreOfficeFormat format;
-                if(request.queryMap().hasKey("raw")){
+                if (request.queryMap().hasKey("raw")) {
                     format = LibreOfficeFormat.ODT;
                     is = SparkServer.class.getResourceAsStream("/example/tmpl.odt");
-                }else{
+                } else {
                     format = LibreOfficeFormat.PDF;
                     is = getDirAsPDFFromResources(config, "example");
                 }
                 boolean inline = request.queryMap().hasKey("inline");
                 response.raw().setContentType(format.getContentType());
-                response.raw().setHeader("Content-Disposition", (inline?"inline":"attachment")+"; filename=\"example."+format.getExt()+"\"");
+                response.raw().setHeader("Content-Disposition", (inline ? "inline" : "attachment") + "; filename=\"example." + format.getExt() + "\"");
                 streamAndClose(is, response.raw().getOutputStream());
-            }catch (Exception e){
+            } catch (Exception e) {
                 notFound(response);
             }
             return 0;
         });
+
+        // curl --form template=@myfile.odt -data=@data.json -asset1=myasset.jpg http://document-service/compile > myfile.pdf
         post("/compile", (request, response) -> {
             try {
                 StopWatch sw = StopWatch.createStarted();
-                FileResult result = templateCompiler.compile(request.raw().getInputStream(), request.queryParams("format"), request.queryMap().hasKey("error"));
+                Template template;
+                if (request.contentType().startsWith("multipart/form-data")) {
+                    request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+                    template = Template.fromFormData(request.raw().getParts(), request.queryParams("format"));
+                } else {
+                    template = Template.fromZip(request.raw().getInputStream(), request.queryParams("format"));
+                }
+                FileResult result = templateCompiler.compile(template, request.queryMap().hasKey("error"));
                 response.header("Content-Type", result.contentType);
                 response.header("Content-Length", "" + result.target.length());
                 try {
@@ -118,11 +130,13 @@ public class SparkServer {
                     result.release();
                 }
                 log.info("request took: " + sw.getTime(TimeUnit.MILLISECONDS));
-            } catch(EofException | MultipartStream.MalformedStreamException eof){
-                try{
+            } catch (EofException | MultipartStream.MalformedStreamException eof) {
+                try {
                     response.raw().getOutputStream().close();
-                }catch (Exception idc){}
+                } catch (Exception idc) {
+                }
             } catch (CompilationException e) {
+                e.printStackTrace();
                 error(422, response, e);
             } catch (BadRequestException e) {
                 error(HttpURLConnection.HTTP_BAD_REQUEST, response, e);
@@ -135,33 +149,50 @@ public class SparkServer {
             }
             return 0;
         });
-        get("/extension", (request, response) -> {
+
+        get("/extension", (request, response) ->
+
+        {
             try {
                 //request.queryParams("app")
                 //app is meant for future releases
                 //right now there is just libre so we can ignore this param
                 Extension extension = templateFormatter.getExtension(request.queryParams("os"));
                 response.raw().setContentType(extension.getContentType());
-                response.raw().setHeader("Content-Disposition", "attachment; filename=\"" + extension.getFileName()+"\"");
+                response.raw().setHeader("Content-Disposition", "attachment; filename=\"" + extension.getFileName() + "\"");
                 streamAndClose(extension.getInputStream(), response.raw().getOutputStream());
             } catch (Exception e) {
                 notFound(response);
             }
             return 0;
         });
-        post("/vars", (request, response) -> {
+
+        post("/vars", (request, response) ->
+        {
             try {
+                Template template;
+                if (request.contentType().startsWith("application/x-www-form-urlencoded")) {
+                    InputStream is = request.raw().getInputStream();
+                    template = Template.fromODT(is);
+                    is.close();
+                } else if (request.contentType().startsWith("multipart/form-data")) {
+                    request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+                    template = Template.fromFormData(request.raw().getParts(), request.queryParams("format"));
+                } else {
+                    template = Template.fromZip(request.raw().getInputStream(), request.queryParams("format"));
+                }
+
                 response.type(JSON_CONTENT_TYPE);
                 OutputStream os = response.raw().getOutputStream();
-                InputStream is = request.raw().getInputStream();
-                os.write(Json.toJson(templateCompiler.vars(is, request.queryParams("prefix"))).getBytes(defaultCharset));
+                Set<String> result = templateCompiler.vars(template, request.queryParams("prefix"));
+                os.write(Json.toJson(result).getBytes(defaultCharset));
                 os.flush();
                 os.close();
-                is.close();
-            } catch(org.eclipse.jetty.io.EofException | MultipartStream.MalformedStreamException eof){
-                try{
+            } catch (org.eclipse.jetty.io.EofException | MultipartStream.MalformedStreamException eof) {
+                try {
                     response.raw().getOutputStream().close();
-                }catch (Exception idc){}
+                } catch (Exception idc) {
+                }
             } catch (CompilationException e) {
                 error(422, response, e);
             } catch (BadRequestException e) {
@@ -172,6 +203,7 @@ public class SparkServer {
                 error(HttpURLConnection.HTTP_UNAVAILABLE, response, e);
             } catch (Exception e) {
                 error(HttpURLConnection.HTTP_INTERNAL_ERROR, response, e);
+                e.printStackTrace();
             }
             return 0;
         });
@@ -179,11 +211,11 @@ public class SparkServer {
         log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<]]][ Document Service started ][[[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     }
 
-    private void api(Response response){
-        try{
+    private void api(Response response) {
+        try {
             response.type("text/html; charset=UTF-8");
             streamAndClose(SparkServer.class.getResourceAsStream("/api.html"), response.raw().getOutputStream());
-        }catch (Exception e){
+        } catch (Exception e) {
             notFound(response);
         }
     }
@@ -209,31 +241,34 @@ public class SparkServer {
                 return null;
             }
             //compile
-            FileResult result = templateCompiler.compile(new FileInputStream(zip), "pdf", false);
+
+            Template template = Template.fromZip(new FileInputStream(zip), "pdf");
+            template.setFormat("pdf");
+            FileResult result = templateCompiler.compile(template, false);
             Files.move(result.target.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
             return new FileInputStream(f);
         }
     }
 
-    private void removeTheDiskCacheOfDocs(){
+    private void removeTheDiskCacheOfDocs() {
         //remove the disk cache to load it again from the jar
         new File(config.getTmpFolder(), "how.it.works.odt").delete();
-        try{
+        try {
             //remove the disk cache to load it again from the jar
             FileUtils.deleteDirectory(new File(config.getTmpFolder(), "example"));
-        }catch (Exception e){
+        } catch (Exception e) {
             //not important
         }
     }
 
     private void notFound(Response response) {
-        try{
+        try {
             response.status(HttpURLConnection.HTTP_NOT_FOUND);
             OutputStream os = response.raw().getOutputStream();
             //close the response stream to prevent spark from fooling around with the return value
             os.flush();
             os.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             //not important
             System.err.println("couldn't send the not found response");
         }
@@ -247,18 +282,18 @@ public class SparkServer {
     }
 
     private void error(int status, Response response, Exception e) {
-        try{
+        try {
             response.status(status);
             response.type(TEXT_CONTENT_TYPE);
             OutputStream os = response.raw().getOutputStream();
             String msg = e.getMessage();
-            if(msg == null){
+            if (msg == null) {
                 msg = "null";
             }
             os.write(msg.getBytes(defaultCharset));
             os.flush();
             os.close();
-        }catch (Exception ee){
+        } catch (Exception ee) {
             System.err.println("couldn't send the error response");
         }
     }

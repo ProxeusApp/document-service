@@ -80,8 +80,6 @@ public class ODTRenderer {
 
 
     private List<File> extractAndCompile(Config conf) throws Exception {
-        log.debug(String.format("DEBUG TEMPLATE %s\n", template));
-
         ExecutorService compileExecutor = Executors.newFixedThreadPool(2);
         List<File> extractedFiles = new ArrayList<>(2);
         Queue<Exception> compileExceptions = new ConcurrentLinkedQueue<>();
@@ -109,7 +107,6 @@ public class ODTRenderer {
 
                         File toExtract = new File(template.getTmpDir(), entry.getName());
                         toExtract.getParentFile().mkdirs();
-                        log.debug(String.format("DEBUG TO EXTRACT %s\n", toExtract));
                         extractedFiles.add(toExtract);
 
                         compileExecutor.submit(() -> {
@@ -141,10 +138,8 @@ public class ODTRenderer {
 
     void assembleZipFile(List<File> extractedFiles) throws Exception {
         Set<String> collectedEmbeddedObjects = new HashSet<>();
-        log.debug(String.format("DEBUG FINISH FILESYSTEM PATH %s\n", template.getSrc().toPath()));
         try (FileSystem fs = FileSystems.newFileSystem(template.getSrc().toPath(), null)) {
             for (File newPath : extractedFiles) {
-                log.debug(String.format("DEBUG FINISH EXTRACTED FILE %s\n", newPath));
                 String zipPath = getZipPath(template.getTmpDir(), newPath.getAbsolutePath());
                 try {
                     if (zipPath.startsWith(File.separator + "Object")) {
@@ -204,7 +199,6 @@ public class ODTRenderer {
 
     private void processManifest(Queue<AssetFile> assetFiles) throws Exception {
         try {
-            log.debug(String.format("DEBUG PROCESS MANIFEST %s\n", assetFiles));
             if (manifestContent == null) {
                 return;
             }
@@ -215,12 +209,10 @@ public class ODTRenderer {
             manifest.process(new ByteArrayInputStream(manifestContent.toByteArray()));
 
 
-            log.debug(String.format("DEBUG PROCESS MANIFEST DEST %s\n", manifestDest));
             FileOutputStream output = new FileOutputStream(manifestDest);
 
             manifest.render(output, Collections.emptyMap());
         } catch (Exception e) {
-            log.debug("DEBUG PROCESS MANIFEST EXCEPTION", e);
             throw e;
         }
     }
@@ -230,7 +222,7 @@ public class ODTRenderer {
         try {
             Files.move(manifestDest.toPath(), fs.getPath(getZipPath(template.getTmpDir(), manifestDest.getAbsolutePath())), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
-            log.debug("DEBUG INSERT MANIFEST EXCEPTION", e);
+            log.error("Could not insert manifest", e);
         }
     }
 

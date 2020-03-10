@@ -44,30 +44,35 @@ sudo docker image build -t document-service -f ./Dockerfile .
 ```
 
 ## Commandline client
-```
-#compile usage:
-./dsclient -t tmpl.odt -o my.pdf
-./dsclient -u http://123.12.12.111:8888 -f pdf -t my/tmpl.odt -d data.json -a myImage.png -a my/images/dir -o output.pdf 
-#print vars usage:
-./dsclient -m vars -t my/tmpl.odt -p input.
+You can simply interact with the server using `curl`.
 
-  -a value
-        asset files, provide directory or file like -a file1 -a file2 -a dir1
-  -d string
-        JSON file path
-  -e    embed compilation error into the returned document
-  -f string
-        result format, possible values: pdf, odt, docx or doc (default "pdf")
-  -m string
-        compile or vars (default "compile")
-  -o string
-        output path, extension will be attached if not provided (default "result")
-  -p string
-        var prefix to filter vars
-  -t string
-        ODT template path
-  -u string
-        Document-Service URL (default "http://localhost:2115")
+
+```
+# To compile a template to pdf (pdf is the default)
+
+curl --form template=@template.odt --form data=@data.json http://<server>/compile > result.pdf
+
+# To compile a template to odt (available format are pdf, odt, docx or doc) 
+
+curl --form template=@template.odt --form data=@data.json http://<server>/compile?format=odt > result.pdf
+
+# To embed the template rendering error in the pdf result (add the `error` query parameter 
+
+curl --form template=@template.odt --form data=@data.json http://<server>/compile?error > result.pdf
+
+# To get the variables used in a template
+
+curl --data-binary @template.odt http://<server>/vars
+curl --form template=@template.odt  http:/<server>/vars 
+
+# To get the subset of the variable starting with a given prefix 
+
+curl --data-binary @template.odt http://<server>/vars?prefix=foo
+curl --form template=@template.odt  http:/<server>/vars?prefix=bar 
+
+# To add asset files
+ 
+curl --form template=@template.odt --form data=@data.json --form asset1=@asset1.png http://<server>/compile > result.pdf
 
 ```
 

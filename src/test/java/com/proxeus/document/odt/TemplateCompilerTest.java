@@ -3,6 +3,7 @@ package com.proxeus.document.odt;
 import com.proxeus.Application;
 import com.proxeus.Config;
 import com.proxeus.document.FileResult;
+import com.proxeus.document.Template;
 import com.proxeus.document.TemplateCompiler;
 import com.proxeus.document.TemplateFormatter;
 import com.proxeus.office.libre.exe.Extension;
@@ -37,7 +38,7 @@ public class TemplateCompilerTest {
 
         InputStream inputStream = new ByteArrayInputStream(createZip());
 
-        FileResult result = templateCompiler.compile(inputStream, "pdf", false);
+        FileResult result = templateCompiler.compile(Template.fromZip(inputStream, "pdf"), false);
         System.out.printf("DEBUG %s\n", result);
 
         OutputStream content= new ByteArrayOutputStream();
@@ -50,10 +51,6 @@ public class TemplateCompilerTest {
         });
         InputStream expected = getClass().getClassLoader().getResourceAsStream("content_noif_fixed_cleaned.xml");
         Assert.assertEquals(convert(expected, Charset.defaultCharset()), content.toString());
-
-
-
-
     }
 
 

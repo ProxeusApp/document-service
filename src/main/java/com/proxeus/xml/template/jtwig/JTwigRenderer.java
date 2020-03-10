@@ -16,7 +16,6 @@ public class JTwigRenderer implements TemplateRenderer {
 
     @Override
     public void render(InputStream input, OutputStream output, Map<String, Object> data, Charset charset) throws Exception {
-        log.debug(data);
         compiler.Compile(input, data, output, charset);
     }
 }
