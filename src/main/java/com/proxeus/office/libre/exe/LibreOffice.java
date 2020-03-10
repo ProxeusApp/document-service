@@ -85,7 +85,6 @@ public class LibreOffice implements Closeable {
     private void exportDocument(File src, File dst, LibreOfficeFormat outputFormat) throws java.lang.Exception {
         try {
             String sUrl = src.toURI().toString();
-            System.out.println("DEBUG SURL: " + sUrl);
             XComponent oDocToStore;
             try {
                 oDocToStore = con.getCompLoader().loadComponentFromURL(sUrl, "_blank", 0, createProps(

@@ -82,19 +82,15 @@ public class ODTCompiler implements DocumentCompiler {
     public Set<String> Vars(Template template, String prefix) throws Exception {
         TemplateVarParser varParser = templateVarParserFactory.newInstance();
         findVars(template, varParser);
-        log.debug(String.format("DEBUG VAR PARSER BEFORE RETURN %s\n", varParser.getVars()));
         Set<String> result = varParser.getVars().stream().filter(Objects::nonNull).filter(var -> var.startsWith(prefix != null ? prefix : "")).collect(Collectors.toSet());
-        log.debug(String.format("DEBUG VAR RESULT %s\n", result));
         return result;
     }
 
     private void findVars(Template template, TemplateVarParser varParser) throws Exception {
         ImageVarProcessor imageVarProcessor = new ImageVarProcessor(varParser);
         TemplateVarProcessor templateVarProcessor = new TemplateVarProcessor(varParser);
-        log.debug(String.format("DEBUG FIND VARS TEMPLATE %s\n", template));
         Zip.extract(template.getSrc(), (entry, zf) -> {
             if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
-                log.debug(String.format("DEBUG ODT PROCESS ENTRY %s\n", entry));
                 TemplateHandler xml = templateHandlerFactory.newInstance(
                         imageVarProcessor,
                         templateVarProcessor

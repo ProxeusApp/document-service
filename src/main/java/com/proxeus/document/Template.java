@@ -132,6 +132,7 @@ public class Template {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private static void processEntry(Template template, String name, InputStream inputStream, boolean isDirectory) throws IOException {
         if (name.toLowerCase().endsWith(".odt")) {
             //found an odt template inside the zip

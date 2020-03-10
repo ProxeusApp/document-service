@@ -39,7 +39,6 @@ public class TemplateCompilerTest {
         InputStream inputStream = new ByteArrayInputStream(createZip());
 
         FileResult result = templateCompiler.compile(Template.fromZip(inputStream, "pdf"), false);
-        System.out.printf("DEBUG %s\n", result);
 
         OutputStream content= new ByteArrayOutputStream();
         Zip.extract(result.target, new EntryFileFilter() {

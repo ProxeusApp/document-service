@@ -25,7 +25,6 @@ public class DefaultTemplateHandler implements TemplateHandler {
     private TemplateRenderer renderer;
 
     public DefaultTemplateHandler(XMLEventProcessor processor, TemplateRenderer renderer) {
-        log.trace("DEBUG NEW TEMPLATE HANDLER");
         this.events = new TemplateXMLEventWriter();
         this.processor = processor;
         this.renderer = renderer;
@@ -46,7 +45,6 @@ public class DefaultTemplateHandler implements TemplateHandler {
 
     @Override
     public void render(OutputStream output, Map<String, Object> data) throws Exception {
-        log.trace(String.format("DEBUG TEMPLATE HANDLER TO OUTPUT STREAM %s\n", events.toString()));
         ByteArrayOutputStream xmlOutput = new ByteArrayOutputStream();
 
         XMLEventWriter writer = XMLOutputFactory.newInstance().createXMLEventWriter(xmlOutput);
