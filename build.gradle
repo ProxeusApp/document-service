@@ -1,6 +1,8 @@
+/*
 plugins {
-    id "com.github.hierynomus.license" version "0.15.0"
+    id "com.github.hierynomus.license" version "0.15.0j"
 }
+*/
 
 apply plugin: 'groovy'
 apply plugin: 'java'

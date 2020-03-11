@@ -21,26 +21,19 @@ Currently supported template format is `ODT`. Other formats like `DOCX` are not 
 + gradle
 + docker
 
-#### Building for development
+#### Building
 ```
- gradle buildJar
- sudo docker image build -f Dockerfile.dev -t document-service .
- 
- #run 2115 for the document-service and 58082 for the UI in case it is needed
- sudo docker run -p 2115:2115 -p 58082:58082 document-service
- 
- #single cmd
- gradle buildJar && sudo docker image build -t document-service -f ./Dockerfile.dev . && sudo docker run -p 2115:2115 -p 58082:58082 document-service
+sudo docker build -t document-service .
+```
 
- #for removing all dockers you can run
- sudo ./rmalldockers.sh
+#### Local run for development
 ```
-To run a development environment use this repository: https://git.proxeus.com/docker/proxeus-platform
+ sudo docker run -p 2115:2115 document-service
+```
 
-#### Building for production
+#### Use the official docker hub image from Proxeus
 ```
-gradle buildJar
-sudo docker image build -t document-service -f ./Dockerfile .
+sudo docker run -p 2115:2115 proxeus/document-service:latest
 ```
 
 ## Commandline client
@@ -75,11 +68,6 @@ curl --form template=@template.odt  http:/<server>/vars?prefix=bar
 curl --form template=@template.odt --form data=@data.json --form asset1=@asset1.png http://<server>/compile > result.pdf
 
 ```
-
-## Playground UI
-If you want to get familiar with the Document-Service, you should start the docker with `-p 58082:58082` to expose the UI.
-The UI provides access to the API, documentation and examples. You can play around with all available methods.
-It is recommended to disable the UI under production.
 
 ## API
 The API documentation can be accessed by `<host>:<port>/api` or over the playground UI on the top right corner.
