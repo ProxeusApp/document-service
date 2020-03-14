@@ -139,6 +139,7 @@ public class SparkServer {
                 e.printStackTrace();
                 error(422, response, e);
             } catch (BadRequestException e) {
+                e.printStackTrace();
                 error(HttpURLConnection.HTTP_BAD_REQUEST, response, e);
             } catch (NotImplementedException e) {
                 error(HttpURLConnection.HTTP_NOT_IMPLEMENTED, response, e);

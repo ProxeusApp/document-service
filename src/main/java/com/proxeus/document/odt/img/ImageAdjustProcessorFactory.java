@@ -4,6 +4,7 @@ import com.proxeus.document.AssetFile;
 import com.proxeus.util.Eval;
 import com.proxeus.util.zip.Zip;
 import com.proxeus.xml.processor.XMLEventProcessor;
+import org.apache.log4j.Logger;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
@@ -24,16 +25,16 @@ import java.util.concurrent.TimeUnit;
 public class ImageAdjustProcessorFactory {
 
     private final static String DRAW = "urn:oasis:names:tc:opendocument:xmlns:drawing:1.0";
-    private final static QName DRAW_FRAME = new QName(DRAW, "frame");
-    private final static QName DRAW_IMAGE = new QName(DRAW, "image");
-    private final static QName DRAW_NAME = new QName(DRAW, "name");
+    private final static QName DRAW_FRAME = new QName(DRAW, "frame", "draw");
+    private final static QName DRAW_IMAGE = new QName(DRAW, "image", "draw");
+    private final static QName DRAW_NAME = new QName(DRAW, "name", "draw");
     private final static String XLINK = "http://www.w3.org/1999/xlink";
-    private final static QName XLINK_HREF = new QName(XLINK, "href");
+    private final static QName XLINK_HREF = new QName(XLINK, "href", "xlink");
     private final static String SVG = "urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0";
-    private final static QName SVG_WIDTH = new QName(SVG, "width");
-    private final static QName SVG_HEIGHT = new QName(SVG, "height");
+    private final static QName SVG_WIDTH = new QName(SVG, "width", "svg");
+    private final static QName SVG_HEIGHT = new QName(SVG, "height", "svg");
     private final static String LOEXT = "urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0";
-    private final static QName LOEXT_MIMETYPE = new QName(LOEXT, "mime-type");
+    private final static QName LOEXT_MIMETYPE = new QName(LOEXT, "mime-type", "loext");
 
     private Map<String, Object> data;
     private ExecutorService imgExecutor = Executors.newFixedThreadPool(4);
@@ -52,6 +53,8 @@ public class ImageAdjustProcessorFactory {
     }
 
     public class ImageAdjustProcessor implements XMLEventProcessor {
+        private Logger log = Logger.getLogger(this.getClass());
+
         private String entryName;
 
         ImageAdjustProcessor(String entryName) {
@@ -94,16 +97,16 @@ public class ImageAdjustProcessorFactory {
                         continue;
                     case XMLEvent.END_ELEMENT:
                         EndElement end = event.asEndElement();
+                        if (end.getName().equals(DRAW_IMAGE)) {
+                            frameEvents.add(end);
+                            continue;
+                        }
                         if (end.getName().equals(DRAW_FRAME)) {
                             frameEvents.add(end);
                             for (XMLEvent e : assetFileReplacement(frameEvents, xmlDirPath)) {
                                 writer.add(e);
                             }
                             frameEvents.clear();
-                            continue;
-                        }
-                        if (end.getName().equals(DRAW_IMAGE)) {
-                            frameEvents.add(end);
                             continue;
                         }
                         writer.add(end);

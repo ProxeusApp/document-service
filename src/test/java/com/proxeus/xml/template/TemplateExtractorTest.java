@@ -42,7 +42,7 @@ public class TemplateExtractorTest {
     public void test() throws Exception{
         XMLEventProcessor extractor = new TemplateExtractor(new JTwigParser());
 
-        InputStream input = JTwigParser.class.getClassLoader().getResourceAsStream(test + ".xml");
+        InputStream input = getClass().getClassLoader().getResourceAsStream(test + ".xml");
         ByteArrayOutputStream output = new ByteArrayOutputStream();
 
         // First, create a new XMLInputFactory

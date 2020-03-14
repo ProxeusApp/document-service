@@ -1,6 +1,9 @@
-package com.proxeus.xml.template;
+package com.proxeus.document.odt;
 
+import com.proxeus.document.AssetFile;
 import com.proxeus.xml.processor.XMLEventProcessor;
+import com.proxeus.xml.template.DefaultTemplateHandler;
+import com.proxeus.xml.template.NoOpTemplateRenderer;
 import com.proxeus.xml.template.jtwig.JTwigParser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,41 +13,45 @@ import org.junit.runners.Parameterized;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 @RunWith(Parameterized.class)
-public class DefaultTemplateHandlerTest {
-    private String test;
+public class ODTManifestProcessorTest {
+ private String test;
 
-    public DefaultTemplateHandlerTest(String test) {
+    public ODTManifestProcessorTest (String test) {
         this.test = test;
     }
 
     @Parameterized.Parameters(name = "{index}: {0}")
     public static Iterable<? extends Object> tests() {
         return Arrays.asList(
-                "xml_tags_in_island",
-                "template_with_code2",
-                "if_statement",
-                "input1",
-                "xml_element_spanning_template_blocks",
-                "content");
+                "manifest"
+        );
     }
 
     @Test
     public void test() {
-
         try {
-            XMLEventProcessor extractor = new TemplateExtractor(new JTwigParser());
+
+            Queue<AssetFile> assetFiles = new LinkedList<>();
+            AssetFile assetFile = new AssetFile();
+            assetFile.orgZipPath = "Pictures/10000000000000850000006377498356141931B6.jpg";
+            assetFile.newZipPath = "foobar.jpg";
+
+            assetFiles.offer(assetFile);
+            XMLEventProcessor processor = new ODTManifestProcessor(assetFiles);
 
             InputStream input = getClass().getClassLoader().getResourceAsStream(test + ".xml");
-            DefaultTemplateHandler handler = new DefaultTemplateHandler(extractor, new NoOpTemplateRenderer());
+            DefaultTemplateHandler handler = new DefaultTemplateHandler(processor, new NoOpTemplateRenderer());
             handler.process(input);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 
             handler.render(output, null);
 
-            InputStream expected = JTwigParser.class.getClassLoader().getResourceAsStream(test + "_fixed.xml");
+            InputStream expected = JTwigParser.class.getClassLoader().getResourceAsStream(test + "_processed.xml");
             Assert.assertEquals(convert(expected, Charset.defaultCharset()), output.toString());
         } catch (Exception e) {
             e.printStackTrace();

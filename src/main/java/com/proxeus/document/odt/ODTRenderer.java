@@ -100,7 +100,6 @@ public class ODTRenderer {
                         TemplateHandler xml = templateHandlerFactory.newInstance(
                                 new CleanEmptyElementProcessor(EMPTY_XML_ELEMENT_TO_REMOVE),
                                 imageAdjuster.newInstance(entry.getName())
-
                         );
                         xml.process(zf.getInputStream(entry));
 

@@ -44,6 +44,7 @@ public class ImageSettings {
         this.xmlDirPath = xmlDirPath;
         this.refFileName = refFileName;
         this.varOnly = varWithOptions;
+        this.assetFilesToInclude = assetFilesToInclude;
         Matcher alignMatcher = imageOptionsRegex.matcher(varWithOptions);
         if (alignMatcher.find()) {
             try {

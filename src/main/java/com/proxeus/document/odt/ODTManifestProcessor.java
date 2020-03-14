@@ -13,21 +13,24 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Queue;
 
 public class ODTManifestProcessor implements XMLEventProcessor {
     private Logger log = Logger.getLogger(this.getClass());
 
     static private String MANIFEST_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:manifest:1.0";
-    static private QName MANIFEST = new QName(MANIFEST_NAMESPACE, "manifext");
-    static private QName FILE_ENTRY = new QName(MANIFEST_NAMESPACE, "file-entry");
-    static private QName FULL_PATH = new QName(MANIFEST_NAMESPACE, "full-path");
-    static private QName MEDIA_TYPE = new QName(MANIFEST_NAMESPACE, "media-type");
+    static private String MANIFEST_PREFIX = "manifest";
+    static private QName MANIFEST = new QName(MANIFEST_NAMESPACE, "manifest", MANIFEST_PREFIX);
+    static private QName FILE_ENTRY = new QName(MANIFEST_NAMESPACE, "file-entry", MANIFEST_PREFIX);
+    static private QName FULL_PATH = new QName(MANIFEST_NAMESPACE, "full-path", MANIFEST_PREFIX);
+    static private QName MEDIA_TYPE = new QName(MANIFEST_NAMESPACE, "media-type", MANIFEST_PREFIX);
     static private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
 
     private Queue<AssetFile> assetFiles;
+    private boolean deleteFileEntry = false;
 
     ODTManifestProcessor(Queue<AssetFile> assetFiles) {
         this.assetFiles = assetFiles;
@@ -36,11 +39,13 @@ public class ODTManifestProcessor implements XMLEventProcessor {
     @Override
     public void process(XMLEventReader reader, XMLEventWriter writer) throws XMLStreamException, IllegalStateException {
         try {
-            Set<File> done = new HashSet<>();
             while (reader.hasNext()) {
                 XMLEvent event = reader.nextEvent();
-
                 switch (event.getEventType()) {
+                    case XMLEvent.START_DOCUMENT:
+                        writer.add(event);
+                        writer.add(eventFactory.createCharacters(System.lineSeparator()));
+                        break;
                     case XMLEvent.START_ELEMENT:
                         StartElement s = event.asStartElement();
                         process(s, writer);
@@ -50,12 +55,14 @@ public class ODTManifestProcessor implements XMLEventProcessor {
                         process(e, writer);
                         break;
                     default:
-                        writer.add(event);
+                        if(!deleteFileEntry){
+                            writer.add(event);
+                        }
                 }
             }
         } catch (Exception e) {
-            //not important as libre will handle it with the repair feature
-            log.info("couldn't modify the manifest");
+            //not important as LibreOffice will handle it with the repair feature
+            log.info("couldn't modify the manifest", e);
         }
     }
 
@@ -75,18 +82,25 @@ public class ODTManifestProcessor implements XMLEventProcessor {
 
         boolean match = false;
         for (AssetFile file : assetFiles) {
+            if (file.orgZipPath == null || file.orgZipPath == "") {
+                continue;
+            }
             if (fullPath.contains(file.orgZipPath)) {
-                match = true;
-                break;
+                // We filter out file entries with matching path.
+                deleteFileEntry = true;
+                return;
             }
         }
 
-        if (!match) {
-            writer.add(s);
-        }
+        writer.add(s);
     }
 
     private void process(EndElement e, XMLEventWriter writer) throws XMLStreamException {
+        if (e.getName().equals(FILE_ENTRY) && deleteFileEntry) {
+            deleteFileEntry = false;
+            return;
+        }
+
         if (!e.getName().equals(MANIFEST)) {
             writer.add(e);
             return;
@@ -94,7 +108,7 @@ public class ODTManifestProcessor implements XMLEventProcessor {
 
         for (AssetFile file : assetFiles) {
             List<Attribute> attributes = Arrays.asList(
-                    eventFactory.createAttribute(FULL_PATH, "/" + file.newZipPath.substring(1)),
+                    eventFactory.createAttribute(FULL_PATH, file.newZipPath),
                     eventFactory.createAttribute(MEDIA_TYPE, "image/png")
             );
 
@@ -102,6 +116,7 @@ public class ODTManifestProcessor implements XMLEventProcessor {
             writer.add(eventFactory.createEndElement(FILE_ENTRY, null));
         }
 
+        writer.add(eventFactory.createCharacters(System.lineSeparator()));
         writer.add(e);
     }
 }

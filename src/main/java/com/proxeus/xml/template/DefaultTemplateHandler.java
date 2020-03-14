@@ -56,7 +56,11 @@ public class DefaultTemplateHandler implements TemplateHandler {
                 StartDocument sd = (StartDocument) e;
                 charset = Charset.forName(sd.getCharacterEncodingScheme());
             }
-            writer.add(e);
+            try{
+                writer.add(e);
+            } catch(Exception ex){
+                throw ex;
+            }
         }
 
         if (data == null){
