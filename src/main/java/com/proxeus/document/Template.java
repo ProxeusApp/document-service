@@ -119,7 +119,7 @@ public class Template {
      * ---- asset3
      *
      * @param template    The template object to initialize
-     * @param inputStream ZIP package input stream
+     * @param zipStream ZIP package input stream
      * @throws Exception
      */
     private static void extractZIP(Template template, InputStream zipStream) throws Exception {
