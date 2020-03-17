@@ -84,40 +84,38 @@ public class ODTRenderer {
         List<File> extractedFiles = new ArrayList<>(2);
         Queue<Exception> compileExceptions = new ConcurrentLinkedQueue<>();
         try {
-            Zip.extract(template.getSrc(), new EntryFileFilter() {
-                public void next(ZipEntry entry, ZipFile zf) throws Exception {
-                    if (entry.getName().startsWith("Fonts/")) {
-                        extractedFonts = true;
-                        File toExtract = new File(template.getTmpDir(), entry.getName());
-                        toExtract.getParentFile().mkdirs();
-                        FileUtils.copyToFile(zf.getInputStream(entry), toExtract);
-                    } else if (entry.getName().equals("META-INF/manifest.xml")) {
-                        manifestDest = new File(template.getTmpDir(), entry.getName());
-                        manifestDest.getParentFile().mkdirs();
-                        manifestContent = new ByteArrayOutputStream();
-                        IOUtils.copy(zf.getInputStream(entry), manifestContent);
-                    } else if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
-                        TemplateHandler xml = templateHandlerFactory.newInstance(
-                                new CleanEmptyElementProcessor(EMPTY_XML_ELEMENT_TO_REMOVE),
-                                imageAdjuster.newInstance(entry.getName())
-                        );
-                        xml.process(zf.getInputStream(entry));
+            Zip.extract(template.getSrc(), (entry, zf) -> {
+                if (entry.getName().startsWith("Fonts/")) {
+                    extractedFonts = true;
+                    File toExtract = new File(template.getTmpDir(), entry.getName());
+                    toExtract.getParentFile().mkdirs();
+                    FileUtils.copyToFile(zf.getInputStream(entry), toExtract);
+                } else if (entry.getName().equals("META-INF/manifest.xml")) {
+                    manifestDest = new File(template.getTmpDir(), entry.getName());
+                    manifestDest.getParentFile().mkdirs();
+                    manifestContent = new ByteArrayOutputStream();
+                    IOUtils.copy(zf.getInputStream(entry), manifestContent);
+                } else if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
+                    TemplateHandler xml = templateHandlerFactory.newInstance(
+                            new CleanEmptyElementProcessor(EMPTY_XML_ELEMENT_TO_REMOVE),
+                            imageAdjuster.newInstance(entry.getName())
+                    );
+                    xml.process(zf.getInputStream(entry));
 
 
-                        File toExtract = new File(template.getTmpDir(), entry.getName());
-                        toExtract.getParentFile().mkdirs();
-                        extractedFiles.add(toExtract);
+                    File toExtract = new File(template.getTmpDir(), entry.getName());
+                    toExtract.getParentFile().mkdirs();
+                    extractedFiles.add(toExtract);
 
-                        compileExecutor.submit(() -> {
-                            try {
-                                FileOutputStream output = new FileOutputStream(toExtract);
-                                xml.render(output, template.getDataCopy());
-                                output.flush();
-                            } catch (Exception e) {
-                                compileExceptions.offer(e);
-                            }
-                        });
-                    }
+                    compileExecutor.submit(() -> {
+                        try {
+                            FileOutputStream output = new FileOutputStream(toExtract);
+                            xml.render(output, template.getDataCopy());
+                            output.flush();
+                        } catch (Exception e) {
+                            compileExceptions.offer(e);
+                        }
+                    });
                 }
             });
 
@@ -255,7 +253,7 @@ public class ODTRenderer {
             Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 ZipEntry entry = entries.nextElement();
-                if (entry.getName().equalsIgnoreCase(CONTENT_XML)) {
+                if (CONTENT_XML.equalsIgnoreCase(entry.getName())) {
                     contentXml = IOUtils.toString(zipFile.getInputStream(entry), UTF_8);
                     break;
                 }

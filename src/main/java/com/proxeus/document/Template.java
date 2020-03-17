@@ -66,15 +66,12 @@ public class Template {
     }
 
     public static Template fromFormData(Collection<Part> parts, String format) throws Exception {
-        Template template = new Template();
-
-        if (format == null){
+        if (format == null) {
             format = "pdf";
         }
 
-        Iterator<Part> it = parts.iterator();
-        while (it.hasNext()) {
-            Part part = it.next();
+        Template template = new Template();
+        for (Part part : parts) {
             try (InputStream inputStream = part.getInputStream()) {
                 String filename = part.getSubmittedFileName();
                 processEntry(template, filename, inputStream, false);
@@ -86,11 +83,12 @@ public class Template {
     }
 
     public static Template fromZip(InputStream zipStream, String format) throws Exception {
+        if (format == null) {
+            format = "pdf";
+        }
+
         Template template = new Template();
         try {
-            if (format == null){
-                format = "pdf";
-            }
             extractZIP(template, zipStream);
             template.setFormat(format);
             return template;
@@ -120,16 +118,12 @@ public class Template {
      * ---- asset2
      * ---- asset3
      *
-     * @param template The template object to initialize
+     * @param template    The template object to initialize
      * @param inputStream ZIP package input stream
      * @throws Exception
      */
     private static void extractZIP(Template template, InputStream zipStream) throws Exception {
-        Zip.extract(zipStream, new EntryFilter() {
-            public void next(ZipEntry zipEntry, InputStream zipInputStream) throws IOException {
-                processEntry(template, zipEntry.getName(), zipInputStream, zipEntry.isDirectory());
-            }
-        });
+        Zip.extract(zipStream, (zipEntry, zipInputStream) -> processEntry(template, zipEntry.getName(), zipInputStream, zipEntry.isDirectory()));
     }
 
     @SuppressWarnings("unchecked")

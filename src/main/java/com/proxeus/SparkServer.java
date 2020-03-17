@@ -37,6 +37,8 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static com.proxeus.Application.config;
+import static org.apache.commons.fileupload.FileUploadBase.CONTENT_DISPOSITION;
+import static org.apache.commons.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 import static spark.Spark.*;
 
 /**
@@ -82,7 +84,7 @@ public class SparkServer {
             try {
                 boolean inline = request.queryMap().hasKey("inline");
                 response.raw().setContentType(LibreOfficeFormat.PDF.getContentType());
-                response.raw().setHeader("Content-Disposition", (inline ? "inline" : "attachment") + "; filename=\"how.it.works.pdf\"");
+                response.raw().setHeader(CONTENT_DISPOSITION, (inline ? "inline" : "attachment") + "; filename=\"how.it.works.pdf\"");
                 streamAndClose(getODTAsPDFFromResources(config, "how.it.works.odt"), response.raw().getOutputStream());
             } catch (Exception e) {
                 notFound(response);
@@ -102,7 +104,7 @@ public class SparkServer {
                 }
                 boolean inline = request.queryMap().hasKey("inline");
                 response.raw().setContentType(format.getContentType());
-                response.raw().setHeader("Content-Disposition", (inline ? "inline" : "attachment") + "; filename=\"example." + format.getExt() + "\"");
+                response.raw().setHeader(CONTENT_DISPOSITION, (inline ? "inline" : "attachment") + "; filename=\"example." + format.getExt() + "\"");
                 streamAndClose(is, response.raw().getOutputStream());
             } catch (Exception e) {
                 notFound(response);
@@ -115,7 +117,7 @@ public class SparkServer {
             try {
                 StopWatch sw = StopWatch.createStarted();
                 Template template;
-                if (request.contentType().startsWith("multipart/form-data")) {
+                if (request.contentType().startsWith(MULTIPART_FORM_DATA)) {
                     request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
                     template = Template.fromFormData(request.raw().getParts(), request.queryParams("format"));
                 } else {
@@ -160,7 +162,7 @@ public class SparkServer {
                 //right now there is just libre so we can ignore this param
                 Extension extension = templateFormatter.getExtension(request.queryParams("os"));
                 response.raw().setContentType(extension.getContentType());
-                response.raw().setHeader("Content-Disposition", "attachment; filename=\"" + extension.getFileName() + "\"");
+                response.raw().setHeader(CONTENT_DISPOSITION, "attachment; filename=\"" + extension.getFileName() + "\"");
                 streamAndClose(extension.getInputStream(), response.raw().getOutputStream());
             } catch (Exception e) {
                 notFound(response);

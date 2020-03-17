@@ -1,5 +1,6 @@
 package com.proxeus.document.odt;
 
+import com.google.common.base.Strings;
 import com.proxeus.document.AssetFile;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import org.apache.log4j.Logger;
@@ -67,7 +68,7 @@ public class ODTManifestProcessor implements XMLEventProcessor {
     }
 
     private void process(StartElement s, XMLEventWriter writer) throws XMLStreamException {
-        if (!s.getName().equals(FILE_ENTRY)) {
+        if (!FILE_ENTRY.equals(s.getName())) {
             writer.add(s);
             return;
         }
@@ -80,9 +81,8 @@ public class ODTManifestProcessor implements XMLEventProcessor {
 
         String fullPath = a.getValue();
 
-        boolean match = false;
         for (AssetFile file : assetFiles) {
-            if (file.orgZipPath == null || file.orgZipPath == "") {
+            if (Strings.isNullOrEmpty(file.orgZipPath)) {
                 continue;
             }
             if (fullPath.contains(file.orgZipPath)) {
@@ -96,12 +96,12 @@ public class ODTManifestProcessor implements XMLEventProcessor {
     }
 
     private void process(EndElement e, XMLEventWriter writer) throws XMLStreamException {
-        if (e.getName().equals(FILE_ENTRY) && deleteFileEntry) {
+        if (FILE_ENTRY.equals(e.getName()) && deleteFileEntry) {
             deleteFileEntry = false;
             return;
         }
 
-        if (!e.getName().equals(MANIFEST)) {
+        if (!MANIFEST.equals(e.getName())) {
             writer.add(e);
             return;
         }
