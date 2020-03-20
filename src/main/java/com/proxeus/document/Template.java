@@ -24,8 +24,6 @@ import static com.proxeus.document.TemplateType.ODT;
  * Template simplifies the compile interface.
  */
 public class Template {
-    private Logger log = Logger.getLogger(this.getClass());
-
     private TemplateType type;
     private File src;
     private Map<String, Object> data;

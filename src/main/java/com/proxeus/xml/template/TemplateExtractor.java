@@ -96,13 +96,9 @@ public class TemplateExtractor implements XMLEventProcessor {
             processEvent(event);
         }
 
-        resultQueue.forEach(event -> {
-            try {
-                writer.add(event.getEvent());
-            } catch (XMLStreamException e) {
-                throw new RuntimeException((e));
-            }
-        });
+        for(ExtractorXMLEvent event : resultQueue){
+            writer.add(event.getEvent());
+        }
     }
 
 

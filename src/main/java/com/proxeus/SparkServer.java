@@ -45,8 +45,6 @@ import static spark.Spark.*;
  * SparkServer defines the protocol of this services.
  */
 public class SparkServer {
-    private Logger log = Logger.getLogger(this.getClass());
-
     private TemplateFormatter templateFormatter;
     private TemplateHandlerFactory templateHandlerFactory;
     private TemplateVarParserFactory templateVarParserFactory;
