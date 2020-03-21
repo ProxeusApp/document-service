@@ -50,7 +50,7 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Tag docker image
+          name: Tag staging docker image
           command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
       - run:
           name: Publish Docker Image to Docker Hub
@@ -68,7 +68,7 @@ jobs:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
       - run:
-          name: Tag docker image
+          name: Tag latest docker image
           command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:latest
       - run:
           name: Publish Docker Image to Docker Hub
