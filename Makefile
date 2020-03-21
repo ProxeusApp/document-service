@@ -1,12 +1,12 @@
-.PHONY: all build build-docker clean clean-docker
+.PHONY: all build build-docker clean
 
 all: build build-docker
 
 build:
-	gradle buildJar
+	gradle test buildJar
+
 build-docker:
 	docker image build -t document-service .
+
 clean:
 	rm -rf .gradle build document-service.jar
-clean-docker:
-	./rmalldockers.sh
