@@ -1,5 +1,7 @@
 package com.proxeus.document;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.io.File;
 
 /**
@@ -25,6 +27,10 @@ public class FileResult {
         target = null;
         contentType = null;
         template = null;
+    }
+
+    public String toString(){
+        return ToStringBuilder.reflectionToString(this);
     }
 }
 

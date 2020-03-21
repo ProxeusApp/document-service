@@ -1,15 +1,10 @@
 package com.proxeus.util.zip;
 
 import com.proxeus.SparkServer;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -26,7 +21,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Zip extract and pack helper.
+ * Zip process and pack helper.
  */
 public class Zip {
     public static void extract(InputStream zipStream, EntryFilter ef) throws Exception {
@@ -106,7 +101,7 @@ public class Zip {
         if (zipEntry.isDirectory()) {
             if (!file.exists()) {
                 if (!file.mkdirs()) {
-                    throw new IOException("Could not extract asset(image?) from ZIP:" + file.getAbsolutePath());
+                    throw new IOException("Could not process asset(image?) from ZIP:" + file.getAbsolutePath());
                 }
             }
         } else {

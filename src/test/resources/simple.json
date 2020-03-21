@@ -1,0 +1,14 @@
+{
+    "input":{
+        "FirmaGerman":"testfirma",
+        "HeadquarterRegisteredOffice":"testoffice",
+        "HeadquarterCanton":"testcanton",
+        "HeadquarterZip":"testzip",
+        "HeadquarterCity":"testcity",
+        "HeadquarterStreet":"teststreet",
+        "HeadquarterStreetNumber":"testnumber",
+        "DateOfStatues":"testdos",
+        "PurposeDETemplate":"Other",
+        "PurposeDE":"testpurposede"
+    }
+}

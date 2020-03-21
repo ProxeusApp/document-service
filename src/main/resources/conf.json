@@ -7,7 +7,7 @@
   "max": 100,/** max workers **/
   "timeout":"30s",/** timeout duration **/
   "logConfig":{
-    "level":"INFO", /** OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL **/
+    "level":"TRACE", /** OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL **/
     "level_console":"DEBUG", /** OFF, FATAL, ERROR, WARN, INFO, DEBUG, TRACE, ALL **/
     "maxFileSize": "5MB",
     "maxBackupIndex": 5,

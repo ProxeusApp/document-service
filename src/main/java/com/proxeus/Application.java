@@ -1,19 +1,13 @@
 package com.proxeus;
 
 import com.proxeus.util.Json;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.RollingFileAppender;
+import org.apache.log4j.*;
+import spark.utils.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
-
-import spark.utils.IOUtils;
 
 /**
  * Application is the config and log init helper.

@@ -10,9 +10,10 @@ public enum LibreOfficeFormat {
     MS_DOCX("MS Word 2007 XML", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "docx"),
     MS_DOC("MS Word 97", "application/msword", "doc");
 
-    public final String filterName;
-    public final String contentType;
-    public final String ext;
+    private final String filterName;
+    private final String contentType;
+    private final String ext;
+
     LibreOfficeFormat(String fn, String ct, String ext){
         this.filterName = fn;
         this.contentType = ct;
@@ -37,5 +38,17 @@ public enum LibreOfficeFormat {
         } else {
             throw new Exception(format + " is not supported");
         }
+    }
+
+    public String getFilterName() {
+        return filterName;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getExt() {
+        return ext;
     }
 }

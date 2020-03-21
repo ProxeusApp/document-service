@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+    first line
+    <a>
+        second line
+    </a>
+    <b>
+        third line
+        {% if
+    </b>
+    <d>
+    foobar</d> <e><c> barfoo %}
+    fourth line</c>
+    fifth line {% endif </e> %}
+</doc>

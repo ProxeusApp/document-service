@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Config for XmlTemplateHandler
+ * Config for TemplateHandler
  */
 public class Config {
 
@@ -51,9 +51,6 @@ public class Config {
         for(String codeName : n){
             MatchParentExactlyCodes.add(codeName);
         }
-    }
-    public boolean NeedsToMatchParentExactly(Code code){
-        return code.codeType==CodeType.CodeBlock && MatchParentExactlyCodes.contains(code.relations.get(0).name());
     }
 
     //false means tags are not going to be fixed with an end or start tag close to the wrong tag

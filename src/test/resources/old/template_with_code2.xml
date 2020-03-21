@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <a><b>{</b><d></d></a><c>%</c> <b>set abc</b>=<c>"% } {{}}" %}</c>
+    <a><b>{</b><d></d></a><c>%</c> <b>if abc</b>==<c>"% } {{}}" %}</c>
+</root>
+

@@ -1,17 +1,15 @@
 package com.proxeus.document;
 
-import com.proxeus.compiler.jtwig.MyJTwigCompiler;
-import com.proxeus.document.docx.DOCXCompiler;
 import com.proxeus.document.odt.ODTCompiler;
 import com.proxeus.error.BadRequestException;
-import com.proxeus.office.libre.LibreOfficeAssistant;
-import com.proxeus.office.microsoft.MicrosoftOfficeAssistant;
 import com.proxeus.util.Json;
 import com.proxeus.util.zip.EntryFilter;
 import com.proxeus.util.zip.Zip;
-
+import com.proxeus.xml.template.TemplateHandlerFactory;
+import com.proxeus.xml.template.TemplateVarParserFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -25,116 +23,28 @@ import static com.proxeus.document.TemplateType.ODT;
 
 
 public class TemplateCompiler {
-    private ODTCompiler odtCompiler;
-    private DOCXCompiler docxCompiler;
-    private MyJTwigCompiler compiler;
+    private Logger log = Logger.getLogger(this.getClass());
 
-    public TemplateCompiler(String cacheFolder, LibreOfficeAssistant libreOfficeAssistant) throws Exception{
-        compiler = new MyJTwigCompiler();
-        odtCompiler = new ODTCompiler(cacheFolder, compiler, libreOfficeAssistant);
-        docxCompiler = new DOCXCompiler(cacheFolder, compiler, new MicrosoftOfficeAssistant());
+    private ODTCompiler odtCompiler;
+
+    public TemplateCompiler(String cacheFolder, TemplateFormatter templateFormatter, TemplateHandlerFactory templateHandlerFactory, TemplateVarParserFactory templateVarParserFactory) throws Exception {
+        this.odtCompiler = new ODTCompiler(cacheFolder, templateFormatter, templateHandlerFactory, templateVarParserFactory);
     }
 
-    public FileResult compile(InputStream zipStream, String format, boolean embedError) throws Exception{
-        Template template = provideTemplateFromZIP(zipStream, format);
-        template.embedError = embedError;
+    public FileResult compile(Template template, boolean embedError) throws Exception {
+        template.setEmbedError(embedError);
         return getCompiler(template).Compile(template);
     }
 
-    public Set<String> vars(InputStream odtStream, String varPrefix) throws Exception{
-        Template template = provideTemplateFromODT(odtStream);
+    public Set<String> vars(Template template, String varPrefix) throws Exception {
         return getCompiler(template).Vars(template, varPrefix);
     }
 
-    private DocumentCompilerIF getCompiler(Template template){
-        switch (template.type) {
-            case ODT:return odtCompiler;
-            case DOCX:return docxCompiler;
-
-            default: return odtCompiler;
+    private DocumentCompiler getCompiler(Template template) {
+        switch (template.getType()) {
+            case ODT:
+            default:
+                return odtCompiler;
         }
     }
-
-    private Template provideTemplateFromZIP(InputStream zipStream, String format) throws Exception {
-        try{
-            if (format == null) {
-                format = "pdf";
-            }
-            Template template = extractZIP(zipStream);
-            template.format = format;
-            return template;
-        }catch (Exception e){
-            throw new BadRequestException("Please read the specification for creating the request with the zip package. zip[tmpl.odt,data.json,assets1,asset2...]");
-        }
-    }
-
-    private Template provideTemplateFromODT(InputStream zipStream) throws Exception {
-        try{
-            Template template = new Template();
-            template.src = new File(template.tmpDir, "tmpl");
-            template.type = TemplateType.ODT;
-            FileUtils.copyToFile(zipStream, template.src);
-            return template;
-        }catch (Exception e){
-            throw new BadRequestException("Please read the specification for the vars request.");
-        }
-    }
-
-    /**
-     * Extracting the ZIP package.
-     * Structure:
-     * -zip
-     * ---- tmpl.odt | tmpl.docx //only one template supported
-     * ---- data.json //the json data the template is going to be resolved with
-     * ---- asset1 // assets that should be referenced in the json data
-     * ---- asset2
-     * ---- asset3
-     * @param zipStream ZIP package
-     * @return a Template that should be ready to be compiled
-     */
-    @SuppressWarnings("unchecked")
-    private Template extractZIP(InputStream zipStream) throws Exception {
-        Template template = new Template();
-        Zip.extract(zipStream, new EntryFilter() {
-            public void next(ZipEntry zipEntry, InputStream zipInputStream) throws Exception {
-                if (zipEntry.getName().toLowerCase().endsWith(".odt")) {
-                    //found an odt template inside the zip
-                    template.type = ODT;
-                    template.src = Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, "tmpl.odt");
-                    if (!template.src.exists() || template.src.isDirectory()) {
-                        throw new BadRequestException("couldn't extract template odt");
-                    }
-                } else if (zipEntry.getName().toLowerCase().endsWith(".docx")) {
-                    //found a docx template inside the zip
-                    template.type = DOCX;
-                    template.src = Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, "tmpl.docx");
-                    if (!template.src.exists() || template.src.isDirectory()) {
-                        throw new BadRequestException("couldn't extract template docx");
-                    }
-                } else if (zipEntry.getName().toLowerCase().endsWith(".json")) {
-                    //the json data the template is going to be resolved with
-                    int jsonSize = (int) zipEntry.getSize();
-                    byte[] jsonBuffer;
-                    if (jsonSize > 0) {
-                        jsonBuffer = new byte[jsonSize];
-                        IOUtils.read(zipInputStream, jsonBuffer);
-                    } else {
-                        jsonBuffer = IOUtils.toByteArray(zipInputStream);
-                    }
-                    template.data = Json.fromJson(jsonBuffer, Map.class);
-                } else {
-                    //other assets that should be referenced in the json data
-                    Zip.zipEntryToFile(zipEntry, zipInputStream, template.tmpDir, zipEntry.getName());
-                }
-            }
-        });
-        if (template.src == null) {
-            throw new BadRequestException("template not found inside the ZIP");
-        }
-        if (template.data == null) {
-            template.data = new HashMap();
-        }
-        return template;
-    }
-
 }

@@ -1,9 +1,11 @@
 package com.proxeus.office.libre;
 
+import com.proxeus.document.TemplateFormatter;
 import com.proxeus.error.UnavailableException;
 import com.proxeus.office.libre.exe.Extension;
 import com.proxeus.office.libre.exe.LibreOffice;
 import com.proxeus.office.libre.exe.LibreOfficePool;
+import org.apache.log4j.Logger;
 
 import java.io.Closeable;
 import java.io.File;
@@ -12,7 +14,9 @@ import java.io.InputStream;
 /**
  * LibreOfficeAssistant makes the communication between LibreOffice and the Document-Service easier and safely.
  */
-public class LibreOfficeAssistant implements Closeable {
+public class LibreOfficeAssistant implements TemplateFormatter, Closeable {
+    private Logger log = Logger.getLogger(this.getClass());
+
     private LibreOfficePool libreOfficePool;
 
     public LibreOfficeAssistant(LibreConfig libreConfig) throws Exception {
@@ -21,25 +25,12 @@ public class LibreOfficeAssistant implements Closeable {
         }
         libreOfficePool = new LibreOfficePool(libreConfig);
         final Thread mainThread = Thread.currentThread();
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            public void run() {
-            libreOfficePool.close();
-            try{
-                mainThread.join();
-            }catch (Exception e){}
-            }
-        });
-    }
-
-    /**
-     * Convert src as the provided format at dst.
-     * @param src srouce file
-     * @param dst destination file
-     * @param format pdf, odt, docx or doc
-     * @return contentType
-     */
-    public String Convert(File src, File dst, String format) throws Exception {
-        return Convert(src, dst, format, false);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        libreOfficePool.close();
+        try{
+            mainThread.join();
+        }catch (Exception e){}
+        }));
     }
 
     /**
@@ -50,14 +41,27 @@ public class LibreOfficeAssistant implements Closeable {
      * @param newFontsInstalled signal new fonts are installed, to restart the executables so the font can be used
      * @return contentType
      */
+    @Override
     public String Convert(File src, File dst, String format, boolean newFontsInstalled) throws Exception {
+        LibreOffice lo = null;
+        try{
+            lo = libreOfficePool.take(newFontsInstalled);
+        }catch(Exception e){
+            throw new UnavailableException("Please try again later.", e);
+        }finally {
+            libreOfficePool.release();
+        }
+       
+        if (lo == null){
+            throw new UnavailableException("Cannot initialize LibreOffice instance. Please try again later.");
+        }
+
         int count = 0;
         do{
             try{
-                LibreOffice lo = libreOfficePool.take(newFontsInstalled);
-                newFontsInstalled = false;
                 return lo.Convert(src, dst, format);
             }catch(ExceptionInInitializerError wiie){
+                wiie.printStackTrace();
                 ++count;
             }catch(Exception e){
                 throw new UnavailableException("Please try again later.", e);
@@ -65,7 +69,7 @@ public class LibreOfficeAssistant implements Closeable {
                 libreOfficePool.release();
             }
         }while(count < 10);
-        throw new UnavailableException("Please try again later.");
+        throw new UnavailableException("Cannot initialize LibreOffice instance. Please try again later.");
     }
 
     /**
@@ -75,14 +79,12 @@ public class LibreOfficeAssistant implements Closeable {
      */
     public Extension getExtension(String os){
         try {
-            Extension ext = new Extension();
-            ext.contentType = "application/octet-stream";
-            ext.fileName = "ProxeusTemplateAssistance_" + os + ".oxt";
-            InputStream fis = LibreOfficeAssistant.class.getResourceAsStream("/" + ext.fileName);
+            Extension ext = new Extension("ProxeusTemplateAssistance_" + os + ".oxt", "application/octet-stream");
+            InputStream fis = LibreOfficeAssistant.class.getResourceAsStream("/" + ext.getFileName());
             if (fis == null) {
                 return null;
             }
-            ext.inputStream = fis;
+            ext.setInputStream(fis);
             return ext;
         } catch (Exception e) {}
         return null;

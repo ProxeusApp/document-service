@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list-item>
+  <p style-name="P36">
+    <span style-name="Fett">
+      <span style-name="T25">{</span>
+    </span>
+    <span style-name="ProxeusFormula">%</span>
+    <span style-name="ProxeusCode">if input.PurposeDETemplate == 'Other %}' </span>
+    <span style-name="ProxeusFormula">%}</span>
+    <span style-name="Fett">
+      <span style-name="T25">{{</span>
+    </span>
+    <span style-name="ProxeusFormula">input.PurposeDE</span>
+    <span style-name="Fett">
+      <span style-name="T25">}} {</span>
+    </span>
+    <span style-name="ProxeusFormula">%</span>
+    <span style-name="ProxeusCode">else</span>
+    <span style-name="ProxeusFormula">%}</span>
+    <span style-name="Fett">
+      <span style-name="T25"> {{</span>
+    </span>
+    <span style-name="ProxeusFormula">input.PurposeDETemplate</span>
+    <span style-name="Fett">
+      <span style-name="T25">}} {</span>
+    </span>
+    <span style-name="ProxeusFormula">%</span>
+    <span style-name="ProxeusCode">endif</span>
+    <span style-name="ProxeusFormula">%}</span>
+  </p>
+</list-item>

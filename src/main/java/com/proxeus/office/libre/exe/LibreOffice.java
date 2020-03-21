@@ -13,13 +13,7 @@ import com.sun.star.document.XEmbeddedObjectSupplier;
 import com.sun.star.frame.XStorable;
 import com.sun.star.lang.DisposedException;
 import com.sun.star.lang.XComponent;
-import com.sun.star.sheet.CellFlags;
-import com.sun.star.sheet.XCalculatable;
-import com.sun.star.sheet.XCellRangesQuery;
-import com.sun.star.sheet.XSheetCellRanges;
-import com.sun.star.sheet.XSpreadsheet;
-import com.sun.star.sheet.XSpreadsheetDocument;
-import com.sun.star.sheet.XSpreadsheets;
+import com.sun.star.sheet.*;
 import com.sun.star.table.XCell;
 import com.sun.star.text.XDocumentIndex;
 import com.sun.star.text.XDocumentIndexesSupplier;
@@ -30,12 +24,7 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.util.XCloseable;
 import com.sun.star.util.XRefreshable;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -66,7 +55,7 @@ public class LibreOffice implements Closeable {
     public String Convert(File src, File dst, String format) throws java.lang.Exception {
         LibreOfficeFormat lof = LibreOfficeFormat.get(format);
         exportDocument(src, dst, lof);
-        return lof.contentType;
+        return lof.getContentType();
     }
 
     /**
@@ -79,8 +68,7 @@ public class LibreOffice implements Closeable {
             if (con != null) {
                 con.disconnect();
             }
-            //BootstrapPipeConnector c = new BootstrapPipeConnector(exeDir);
-            //c.connect();
+
             BootstrapSocketConnector c = new BootstrapSocketConnector(exeDir);
             c.connect();
             con = c;
@@ -96,10 +84,8 @@ public class LibreOffice implements Closeable {
 
     private void exportDocument(File src, File dst, LibreOfficeFormat outputFormat) throws java.lang.Exception {
         try {
-            //InputStream input = new FileInputStream(src);
-            //OOInputStream ooInputStream = new OOInputStream(input);
             String sUrl = src.toURI().toString();
-            XComponent oDocToStore = null;
+            XComponent oDocToStore;
             try {
                 oDocToStore = con.getCompLoader().loadComponentFromURL(sUrl, "_blank", 0, createProps(
                         p("Hidden", Boolean.TRUE),
@@ -111,10 +97,10 @@ public class LibreOffice implements Closeable {
                 ));
                 if (oDocToStore == null) {
                     lastReconnect = -1;//force reconnect
-                    throw new ExceptionInInitializerError("Please try again later.");
+                    throw new ExceptionInInitializerError("No doc to store. No Please try again later.");
                 }
             } catch (NullPointerException eee) {
-                throw new ExceptionInInitializerError("Please try again later.");
+                throw new ExceptionInInitializerError("Internal error.  Please try again later.");
             }
 
             try {
@@ -152,7 +138,7 @@ public class LibreOffice implements Closeable {
             }
             xStorable.storeToURL(sUrl, createProps(
                     p("Overwrite", Boolean.TRUE),
-                    p("FilterName", outputFormat.filterName),
+                    p("FilterName", outputFormat.getFilterName()),
                     p("Hidden", Boolean.TRUE)
                     //p("OutputStream", out)
             ));
