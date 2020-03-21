@@ -84,6 +84,9 @@ workflows:
       - build-docker:
           requires:
             - build-jar
+          filters:
+            branches:
+              only: master
       - approve-staging:
           type: approval
           requires:
