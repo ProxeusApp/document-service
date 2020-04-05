@@ -94,10 +94,5 @@ public class TemplateCompilerTest {
             Files.copy(src.toPath(), dst.toPath());
             return "test";
         }
-
-        @Override
-        public Extension getExtension(String os) {
-            return null;
-        }
     }
 }

@@ -72,24 +72,6 @@ public class LibreOfficeAssistant implements TemplateFormatter, Closeable {
         throw new UnavailableException("Cannot initialize LibreOffice instance. Please try again later.");
     }
 
-    /**
-     * Get the native LibreOffice Template-Assistance extension
-     * @param os linux_x86_64 | mac_x86_64 | win_x86 | win_x86_64
-     * @return the extension containing inputStream, contentType and fileName
-     */
-    public Extension getExtension(String os){
-        try {
-            Extension ext = new Extension("ProxeusTemplateAssistance_" + os + ".oxt", "application/octet-stream");
-            InputStream fis = LibreOfficeAssistant.class.getResourceAsStream("/" + ext.getFileName());
-            if (fis == null) {
-                return null;
-            }
-            ext.setInputStream(fis);
-            return ext;
-        } catch (Exception e) {}
-        return null;
-    }
-
     public void close() {
         libreOfficePool.close();
     }

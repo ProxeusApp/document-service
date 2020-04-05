@@ -151,23 +151,6 @@ public class SparkServer {
             return 0;
         });
 
-        get("/extension", (request, response) ->
-
-        {
-            try {
-                //request.queryParams("app")
-                //app is meant for future releases
-                //right now there is just libre so we can ignore this param
-                Extension extension = templateFormatter.getExtension(request.queryParams("os"));
-                response.raw().setContentType(extension.getContentType());
-                response.raw().setHeader(CONTENT_DISPOSITION, "attachment; filename=\"" + extension.getFileName() + "\"");
-                streamAndClose(extension.getInputStream(), response.raw().getOutputStream());
-            } catch (Exception e) {
-                notFound(response);
-            }
-            return 0;
-        });
-
         post("/vars", (request, response) ->
         {
             try {
