@@ -47,7 +47,10 @@ public class DefaultTemplateHandler implements TemplateHandler {
     public void render(OutputStream output, Map<String, Object> data) throws Exception {
         ByteArrayOutputStream xmlOutput = new ByteArrayOutputStream();
 
-        XMLEventWriter writer = XMLOutputFactory.newInstance().createXMLEventWriter(xmlOutput);
+        XMLOutputFactory outputXMLFactory = XMLOutputFactory.newInstance();
+        outputXMLFactory.setProperty("escapeCharacters", false);
+
+        XMLEventWriter writer = outputXMLFactory.createXMLEventWriter(xmlOutput);
         Charset charset = UTF_8;
         Iterator<XMLEvent> it = events.interator();
         while (it.hasNext()) {
@@ -59,7 +62,7 @@ public class DefaultTemplateHandler implements TemplateHandler {
             writer.add(e);
         }
 
-        if (data == null){
+        if (data == null) {
             data = Collections.emptyMap();
         }
         InputStream input = new ByteArrayInputStream(xmlOutput.toByteArray());

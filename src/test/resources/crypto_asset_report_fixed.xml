@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:db="urn:oasis:names:tc:opendocument:xmlns:database:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:smil="urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xlink="http://www.w3.org/1999/xlink" office:version="1.2">
+  <office:font-face-decls>
+    <style:font-face style:name="Liberation Serif" style:font-pitch="variable" style:font-family-generic="roman" svg:font-family="Liberation Serif" svg:panose-1="2 2 6 3 5 4 5 2 3 4"></style:font-face>
+    <style:font-face style:name="Songti SC" style:font-pitch="variable" style:font-family-generic="system" svg:font-family="Songti SC"></style:font-face>
+    <style:font-face style:name="Arial Unicode MS" style:font-pitch="variable" style:font-family-generic="system" svg:font-family="Arial Unicode MS" svg:panose-1="2 11 6 4 2 2 2 2 2 4"></style:font-face>
+    <style:font-face style:name="Times New Roman" style:font-pitch="variable" style:font-family-generic="roman" svg:font-family="Times New Roman" svg:panose-1="2 2 6 3 5 4 5 2 3 4"></style:font-face>
+    <style:font-face style:name="Liberation Sans" style:font-pitch="variable" style:font-family-generic="swiss" svg:font-family="Liberation Sans" svg:panose-1="2 11 6 4 2 2 2 2 2 4"></style:font-face>
+    <style:font-face style:name="PingFang SC" style:font-pitch="variable" style:font-family-generic="system" svg:font-family="PingFang SC"></style:font-face>
+    <style:font-face style:name="Calibri Light" style:font-pitch="variable" style:font-family-generic="swiss" svg:font-family="Calibri Light" svg:panose-1="2 15 3 2 2 2 4 3 2 4"></style:font-face>
+    <style:font-face style:name="Mangal" style:font-pitch="variable" style:font-family-generic="roman" svg:font-family="Mangal" svg:panose-1="0 0 4 0 0 0 0 0 0 0"></style:font-face>
+    <style:font-face style:name="Calibri" style:font-pitch="variable" style:font-family-generic="swiss" svg:font-family="Calibri" svg:panose-1="2 15 5 2 2 2 4 3 2 4"></style:font-face>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:name="P1" style:parent-style-name="Titel" style:family="paragraph" style:master-page-name="MP0">
+      <style:paragraph-properties fo:break-before="page"></style:paragraph-properties>
+    </style:style>
+    <style:style style:name="T2" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="P3" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="P4" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="P5" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="P6" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="TableColumn8" style:family="table-column">
+      <style:table-column-properties style:column-width="1.6083in" style:use-optimal-column-width="false"></style:table-column-properties>
+    </style:style>
+    <style:style style:name="TableColumn9" style:family="table-column">
+      <style:table-column-properties style:column-width="5.0847in" style:use-optimal-column-width="false"></style:table-column-properties>
+    </style:style>
+    <style:style style:name="Table7" style:family="table">
+      <style:table-properties style:width="6.693in" fo:margin-left="0in" table:align="left"></style:table-properties>
+    </style:style>
+    <style:style style:name="TableRow10" style:family="table-row">
+      <style:table-row-properties style:use-optimal-row-height="false"></style:table-row-properties>
+    </style:style>
+    <style:style style:name="TableCell11" style:family="table-cell">
+      <style:table-cell-properties fo:padding-left="0.075in" fo:padding-top="0in" fo:border="none" style:writing-mode="lr-tb" fo:padding-right="0.075in" fo:padding-bottom="0in"></style:table-cell-properties>
+    </style:style>
+    <style:style style:name="T12" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="TableCell13" style:family="table-cell">
+      <style:table-cell-properties fo:padding-left="0.075in" fo:padding-top="0in" fo:border="none" style:writing-mode="lr-tb" fo:padding-right="0.075in" fo:padding-bottom="0in"></style:table-cell-properties>
+    </style:style>
+    <style:style style:name="P14" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="P15" style:parent-style-name="Standard" style:family="paragraph">
+      <style:paragraph-properties fo:line-height="115%"></style:paragraph-properties>
+    </style:style>
+    <style:style style:name="T16" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T17" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T18" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T19" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties fo:color="#000000" style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="P20" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T21" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T22" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T23" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T24" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T25" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T26" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T27" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T28" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T29" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T30" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T31" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T32" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T33" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T34" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" style:font-weight-complex="bold" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T35" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T36" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T37" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T38" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T39" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T40" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T41" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T42" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T43" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T44" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T45" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="P46" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T47" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T48" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="P49" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="P50" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties fo:color="#70AD47" style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="P51" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties fo:color="#70AD47" style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="P52" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties fo:color="#70AD47" style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="P53" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T54" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T55" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="T56" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="T57" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T58" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T59" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T60" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T61" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T62" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T63" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="T64" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T65" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T66" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T67" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="T68" style:parent-style-name="Absatz-Standardschriftart" style:family="text">
+      <style:text-properties style:font-name="Calibri" style:font-weight-asian="bold" fo:font-weight="bold" style:font-weight-complex="bold"></style:text-properties>
+    </style:style>
+    <style:style style:name="P69" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="P70" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri"></style:text-properties>
+    </style:style>
+    <style:style style:name="P71" style:parent-style-name="Standard" style:family="paragraph">
+      <style:text-properties style:font-name="Calibri" fo:country="GB" fo:language="en"></style:text-properties>
+    </style:style>
+    <style:style style:name="a0" style:parent-style-name="Graphics" style:family="graphic">
+      <style:graphic-properties draw:luminance="0%" fo:border="0.01042in none" fo:background-color="transparent" draw:contrast="0%" draw:image-opacity="100%" fo:clip="rect(0.561in, 0in, 0.48071in, 0in)"></style:graphic-properties>
+    </style:style>
+    <style:style style:name="a1" style:parent-style-name="Graphics" style:family="graphic">
+      <style:graphic-properties draw:luminance="0%" fo:border="0.01042in none" fo:background-color="transparent" draw:contrast="0%" draw:image-opacity="100%" fo:clip="rect(0in, 0in, 0in, 0in)"></style:graphic-properties>
+    </style:style>
+  </office:automatic-styles>
+  <office:body>
+    <office:text text:use-soft-page-breaks="true">
+      <text:p text:style-name="P1">
+        <text:span text:style-name="T2">
+          <draw:frame draw:style-name="a0" style:rel-width="scale" style:rel-height="scale" draw:name="Picture 5" svg:x="0in" svg:width="1.6043in" svg:y="0in" text:anchor-type="as-char" svg:height="0.5654in">
+            <draw:image xlink:type="simple" xlink:show="embed" xlink:href="media/image1.png" xlink:actuate="onLoad"></draw:image>
+            <svg:title></svg:title>
+            <svg:desc></svg:desc>
+          </draw:frame>
+        </text:span>
+      </text:p>
+      <text:p text:style-name="Standard"></text:p>
+      <text:p text:style-name="Titel"></text:p>
+      <text:p text:style-name="Titel">Crypto Asset<text:s></text:s>Report</text:p>
+      <text:p text:style-name="P3"></text:p>
+      <text:p text:style-name="P4">A sample project by Proxeus, March 2020</text:p>
+      <text:p text:style-name="P5"></text:p>
+      <text:p text:style-name="P6"></text:p>
+      <table:table table:style-name="Table7">
+        <table:table-columns>
+          <table:table-column table:style-name="TableColumn8"></table:table-column>
+          <table:table-column table:style-name="TableColumn9"></table:table-column>
+        </table:table-columns>
+        <table:table-row table:style-name="TableRow10">
+          <table:table-cell table:style-name="TableCell11">
+            <text:p text:style-name="Standard">
+              <text:span text:style-name="T12">
+                <draw:frame draw:style-name="a1" style:rel-width="scale" style:rel-height="scale" draw:name="Picture 4" svg:x="0in" svg:width="1.4583in" svg:y="0in" text:anchor-type="as-char" svg:height="1.4583in">
+                  <draw:image xlink:type="simple" xlink:show="embed" xlink:href="media/image2.png" xlink:actuate="onLoad"></draw:image>
+                  <svg:title></svg:title>
+                  <svg:desc></svg:desc>
+                </draw:frame>
+              </text:span>
+            </text:p>
+          </table:table-cell>
+          <table:table-cell table:style-name="TableCell13">
+            <text:p text:style-name="P14"></text:p>
+            <text:p text:style-name="P15">
+              <text:span text:style-name="T16">
+                <text:line-break></text:line-break>
+              </text:span>
+              <text:span text:style-name="T17">Wallet address:</text:span>
+              <text:span text:style-name="T18">
+                <text:line-break></text:line-break>
+              </text:span>
+              <text:span text:style-name="T19">{{input.ethAddress}}</text:span>
+            </text:p>
+          </table:table-cell>
+        </table:table-row>
+      </table:table>
+      <text:p text:style-name="P20"></text:p>
+      <text:p text:style-name="Standard">
+        <text:span text:style-name="T21">This wallet holds<text:s></text:s></text:span>
+        <text:span text:style-name="T22"></text:span>{{input.ETH|round(3,'common')}}<text:span text:style-name="T32"> ETH</text:span>
+        <text:span text:style-name="T33">
+          <text:s></text:s>
+        </text:span>
+        <text:span text:style-name="T34">(rounded to three decimal places)</text:span>
+        <text:span text:style-name="T35">.</text:span>
+      </text:p>
+      <text:p text:style-name="Standard">
+        <text:span text:style-name="T36">This amounts to a total of USD </text:span>{{input.USD_ETH|round(2,'common')}}<text:span text:style-name="T44">.</text:span>
+        <text:span text:style-name="T45">
+          <text:line-break></text:line-break>
+        </text:span>
+      </text:p>
+      <text:p text:style-name="P46"></text:p>
+      <text:p text:style-name="Standard">
+        <text:span text:style-name="T47">The following ERC20 token<text:s></text:s></text:span>
+        <text:span text:style-name="T48">positions have been found:</text:span>
+      </text:p>
+      <text:p text:style-name="P49"></text:p>
+      <text:p text:style-name="P50"></text:p>{%if (input.XES &gt; 0) %}<text:p text:style-name="P50"> {{input.XES}} XES: USD {{input.USD_XES}}</text:p>
+      <text:p text:style-name="P51"></text:p>{%else%}<text:p text:style-name="P51"></text:p>{%endif%}<text:p text:style-name="P51"></text:p>{% if (input.MKR &gt; 0) %}<text:p text:style-name="P51">{{input.MKR}} MKR: USD {{input.USD_MKR}}</text:p>
+      <text:p text:style-name="P52"></text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.BAT &gt; 0) %}<text:p text:style-name="P52">{{input.BAT}} BAT x USD {{input.USD_BAT}}<text:tab></text:tab>= USD {{input.BAT * input.USD_BAT}}</text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.ENJ&gt; 0) %}<text:p text:style-name="P52">{{input.ENJ}}ENJ<text:s></text:s>x USD {{input.USD_ENJ}} = USD {{input.ENJ* input.USD_ENJ}}</text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.ZRX&gt; 0) %}<text:p text:style-name="P52">{{input.ZRX}}<text:s></text:s>ZRX<text:s></text:s>x USD {{input.USD_ZRX}} = USD {{input.ZRX* input.USD_ZRX}} </text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.OMG &gt; 0) %}<text:p text:style-name="P52">{{input.OMG}} OMG x USD {{input.USD_OMG}} = USD {{input.OMG * input.USD_OMG}}</text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>
+      <text:p text:style-name="Standard"></text:p>
+      <text:p text:style-name="P53"></text:p>
+      <text:p text:style-name="Standard">
+        <text:span text:style-name="T54">All analyzed positions together amount to<text:s></text:s></text:span>
+        <text:span text:style-name="T55">USD </text:span>{{((input.USD_XES)+(input.USD_MKR)+(input.USD_BAT)+(input.USD_ENJ)+(input.USD_ZRX)+(input.USD_OMG)+(input.USD_ETH))|round(2, 'common')}}<text:span text:style-name="T68">.</text:span>
+      </text:p>
+      <text:p text:style-name="P69"></text:p>
+      <text:p text:style-name="P70">This<text:s></text:s>report was created {{"now"|date("dd.MM.yyyy HH:mm")}} and shows balances at the time of its generation. Prices according to<text:s></text:s>CryptoCompare.com. No guarantee is given for the correctness of the information.</text:p>
+      <text:p text:style-name="P71"></text:p>
+    </office:text>
+  </office:body>
+</office:document-content>

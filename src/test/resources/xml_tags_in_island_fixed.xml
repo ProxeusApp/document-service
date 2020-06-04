@@ -6,7 +6,8 @@
     </a>
     <b>
         third line
-        </b>{% if foobar barfoo %}<e><c>
+        
+        </b>{% iffoobar barfoo %}<e><c>
     fourth line</c>
     fifth line </e>{% endif %}
 </doc>

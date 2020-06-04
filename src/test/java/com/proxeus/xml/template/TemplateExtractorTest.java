@@ -35,7 +35,9 @@ public class TemplateExtractorTest {
                 "input1",
                 "xml_element_spanning_template_blocks",
                 "content",
-                "content_with_error");
+                "content_with_error",
+                "crypto_asset_report",
+                "proof_of_existence");
     }
 
     @Test
@@ -59,7 +61,7 @@ public class TemplateExtractorTest {
 
         String result = output.toString();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/content_with_error_fixed.xml"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/" + test + "_fixed.xml"));
         writer.write(result);
         writer.close();
 

@@ -6,6 +6,9 @@
     </a>
     <b>
         third line
+        <!-- we assume that the line break after the if is not volontary and that the if will be appended to foobar.
+        This is not ideal but we cannot distinguish between the cases where we should append and where we should add
+        a space -->
         {% if
     </b>
     <d>

@@ -8,6 +8,5 @@ public enum ParserState {
     // internal states
     MAYBE_START_DELIMITER,
     MAYBE_END_DELIMITER,
-    SINGLE_QUOTE_STRING,
-    DOUBLE_QUOTE_STRING,
+    STRING,
 }

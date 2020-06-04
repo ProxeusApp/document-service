@@ -1,0 +1,18 @@
+{
+  "input": {
+    "ETH": 10,
+    "USD_ETH": 230,
+    "XES" : 1,
+    "USD_XES" : 0.1,
+    "MKR": 2,
+    "USD_MKR": 0.2,
+    "BAT": 3,
+    "USD_BAT": 0.3,
+    "ENJ": 5,
+    "USD_ENJ": 0.5,
+    "ZRX": 7,
+    "USD_ZRX": 0.7,
+    "OMG": 9,
+    "USD_OMG": 0.9
+  }
+}
