@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
         language-pack-en-base \
         openjdk-8-jre-headless \
         libreoffice \
-    && apt-get clean && rm -rf /var/cache/* /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/cache/* /var/lib/apt/lists/* \
+    && update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 
 #font configuration
 COPY ./00-fontconfig.conf /etc/fonts/conf.d/
