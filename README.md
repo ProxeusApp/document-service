@@ -36,7 +36,7 @@ sudo docker build -t document-service .
 sudo docker run -p 2115:2115 proxeus/document-service:latest
 ```
 
-## Commandline client
+## Command line client
 You can simply interact with the server using `curl`.
 
 
@@ -47,7 +47,7 @@ curl --form template=@template.odt --form data=@data.json http://<server>/compil
 
 # To compile a template to odt (available format are pdf, odt, docx or doc) 
 
-curl --form template=@template.odt --form data=@data.json http://<server>/compile?format=odt > result.pdf
+curl --form template=@template.odt --form data=@data.json http://<server>/compile?format=odt > result.odt
 
 # To embed the template rendering error in the pdf result (add the `error` query parameter 
 

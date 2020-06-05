@@ -177,7 +177,6 @@ public class TemplateExtractor implements XMLEventProcessor {
                     break;
                 }
 
-
                 parser.onProcessQueue(s -> processTmpQueue());
                 parser.onFlushCharacters(e -> flush(e.getCharacters(), e.getState(), e.getTagType()));
                 try {

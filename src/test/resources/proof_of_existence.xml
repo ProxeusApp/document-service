@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content xmlns:officeooo="http://openoffice.org/2009/office" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:css3t="http://www.w3.org/TR/css3-text/" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" office:version="1.2">
+  <office:scripts/>
+  <office:font-face-decls>
+    <style:font-face style:name="Arial Unicode MS1" svg:font-family="'Arial Unicode MS'" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Liberation Serif" svg:font-family="'Liberation Serif'" style:font-family-generic="roman" style:font-pitch="variable"/>
+    <style:font-face style:name="Calibri" svg:font-family="Calibri" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="Liberation Sans" svg:font-family="'Liberation Sans'" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="Work Sans" svg:font-family="'Work Sans'" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="Arial Unicode MS" svg:font-family="'Arial Unicode MS'" style:font-family-generic="system" style:font-pitch="variable"/>
+    <style:font-face style:name="PingFang SC" svg:font-family="'PingFang SC'" style:font-family-generic="system" style:font-pitch="variable"/>
+    <style:font-face style:name="Songti SC" svg:font-family="'Songti SC'" style:font-family-generic="system" style:font-pitch="variable"/>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:name="Table1" style:family="table">
+      <style:table-properties style:width="6.6931in" fo:margin-left="0in" table:align="left"/>
+    </style:style>
+    <style:style style:name="Table1.A" style:family="table-column">
+      <style:table-column-properties style:column-width="1.25in"/>
+    </style:style>
+    <style:style style:name="Table1.B" style:family="table-column">
+      <style:table-column-properties style:column-width="5.4431in"/>
+    </style:style>
+    <style:style style:name="Table1.A1" style:family="table-cell">
+      <style:table-cell-properties fo:padding-left="0.075in" fo:padding-right="0.075in" fo:padding-top="0in" fo:padding-bottom="0in" fo:border="none" style:writing-mode="lr-tb"/>
+    </style:style>
+    <style:style style:name="Table2" style:family="table">
+      <style:table-properties style:width="6.6931in" table:align="margins"/>
+    </style:style>
+    <style:style style:name="Table2.A" style:family="table-column">
+      <style:table-column-properties style:column-width="1.75in" style:rel-column-width="17135*"/>
+    </style:style>
+    <style:style style:name="Table2.B" style:family="table-column">
+      <style:table-column-properties style:column-width="4.9431in" style:rel-column-width="48400*"/>
+    </style:style>
+    <style:style style:name="Table2.A1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.0382in" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="0.05pt solid #000000" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Table2.B1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.0382in" fo:border="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Table2.A2" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.0382in" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Table2.B2" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.0382in" fo:border-left="0.05pt solid #000000" fo:border-right="0.05pt solid #000000" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Table2.3" style:family="table-row">
+      <style:table-row-properties style:min-row-height="1.3917in"/>
+    </style:style>
+    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Work Sans" fo:font-size="24pt" fo:font-weight="bold" officeooo:rsid="001a52fe" officeooo:paragraph-rsid="001a52fe" style:font-size-asian="24pt" style:font-weight-asian="bold" style:font-size-complex="24pt" style:font-weight-complex="bold"/>
+    </style:style>
+    <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Work Sans" fo:font-size="24pt" fo:font-weight="bold" officeooo:rsid="001a52fe" officeooo:paragraph-rsid="001e2161" style:font-size-asian="24pt" style:font-weight-asian="bold" style:font-size-complex="24pt" style:font-weight-complex="bold"/>
+    </style:style>
+    <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Work Sans" fo:font-size="24pt" officeooo:rsid="001e84d7" officeooo:paragraph-rsid="001e84d7" style:font-size-asian="24pt" style:font-size-complex="24pt"/>
+    </style:style>
+    <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Work Sans" fo:font-size="24pt" officeooo:paragraph-rsid="001e84d7" style:font-size-asian="24pt" style:font-size-complex="24pt"/>
+    </style:style>
+    <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="bold" officeooo:rsid="001a52fe" officeooo:paragraph-rsid="001e2161" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+    </style:style>
+    <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="bold" officeooo:rsid="001e84d7" officeooo:paragraph-rsid="001e84d7" style:font-size-asian="12pt" style:font-weight-asian="bold" style:font-size-complex="12pt" style:font-weight-complex="bold"/>
+    </style:style>
+    <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001a52fe" officeooo:paragraph-rsid="001e84d7" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties officeooo:paragraph-rsid="001ea6f7"/>
+    </style:style>
+    <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties officeooo:paragraph-rsid="001e84d7"/>
+    </style:style>
+    <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:line-height="115%"/>
+      <style:text-properties officeooo:paragraph-rsid="001e2161"/>
+    </style:style>
+    <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Standard">
+      <style:text-properties officeooo:paragraph-rsid="001e2161"/>
+    </style:style>
+    <style:style style:name="T1" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001a52fe" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T2" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001d9824" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T3" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001e2161" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T4" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001e84d7" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T5" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001ea6f7" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T6" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001ffa80" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T7" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001e84d7" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T8" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001ffa80" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T9" style:family="text">
+      <style:text-properties style:font-name="Work Sans" fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="00233e2c" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T10" style:family="text">
+      <style:text-properties style:font-name="Calibri"/>
+    </style:style>
+    <style:style style:name="T11" style:family="text">
+      <style:text-properties style:font-name="Calibri" officeooo:rsid="001e2161"/>
+    </style:style>
+    <style:style style:name="T12" style:family="text">
+      <style:text-properties fo:color="#000000" style:font-name="Calibri" fo:font-weight="bold" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+    </style:style>
+    <style:style style:name="T13" style:family="text">
+      <style:text-properties fo:color="#000000" style:font-name="Calibri" fo:font-weight="bold" officeooo:rsid="001e2161" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+    </style:style>
+    <style:style style:name="T14" style:family="text">
+      <style:text-properties fo:color="#000000" style:font-name="Calibri" fo:font-weight="bold" officeooo:rsid="001ffa80" style:font-weight-asian="bold" style:font-weight-complex="bold"/>
+    </style:style>
+    <style:style style:name="T15" style:family="text">
+      <style:text-properties fo:font-size="12pt" fo:font-weight="normal" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T16" style:family="text">
+      <style:text-properties fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001a52fe" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="T17" style:family="text">
+      <style:text-properties fo:font-size="12pt" fo:font-weight="normal" officeooo:rsid="001e84d7" style:font-size-asian="10.5pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="fr1" style:family="graphic" style:parent-style-name="Graphics">
+      <style:graphic-properties style:run-through="foreground" style:wrap="none" style:vertical-pos="top" style:vertical-rel="text" style:horizontal-pos="from-left" style:horizontal-rel="paragraph" style:mirror="none" fo:clip="rect(0in, 0in, 0in, 0in)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
+    </style:style>
+    <style:style style:name="fr2" style:family="graphic" style:parent-style-name="Graphics">
+      <style:graphic-properties style:vertical-pos="from-top" style:vertical-rel="paragraph" style:horizontal-pos="from-left" style:horizontal-rel="paragraph" style:mirror="none" fo:clip="rect(0in, 0in, 0in, 0in)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
+    </style:style>
+  </office:automatic-styles>
+  <office:body>
+    <office:text>
+      <office:forms form:automatic-focus="false" form:apply-design-mode="false"/>
+      <text:sequence-decls>
+        <text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Figure"/>
+      </text:sequence-decls>
+      <text:p text:style-name="P1">
+        <draw:frame draw:style-name="fr2" draw:name="Image2" text:anchor-type="paragraph" svg:x="0.0193in" svg:y="0.0071in" svg:width="2.1571in" svg:height="0.5161in" draw:z-index="0">
+          <draw:image xlink:href="Pictures/10000201000005C000000160B79759BF7A105C41.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" loext:mime-type="image/png"/>
+        </draw:frame>
+      </text:p>
+      <text:p text:style-name="P1"/>
+      <text:p text:style-name="P1"/>
+      <text:p text:style-name="P1"/>
+      <text:p text:style-name="P1">Proof of Existence </text:p>
+      <text:p text:style-name="P1"/>
+      <text:p text:style-name="P5">A sample project by Proxeus, March 2020</text:p>
+      <text:p text:style-name="P1"/>
+      <text:p text:style-name="P1"/>
+      <table:table table:name="Table1" table:style-name="Table1">
+        <table:table-column table:style-name="Table1.A"/>
+        <table:table-column table:style-name="Table1.B"/>
+        <table:table-row>
+          <table:table-cell table:style-name="Table1.A1" office:value-type="string">
+            <text:p text:style-name="P11">
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T10">
+                  <draw:frame draw:style-name="fr1" draw:name="Image1" text:anchor-type="as-char" svg:width="1.1602in" svg:height="1.1602in" draw:z-index="1">
+                    <draw:image xlink:href="Pictures/1000020100000200000002009548A4F6A7EA8AE6.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" loext:mime-type="image/png"/>
+                  </draw:frame>
+                </text:span>
+              </text:span>
+            </text:p>
+          </table:table-cell>
+          <table:table-cell table:style-name="Table1.A1" office:value-type="string">
+            <text:p text:style-name="P10">
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T10"/>
+              </text:span>
+            </text:p>
+            <text:p text:style-name="P10">
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T11">Tweet ID</text:span>
+              </text:span>
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T10">:<text:line-break/></text:span>
+              </text:span>
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T12">{{input.</text:span>
+              </text:span>
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T13">i</text:span>
+              </text:span>
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T14">d</text:span>
+              </text:span>
+              <text:span text:style-name="Default_20_Paragraph_20_Font">
+                <text:span text:style-name="T12">}}</text:span>
+              </text:span>
+            </text:p>
+          </table:table-cell>
+        </table:table-row>
+      </table:table>
+      <text:p text:style-name="P2"/>
+      <text:p text:style-name="P2"/>
+      <text:p text:style-name="P6">Tweet Details:</text:p>
+      <text:p text:style-name="P7"/>
+      <table:table table:name="Table2" table:style-name="Table2">
+        <table:table-column table:style-name="Table2.A"/>
+        <table:table-column table:style-name="Table2.B"/>
+        <table:table-row>
+          <table:table-cell table:style-name="Table2.A1" office:value-type="string">
+            <text:p text:style-name="P9">
+              <text:span text:style-name="T7">Tw</text:span>
+              <text:span text:style-name="T9">itter</text:span>
+              <text:span text:style-name="T7"> U</text:span>
+              <text:span text:style-name="T8">ser</text:span>
+              <text:span text:style-name="T7">:</text:span>
+            </text:p>
+          </table:table-cell>
+          <table:table-cell table:style-name="Table2.B1" office:value-type="string">
+            <text:p text:style-name="P9">
+              <text:span text:style-name="T1">{{i</text:span>
+              <text:span text:style-name="T2">nput</text:span>
+              <text:span text:style-name="T1">.</text:span>
+              <text:span text:style-name="T6">user.name</text:span>
+              <text:span text:style-name="T1">}}</text:span>
+            </text:p>
+          </table:table-cell>
+        </table:table-row>
+        <table:table-row>
+          <table:table-cell table:style-name="Table2.A2" office:value-type="string">
+            <text:p text:style-name="P4">
+              <text:span text:style-name="T16">T</text:span>
+              <text:span text:style-name="T17">weet Timestamp:</text:span>
+            </text:p>
+          </table:table-cell>
+          <table:table-cell table:style-name="Table2.B2" office:value-type="string">
+            <text:p text:style-name="P9">
+              <text:span text:style-name="T1">{{i</text:span>
+              <text:span text:style-name="T2">nput</text:span>
+              <text:span text:style-name="T1">.c</text:span>
+              <text:span text:style-name="T6">reated_at</text:span>
+              <text:span text:style-name="T1">}}</text:span>
+            </text:p>
+          </table:table-cell>
+        </table:table-row>
+        <table:table-row table:style-name="Table2.3">
+          <table:table-cell table:style-name="Table2.A2" office:value-type="string">
+            <text:p text:style-name="P3">
+              <text:span text:style-name="T16">T</text:span>
+              <text:span text:style-name="T15">weet Content:</text:span>
+            </text:p>
+          </table:table-cell>
+          <table:table-cell table:style-name="Table2.B2" office:value-type="string">
+            <text:p text:style-name="P9">
+              <text:span text:style-name="T1">{{i</text:span>
+              <text:span text:style-name="T2">nput</text:span>
+              <text:span text:style-name="T1">.t</text:span>
+              <text:span text:style-name="T6">ext</text:span>
+              <text:span text:style-name="T1">}}</text:span>
+            </text:p>
+          </table:table-cell>
+        </table:table-row>
+      </table:table>
+      <text:p text:style-name="P2"/>
+      <text:p text:style-name="P2"/>
+      <text:p text:style-name="P2"/>
+      <text:p text:style-name="P2"/>
+      <text:p text:style-name="P8">
+        <text:span text:style-name="T1">T</text:span>
+        <text:span text:style-name="T3">he Tweet </text:span>
+        <text:span text:style-name="T4">above was registered on the blockchain via Proxeus. This proof of existence </text:span>
+        <text:span text:style-name="T5">was created {{”now”|date(“dd.MM.yyyy HH:mm”)}} and </text:span>
+        <text:span text:style-name="T4">can be verified </text:span>
+        <text:a xlink:type="simple" xlink:href="https://demo.proxeus.com/validation" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">
+          <text:span text:style-name="T4">here</text:span>
+        </text:a>
+        <text:span text:style-name="T4">.</text:span>
+      </text:p>
+    </office:text>
+  </office:body>
+</office:document-content>

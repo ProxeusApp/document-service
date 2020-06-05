@@ -3,6 +3,7 @@ package com.proxeus.xml.template.jtwig;
 import com.proxeus.xml.template.parser.*;
 
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.events.Characters;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
@@ -23,6 +24,9 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
 
     private ParserState state;
     private TagType tagType;
+    private boolean ignoreSpace;
+    private char stringDelimiter;
+
     private StringBuffer nextCharacters;
 
     private int blockCounter;
@@ -147,13 +151,22 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
                 }
                 break;
             case TEMPLATE:
-                if (Character.isWhitespace(c)) {
-                    if (nextCharacters.length() == 0 || !Character.isWhitespace(nextCharacters.charAt(nextCharacters.length() - 1))) {
-                        nextCharacters.append(' ');
-                    }
-                } else {
-                    nextCharacters.append(c);
+                if (Character.isWhitespace(c) && c != ' ') {
+                    ignoreSpace = true;
+                    break;
                 }
+                if (c == ' ' && ignoreSpace) {
+                    break;
+                }
+                ignoreSpace = false;
+
+                if (c == ' ' && nextCharacters.length() > 0 && nextCharacters.charAt(nextCharacters.length() - 1) == ' ') {
+                    break;
+                }
+
+                c = cleanQuote(c);
+                nextCharacters.append(c);
+
                 switch (c) {
                     case '%':
                         if (this.tagType == CODE) {
@@ -171,24 +184,27 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
                         }
                         break;
                     case '"':
-                        stateChange(DOUBLE_QUOTE_STRING);
-                        break;
                     case '\'':
-                        stateChange(SINGLE_QUOTE_STRING);
+                        stateChange(STRING);
+                        stringDelimiter = c;
+                        ignoreSpace = false;
                 }
                 break;
-            case DOUBLE_QUOTE_STRING:
-                nextCharacters.append(c);
-                switch (c) {
-                    case '"':
-                        stateChange(TEMPLATE);
+            case STRING:
+                if (Character.isWhitespace(c) && c != ' ') {
+                    ignoreSpace = true;
+                    break;
                 }
-                break;
-            case SINGLE_QUOTE_STRING:
+                if (c == ' ' && ignoreSpace) {
+                    break;
+                }
+                ignoreSpace = false;
+
+                c = cleanQuote(c);
                 nextCharacters.append(c);
-                switch (c) {
-                    case '\'':
-                        stateChange(TEMPLATE);
+
+                if (c == stringDelimiter) {
+                    stateChange(TEMPLATE);
                 }
                 break;
             case MAYBE_END_DELIMITER:
@@ -217,6 +233,16 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
                         nextCharacters.append(c);
                 }
         }
+    }
+
+    private char cleanQuote(char c) {
+        if ((int) c == 8216 || (int) c == 8217 || (int) c == 8218) {
+            c = '\'';
+        }
+        if ((int) c == 171 || (int) c == 187 || (int) c == 8220 || (int) c == 8221 || (int) c == 8222) {
+            c = '"';
+        }
+        return c;
     }
 
     private void updateBlock(String island) {

@@ -18,7 +18,7 @@ public class StateChangeEvent {
             return MAYBE_DELIMITER;
         }
 
-        if (state == DOUBLE_QUOTE_STRING || state ==SINGLE_QUOTE_STRING  ){
+        if (state == STRING){
             return TEMPLATE;
         }
 
