@@ -40,24 +40,6 @@ jobs:
           paths:
             - image.tar
 
-  publish-staging:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - setup_remote_docker
-      - run:
-          name: Load archived Docker image
-          command: docker load -i /tmp/workspace/image.tar
-      - run:
-          name: Tag staging docker image
-          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $CONTAINER_IMAGE_NAME:staging
-
   publish-latest:
     executor: docker-publisher
     steps:
@@ -76,6 +58,42 @@ jobs:
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker push $CONTAINER_IMAGE_NAME:latest
 
+  publish-staging:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Tag staging docker image
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:staging
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME:staging
+
+  publish-demo:
+    executor: docker-publisher
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Tag demo docker image
+          command: docker tag $CONTAINER_IMAGE_NAME $CONTAINER_IMAGE_NAME:demo
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $CONTAINER_IMAGE_NAME:demo
+
 workflows:
   version: 2.1
   build-master:
@@ -87,26 +105,35 @@ workflows:
           filters:
             branches:
               only: master
+      - publish-latest:
+          requires:
+            - build-docker
+          filters:
+            branches:
+              only: master
       - approve-staging:
           type: approval
           requires:
-            - build-docker
+            - publish-latest
           filters:
             branches:
               only: master
       - publish-staging:
           requires:
             - approve-staging
-      - approve-latest:
+          filters:
+            branches:
+              only: master
+      - approve-demo:
           type: approval
           requires:
             - publish-staging
           filters:
             branches:
               only: master
-      - publish-latest:
+      - publish-demo:
           requires:
-            - approve-latest
+            - approve-demo
           filters:
             branches:
               only: master
