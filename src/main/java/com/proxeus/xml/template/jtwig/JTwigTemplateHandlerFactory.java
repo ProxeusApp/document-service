@@ -8,10 +8,10 @@ import com.proxeus.xml.template.*;
 public class JTwigTemplateHandlerFactory implements TemplateHandlerFactory {
 
     @Override
-    public TemplateHandler newInstance(XMLEventProcessor... processors) {
+    public TemplateHandler newInstance(XMLEventProcessor preProcessor, XMLEventProcessor postProcessor) {
         XMLEventProcessorChain p = new XMLEventProcessorChain(new TemplateExtractor(new JTwigParser()));
-        p.addProcessor(processors);
-        return new DefaultTemplateHandler(p, new JTwigRenderer());
+        p.addProcessor(preProcessor);
+        return new DefaultTemplateHandler(p, new JTwigRenderer(), postProcessor);
     }
 
 }

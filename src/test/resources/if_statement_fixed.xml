@@ -4,8 +4,8 @@
     <span style-name="Fett">
       <span style-name="T25"></span></span>{%if input.PurposeDETemplate == 'Other %}' %}<span style-name="ProxeusFormula"></span>
     <span style-name="Fett">
-      <span style-name="T25"></span></span>{{input.PurposeDE}}<span style-name="Fett"><span style-name="T25"> </span></span>{%else%}<span style-name="ProxeusFormula"></span>
+      <span style-name="T25">{{input.PurposeDE}}</span></span><span style-name="Fett"><span style-name="T25"> </span></span>{%else%}<span style-name="ProxeusFormula"></span>
     <span style-name="Fett">
-      <span style-name="T25"> </span></span>{{input.PurposeDETemplate}}<span style-name="Fett"><span style-name="T25"> </span></span>{%endif%}<span style-name="ProxeusFormula"></span>
+      <span style-name="T25"> {{input.PurposeDETemplate}}</span></span><span style-name="Fett"><span style-name="T25"> </span></span>{%endif%}<span style-name="ProxeusFormula"></span>
   </p>
 </list-item>

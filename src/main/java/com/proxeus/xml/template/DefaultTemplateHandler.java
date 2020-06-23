@@ -21,13 +21,17 @@ public class DefaultTemplateHandler implements TemplateHandler {
 
     private Logger log = Logger.getLogger(this.getClass());
     private TemplateXMLEventWriter events;
-    private XMLEventProcessor processor;
+    private XMLEventProcessor preProcessor;
+    private XMLEventProcessor postProcessor;
     private TemplateRenderer renderer;
 
-    public DefaultTemplateHandler(XMLEventProcessor processor, TemplateRenderer renderer) {
+    private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+
+    public DefaultTemplateHandler(XMLEventProcessor preProcessor, TemplateRenderer renderer, XMLEventProcessor postProcessor) {
         this.events = new TemplateXMLEventWriter();
-        this.processor = processor;
+        this.preProcessor = preProcessor;
         this.renderer = renderer;
+        this.postProcessor = postProcessor;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class DefaultTemplateHandler implements TemplateHandler {
         // Setup a new eventReader
         try {
             XMLEventReader reader = inputFactory.createXMLEventReader(input);
-            processor.process(reader, events);
+            this.preProcessor.process(reader, events);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,8 +69,39 @@ public class DefaultTemplateHandler implements TemplateHandler {
         if (data == null) {
             data = Collections.emptyMap();
         }
-        InputStream input = new ByteArrayInputStream(xmlOutput.toByteArray());
-        this.renderer.render(input, output, data, charset);
+        InputStream renderInput = new ByteArrayInputStream(xmlOutput.toByteArray());
+        ByteArrayOutputStream renderOutput = new ByteArrayOutputStream();
+        this.renderer.render(renderInput, renderOutput, data, charset);
+
+        InputStream input = new ByteArrayInputStream(renderOutput.toByteArray());
+        postProcess(input,output);
+    }
+
+    private void postProcess(InputStream input, OutputStream output) throws Exception {
+        TemplateXMLEventWriter eventWriter = new TemplateXMLEventWriter();
+        // First, create a new XMLInputFactory
+        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        // Setup a new eventReader
+        try {
+            XMLEventReader reader = inputFactory.createXMLEventReader(input);
+            this.postProcessor.process(reader, eventWriter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        XMLOutputFactory outputXMLFactory = XMLOutputFactory.newInstance();
+        outputXMLFactory.setProperty("escapeCharacters", false);
+
+        XMLEventWriter writer = outputXMLFactory.createXMLEventWriter(output);
+
+        Iterator<XMLEvent> it = eventWriter.interator();
+        while (it.hasNext()) {
+            XMLEvent e = it.next();
+            writer.add(e);
+            if (e.isStartDocument()) {
+                writer.add(eventFactory.createCharacters(System.lineSeparator()));
+            }
+        }
     }
 
     @Override

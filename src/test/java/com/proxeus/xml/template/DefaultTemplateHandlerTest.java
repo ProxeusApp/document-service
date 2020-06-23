@@ -1,5 +1,6 @@
 package com.proxeus.xml.template;
 
+import com.proxeus.xml.processor.NoOpEventProcessor;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.template.jtwig.JTwigParser;
 import org.junit.Assert;
@@ -38,7 +39,7 @@ public class DefaultTemplateHandlerTest {
             XMLEventProcessor extractor = new TemplateExtractor(new JTwigParser());
 
             InputStream input = getClass().getClassLoader().getResourceAsStream(test + ".xml");
-            DefaultTemplateHandler handler = new DefaultTemplateHandler(extractor, new NoOpTemplateRenderer());
+            DefaultTemplateHandler handler = new DefaultTemplateHandler(extractor, new NoOpTemplateRenderer(), new NoOpEventProcessor());
             handler.process(input);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 

@@ -7,6 +7,6 @@
         <text:span>foobar</text:span>
     </text:p>
     <text:p>
-        barfoo<text:span></text:span><text:span>hello</text:span>
+        barfoo<text:span></text:span><text:span>hello</text:span><text:span/>
     </text:p>
 </root>

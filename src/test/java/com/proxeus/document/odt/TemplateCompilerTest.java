@@ -44,7 +44,8 @@ public class TemplateCompilerTest {
         return Arrays.asList(
                 "simple_noif_template.odt:simple.json:content_noif_fixed_cleaned.xml",
                 "crypto_asset_report.odt:crypto_asset_report.json:crypto_asset_report_fixed_cleaned.xml",
-                "proof_of_existence.odt:proof_of_existence.json:proof_of_existence_fixed_cleaned.xml"
+                "proof_of_existence.odt:proof_of_existence.json:proof_of_existence_fixed_cleaned.xml",
+                "hr0301.odt:hr03.json:hr0301_fixed_cleaned.xml"
         );
     }
 

@@ -37,7 +37,8 @@ public class TemplateExtractorTest {
                 "content",
                 "content_with_error",
                 "crypto_asset_report",
-                "proof_of_existence");
+                "proof_of_existence",
+                "paragraph");
     }
 
     @Test
