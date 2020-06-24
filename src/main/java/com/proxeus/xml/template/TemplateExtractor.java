@@ -290,13 +290,7 @@ public class TemplateExtractor implements XMLEventProcessor {
         return eventFactory.createEndElement(s.getName(), s.getNamespaces());
     }
 
-    private void pushStack(XMLEvent event) {
-        log("PUSH EVENT TO STACK %d %s\n", event.getEventType(), event.toString());
-        elementStack.push(new ExtractorXMLEvent(event, parser.getState(), parser.getTagType(), parser.getBlockId()));
-    }
-
     private void pushTmp(XMLEvent event) {
-        log("PUSH EVENT TO TMP QUEUE %d %s\n", event.getEventType(), event.toString());
         pushTmp(event, parser.getState(), parser.getTagType());
     }
 

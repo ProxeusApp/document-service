@@ -33,7 +33,6 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
         nextEvent:
         while (reader.hasNext()) {
             XMLEvent event = reader.nextEvent();
-            System.out.println(queue.toString());
             switch (event.getEventType()) {
                 case XMLEvent.START_DOCUMENT:
                     writer.add(event);
@@ -41,12 +40,10 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
                     break;
                 case XMLEvent.START_ELEMENT:
                     StartElement s = event.asStartElement();
-                    System.out.printf("START %s\n", s.getName().getLocalPart());
                     queue.offer(s);
                     break;
                 case XMLEvent.CHARACTERS:
                     Characters c = event.asCharacters();
-                    System.out.printf("CHARACTER %s\n", c.getData());
                     if (c.isIgnorableWhiteSpace()) {
                         break;
                     }
@@ -58,7 +55,6 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
                     break;
                 case XMLEvent.END_ELEMENT:
                     EndElement e = event.asEndElement();
-                    System.out.printf("END %s\n", e.getName().getLocalPart());
                     if (queue.isEmpty()) {
                         queue.offer(e);
                         flush(writer);
@@ -114,7 +110,6 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
     }
 
     private void flush(XMLEventWriter writer) {
-        System.out.println("FLUSH");
         while (!queue.isEmpty()) {
             try {
                 writer.add(queue.pollFirst());
