@@ -13,19 +13,24 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class CleanEmptyElementProcessor implements XMLEventProcessor {
-    private List<QName> emptyElementToRemove;
+    private List<QName> elementToRemoveIfEmpty;
+    private List<QName> elementToRemoveIfOnlyWhitespace;
+
     LinkedList<XMLEvent> queue = new LinkedList<>();
 
     private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
-    public CleanEmptyElementProcessor(List<QName> emptyElementToRemove) {
-        this.emptyElementToRemove = emptyElementToRemove;
+    public CleanEmptyElementProcessor(List<QName> ElementToRemoveIfEmpty, List<QName> elementToRemoveIfOnlyWhitespace) {
+        this.elementToRemoveIfEmpty = ElementToRemoveIfEmpty;
+        this.elementToRemoveIfOnlyWhitespace = elementToRemoveIfOnlyWhitespace;
     }
 
     @Override
     public void process(XMLEventReader reader, XMLEventWriter writer) throws XMLStreamException, IllegalStateException {
+        nextEvent:
         while (reader.hasNext()) {
             XMLEvent event = reader.nextEvent();
             switch (event.getEventType()) {
@@ -36,42 +41,75 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
                 case XMLEvent.START_ELEMENT:
                     StartElement s = event.asStartElement();
                     queue.offer(s);
-                    continue;
+                    break;
                 case XMLEvent.CHARACTERS:
                     Characters c = event.asCharacters();
-                    if (!c.isIgnorableWhiteSpace()) {
-                        flush(c, writer);
+                    if (c.isIgnorableWhiteSpace()) {
+                        break;
                     }
-                    continue;
+                    queue.offer(c);
+                    if (c.isWhiteSpace()) {
+                        break;
+                    }
+                    flush(writer);
+                    break;
                 case XMLEvent.END_ELEMENT:
                     EndElement e = event.asEndElement();
                     if (queue.isEmpty()) {
-                        flush(e, writer);
-                        continue;
+                        queue.offer(e);
+                        flush(writer);
+                        break;
                     }
 
-                    if (!emptyElementToRemove.contains(e.getName())) {
-                        flush(e, writer);
-                        continue;
+                    if (!(elementToRemoveIfEmpty.contains(e.getName()) || elementToRemoveIfOnlyWhitespace.contains(e.getName()))) {
+                        queue.offer(e);
+                        flush(writer);
+                        break;
                     }
 
                     XMLEvent previous = queue.peekLast();
-                    if (!previous.isStartElement() || !previous.asStartElement().getName().equals(e.getName())) {
-                        flush(e, writer);
-                        continue;
+                    if (previous.isStartElement() && previous.asStartElement().getName().equals(e.getName())) {
+                        queue.removeLast();
+                        break;
                     }
 
-                    queue.removeLast();
+                    if (elementToRemoveIfOnlyWhitespace.contains(e.getName())) {
+                        // Here we backtrack the queue for the next start element that can be removed when only containing whitespaces.
+                        ListIterator<XMLEvent> it = queue.listIterator(queue.size() - 1);
+                        backtrack:
+                        while (it.hasPrevious()) {
+                            XMLEvent p = it.previous();
+                            switch (p.getEventType()) {
+                                case XMLEvent.CHARACTERS:
+                                    // The queue can only contain whitespaces at this point
+                                    continue backtrack;
+                                case XMLEvent.START_ELEMENT:
+                                    if (p.asStartElement().getName().equals(e.getName())) {
+                                        it.remove();
+                                        while (it.hasNext()) {
+                                            it.next();
+                                            it.remove();
+                                        }
+                                        continue nextEvent;
+                                    }
+                                    break backtrack;
+                                default:
+                                    break backtrack;
+                            }
+                        }
+                    }
 
-                    continue;
+                    queue.offer(e);
+                    flush(writer);
+                    break;
                 default:
-                    flush(event, writer);
+                    queue.offer(event);
+                    flush(writer);
             }
         }
     }
 
-    private void flush(XMLEvent event, XMLEventWriter writer) {
-        queue.offer(event);
+    private void flush(XMLEventWriter writer) {
         while (!queue.isEmpty()) {
             try {
                 writer.add(queue.pollFirst());

@@ -8,6 +8,8 @@ import com.proxeus.error.UnavailableException;
 import com.proxeus.util.zip.EntryFileFilter;
 import com.proxeus.util.zip.Zip;
 import com.proxeus.xml.Config;
+import com.proxeus.xml.processor.NoOpEventProcessor;
+import com.proxeus.xml.processor.XMLEventProcessorChain;
 import com.proxeus.xml.template.CleanEmptyElementProcessor;
 import com.proxeus.xml.template.TemplateHandler;
 import com.proxeus.xml.template.TemplateHandlerFactory;
@@ -38,8 +40,10 @@ public class ODTRenderer {
 
     private static String TEXT = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
     private static QName TEXT_SPAN = new QName(TEXT, "span");
+    private static QName TEXT_P = new QName(TEXT, "p");
 
     private static List<QName> EMPTY_XML_ELEMENT_TO_REMOVE = Arrays.asList(TEXT_SPAN);
+    private static List<QName> EMPTY_XML_ELEMENT_TO_REMOVE_IF_ONLY_WHITESPACE = Arrays.asList(TEXT_P);
 
     final static String CONTENT_XML = "content.xml";
     final static String STYLE_XML = "styles.xml";
@@ -97,8 +101,8 @@ public class ODTRenderer {
                     IOUtils.copy(zf.getInputStream(entry), manifestContent);
                 } else if (entry.getName().endsWith(CONTENT_XML) || entry.getName().endsWith(STYLE_XML)) {
                     TemplateHandler xml = templateHandlerFactory.newInstance(
-                            new CleanEmptyElementProcessor(EMPTY_XML_ELEMENT_TO_REMOVE),
-                            imageAdjuster.newInstance(entry.getName())
+                            imageAdjuster.newInstance(entry.getName()),
+                            new CleanEmptyElementProcessor(EMPTY_XML_ELEMENT_TO_REMOVE, EMPTY_XML_ELEMENT_TO_REMOVE_IF_ONLY_WHITESPACE)
                     );
                     xml.process(zf.getInputStream(entry));
 
@@ -201,7 +205,8 @@ public class ODTRenderer {
             }
 
             TemplateHandler manifest = templateHandlerFactory.newInstance(
-                    new ODTManifestProcessor(assetFiles)
+                    new ODTManifestProcessor(assetFiles),
+                    new NoOpEventProcessor()
             );
             manifest.process(new ByteArrayInputStream(manifestContent.toByteArray()));
 

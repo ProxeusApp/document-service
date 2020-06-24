@@ -160,8 +160,17 @@ public class TemplateExtractor implements XMLEventProcessor {
                         }
 
                         if (!ignore) {
-                            // The end element is pushed before the code island
-                            pushResult(event, ParserState.XML, NONE);
+                            switch(parser.getTagType()){
+                                case CODE:
+                                case COMMENT:
+                                    // The end element is pushed before the code and comment islands
+                                    pushResult(event, ParserState.XML, NONE);
+                                    break;
+                                case OUTPUT:
+                                    // The end element is pushed after the output code island
+                                    pushTmp(event, ParserState.XML, NONE);
+                                    break;
+                            }
                         }
                         log("END END_ELEMENT IN TEMPLATE %s\n", end.getName());
                 }
@@ -281,14 +290,13 @@ public class TemplateExtractor implements XMLEventProcessor {
         return eventFactory.createEndElement(s.getName(), s.getNamespaces());
     }
 
-    private void pushStack(XMLEvent event) {
-        log("PUSH EVENT TO STACK %d %s\n", event.getEventType(), event.toString());
-        elementStack.push(new ExtractorXMLEvent(event, parser.getState(), parser.getTagType(), parser.getBlockId()));
+    private void pushTmp(XMLEvent event) {
+        pushTmp(event, parser.getState(), parser.getTagType());
     }
 
-    private void pushTmp(XMLEvent event) {
+    private void pushTmp(XMLEvent event, ParserState state, TagType tagType) {
         log("PUSH EVENT TO TMP QUEUE %d %s\n", event.getEventType(), event.toString());
-        tmpQueue.add(new ExtractorXMLEvent(event, parser.getState(), parser.getTagType(), parser.getBlockId()));
+        tmpQueue.add(new ExtractorXMLEvent(event, state, tagType, parser.getBlockId()));
     }
 
     private void flush(String characters, ParserState state, TagType tagType) {

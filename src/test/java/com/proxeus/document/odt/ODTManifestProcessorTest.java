@@ -1,6 +1,7 @@
 package com.proxeus.document.odt;
 
 import com.proxeus.document.AssetFile;
+import com.proxeus.xml.processor.NoOpEventProcessor;
 import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.template.DefaultTemplateHandler;
 import com.proxeus.xml.template.NoOpTemplateRenderer;
@@ -45,7 +46,7 @@ public class ODTManifestProcessorTest {
             XMLEventProcessor processor = new ODTManifestProcessor(assetFiles);
 
             InputStream input = getClass().getClassLoader().getResourceAsStream(test + ".xml");
-            DefaultTemplateHandler handler = new DefaultTemplateHandler(processor, new NoOpTemplateRenderer());
+            DefaultTemplateHandler handler = new DefaultTemplateHandler(processor, new NoOpTemplateRenderer(), new NoOpEventProcessor());
             handler.process(input);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
 

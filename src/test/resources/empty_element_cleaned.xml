@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0">
-    <text:p>
-        
-    </text:p>
+    
     <text:p>
         <text:span>foobar</text:span>
     </text:p>

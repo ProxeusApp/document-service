@@ -25,7 +25,8 @@ public class CleanEmptyElementProcessorTest {
     private static QName TEXT_SPAN = new QName(TEXT, "span");
     private static QName TEXT_P = new QName(TEXT, "p");
 
-    private static List<QName> EMPTY_XML_ELEMENT_TO_REMOVE = Arrays.asList(TEXT_SPAN, TEXT_P);
+    private static List<QName> ELEMENT_TO_REMOVE_IF_EMPTY = Arrays.asList(TEXT_SPAN);
+    private static List<QName> ELEMENT_TO_REMOVE_IF_ONLY_WHITESPACE = Arrays.asList(TEXT_P);
 
     private String test;
 
@@ -38,16 +39,18 @@ public class CleanEmptyElementProcessorTest {
         return Arrays.asList(
                 "template_with_code2_fixed.xml:template_with_code2_fixed.xml",
                 "content_fixed.xml:content_fixed_cleaned.xml",
-                "empty_element.xml:empty_element_cleaned.xml"
+                "empty_element.xml:empty_element_cleaned.xml",
+                "paragraph_fixed.xml:paragraph_fixed_cleaned.xml",
+                "small_paragraph_fixed.xml:small_paragraph_fixed_cleaned.xml"
         );
     }
 
     @Test
-    public void test() {
+    public void test() throws Exception {
 
         String[] filenames = test.split(":");
 
-        XMLEventProcessor cleaner = new CleanEmptyElementProcessor(EMPTY_XML_ELEMENT_TO_REMOVE);
+        XMLEventProcessor cleaner = new CleanEmptyElementProcessor(ELEMENT_TO_REMOVE_IF_EMPTY, ELEMENT_TO_REMOVE_IF_ONLY_WHITESPACE);
 
         InputStream input = getClass().getClassLoader().getResourceAsStream(filenames[0]);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -63,6 +66,12 @@ public class CleanEmptyElementProcessorTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        String result = output.toString();
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/" + filenames[1]));
+        writer.write(result);
+        writer.close();
 
         try {
             InputStream expected = getClass().getClassLoader().getResourceAsStream(filenames[1]);
