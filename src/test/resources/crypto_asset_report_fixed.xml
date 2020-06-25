@@ -285,7 +285,7 @@
       <text:p text:style-name="P20"></text:p>
       <text:p text:style-name="Standard">
         <text:span text:style-name="T21">This wallet holds<text:s></text:s></text:span>
-        <text:span text:style-name="T22">{{input.ETH|round(3,'common')}}</text:span><text:span text:style-name="T32"> ETH</text:span>
+        <text:span text:style-name="T22" _proxeus="template">{{input.ETH|round(3,'common')}}</text:span><text:span text:style-name="T32"> ETH</text:span>
         <text:span text:style-name="T33">
           <text:s></text:s>
         </text:span>
@@ -293,7 +293,7 @@
         <text:span text:style-name="T35">.</text:span>
       </text:p>
       <text:p text:style-name="Standard">
-        <text:span text:style-name="T36">This amounts to a total of USD {{input.USD_ETH|round(2,'common')}}</text:span><text:span text:style-name="T44">.</text:span>
+        <text:span text:style-name="T36" _proxeus="template">This amounts to a total of USD {{input.USD_ETH|round(2,'common')}}</text:span><text:span text:style-name="T44">.</text:span>
         <text:span text:style-name="T45">
           <text:line-break></text:line-break>
         </text:span>
@@ -304,14 +304,14 @@
         <text:span text:style-name="T48">positions have been found:</text:span>
       </text:p>
       <text:p text:style-name="P49"></text:p>
-      <text:p text:style-name="P50"></text:p>{%if (input.XES &gt; 0) %}<text:p text:style-name="P50"> {{input.XES}} XES: USD {{input.USD_XES}}</text:p>
-      <text:p text:style-name="P51"></text:p>{%else%}<text:p text:style-name="P51"></text:p>{%endif%}<text:p text:style-name="P51"></text:p>{% if (input.MKR &gt; 0) %}<text:p text:style-name="P51">{{input.MKR}} MKR: USD {{input.USD_MKR}}</text:p>
-      <text:p text:style-name="P52"></text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.BAT &gt; 0) %}<text:p text:style-name="P52">{{input.BAT}} BAT x USD {{input.USD_BAT}}<text:tab></text:tab>= USD {{input.BAT * input.USD_BAT}}</text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.ENJ&gt; 0) %}<text:p text:style-name="P52">{{input.ENJ}}ENJ<text:s></text:s>x USD {{input.USD_ENJ}} = USD {{input.ENJ* input.USD_ENJ}}</text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.ZRX&gt; 0) %}<text:p text:style-name="P52">{{input.ZRX}}<text:s></text:s>ZRX<text:s></text:s>x USD {{input.USD_ZRX}} = USD {{input.ZRX* input.USD_ZRX}} </text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>{% if (input.OMG &gt; 0) %}<text:p text:style-name="P52">{{input.OMG}} OMG x USD {{input.USD_OMG}} = USD {{input.OMG * input.USD_OMG}}</text:p>{% else %}<text:p text:style-name="P52"></text:p>{% endif %}<text:p text:style-name="P52"></text:p>
+      <text:p text:style-name="P50"></text:p>{%if (input.XES &gt; 0) %}<text:p text:style-name="P50" _proxeus="template"> {{input.XES}} XES: USD {{input.USD_XES}}</text:p>
+      <text:p text:style-name="P51" _proxeus="template"></text:p>{%else%}<text:p text:style-name="P51" _proxeus="template"></text:p>{%endif%}<text:p text:style-name="P51" _proxeus="template"></text:p>{% if (input.MKR &gt; 0) %}<text:p text:style-name="P51" _proxeus="template">{{input.MKR}} MKR: USD {{input.USD_MKR}}</text:p>
+      <text:p text:style-name="P52" _proxeus="template"></text:p>{% else %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% endif %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% if (input.BAT &gt; 0) %}<text:p text:style-name="P52" _proxeus="template">{{input.BAT}} BAT x USD {{input.USD_BAT}}<text:tab _proxeus="template"></text:tab>= USD {{input.BAT * input.USD_BAT}}</text:p>{% else %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% endif %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% if (input.ENJ&gt; 0) %}<text:p text:style-name="P52" _proxeus="template">{{input.ENJ}}ENJ<text:s _proxeus="template"></text:s>x USD {{input.USD_ENJ}} = USD {{input.ENJ* input.USD_ENJ}}</text:p>{% else %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% endif %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% if (input.ZRX&gt; 0) %}<text:p text:style-name="P52" _proxeus="template">{{input.ZRX}}<text:s _proxeus="template"></text:s>ZRX<text:s _proxeus="template"></text:s>x USD {{input.USD_ZRX}} = USD {{input.ZRX* input.USD_ZRX}} </text:p>{% else %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% endif %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% if (input.OMG &gt; 0) %}<text:p text:style-name="P52" _proxeus="template">{{input.OMG}} OMG x USD {{input.USD_OMG}} = USD {{input.OMG * input.USD_OMG}}</text:p>{% else %}<text:p text:style-name="P52" _proxeus="template"></text:p>{% endif %}<text:p text:style-name="P52" _proxeus="template"></text:p>
       <text:p text:style-name="Standard"></text:p>
       <text:p text:style-name="P53"></text:p>
       <text:p text:style-name="Standard">
         <text:span text:style-name="T54">All analyzed positions together amount to<text:s></text:s></text:span>
-        <text:span text:style-name="T55">USD {{((input.USD_XES)+(input.USD_MKR)+(input.USD_BAT)+(input.USD_ENJ)+(input.USD_ZRX)+(input.USD_OMG)+(input.USD_ETH))|round(2, 'common')}}</text:span><text:span text:style-name="T68">.</text:span>
+        <text:span text:style-name="T55" _proxeus="template">USD {{((input.USD_XES)+(input.USD_MKR)+(input.USD_BAT)+(input.USD_ENJ)+(input.USD_ZRX)+(input.USD_OMG)+(input.USD_ETH))|round(2, 'common')}}</text:span><text:span text:style-name="T68">.</text:span>
       </text:p>
       <text:p text:style-name="P69"></text:p>
       <text:p text:style-name="P70">This<text:s></text:s>report was created {{"now"|date("dd.MM.yyyy HH:mm")}} and shows balances at the time of its generation. Prices according to<text:s></text:s>CryptoCompare.com. No guarantee is given for the correctness of the information.</text:p>

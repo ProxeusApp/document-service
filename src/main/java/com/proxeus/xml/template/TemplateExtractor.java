@@ -4,17 +4,18 @@ import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.template.parser.ParserState;
 import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.template.parser.TemplateParser;
+import com.sun.tools.javadoc.Start;
 import org.apache.log4j.Logger;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Characters;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
-import javax.xml.stream.events.XMLEvent;
+import javax.xml.stream.events.*;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 
 import static com.proxeus.xml.template.parser.TagType.CODE;
@@ -28,7 +29,8 @@ import static com.proxeus.xml.template.parser.TagType.NONE;
  * First, we need to ensure that code islands do not contain any XML tags:
  * * XML elements entirely inside a code island are deleted,
  * * XML tags opening inside an island are push after the end of the code island,
- * * XML tags closing inside code island are pull forward before the code island.
+ * * XML tags closing inside code or comment island are pull forward before the code island,
+ * * XML tags closing inside content island are pushed after the code island to preserve formatting and XML structure.
  *
  * <pre>{@Code
  *                        {%...........................%}            {% ......%}
@@ -46,7 +48,7 @@ import static com.proxeus.xml.template.parser.TagType.NONE;
  *
  *
  * <pre>{@Code
- * If an element span several code islands, we need to split them:
+ * If an element spans several code islands, we need to split it if the element is closed in a different scope:
  *
  *                   {%..........%}          {%..........%}          {%.........%}
  *           <a>......................................................................</a>
@@ -59,7 +61,7 @@ import static com.proxeus.xml.template.parser.TagType.NONE;
  * }</pre>
  *
  * <pre>{@Code
- * If an element span an output or a comment island, we do not need to split it:
+ * If an element spans several output or comment islands, we do not need to split it:
  *
  *                   {{..........}}          {%..........%}          {#.........#}
  *           <a>......................................................................</a>
@@ -69,8 +71,14 @@ import static com.proxeus.xml.template.parser.TagType.NONE;
  *                   {{..........}}          {%..........%}          {#.........#}
  *           <a>.........................</a>              <a>........................</a>
  * }</pre>
+ * <p>
+ * Any element that is added or moved around is tagged with a "_proxeus" attribute.  This is useful for downstream
+ * clean up processing.
  */
 public class TemplateExtractor implements XMLEventProcessor {
+
+    static public final QName PROXEUS_MARKER_ATTRIBUTE_NAME = new QName("_proxeus");
+    static private final String PROXEUS_MARKER_ATTRIBUTE_VALUE = "template";
 
     private Logger log = Logger.getLogger(this.getClass());
     private TemplateParser parser;
@@ -79,10 +87,14 @@ public class TemplateExtractor implements XMLEventProcessor {
     private LinkedList<ExtractorXMLEvent> elementStack;
     private LinkedList<ExtractorXMLEvent> resultQueue;
 
-    private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
+
+    static private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
     public TemplateExtractor(TemplateParser parser) {
         this.parser = parser;
+        this.parser.onProcessQueue(s -> processTmpQueue());
+        this.parser.onFlushCharacters(e -> flush(e.getCharacters(), e.getState(), e.getTagType()));
+
         this.tmpQueue = new LinkedList<>();
         this.elementStack = new LinkedList<>();
         this.resultQueue = new LinkedList<>();
@@ -96,11 +108,37 @@ public class TemplateExtractor implements XMLEventProcessor {
             processEvent(event);
         }
 
-        for(ExtractorXMLEvent event : resultQueue){
+        for (ExtractorXMLEvent event : resultQueue) {
             writer.add(event.getEvent());
         }
     }
 
+    public static boolean IsMarked(StartElement s) {
+        return s.getAttributeByName(TemplateExtractor.PROXEUS_MARKER_ATTRIBUTE_NAME) != null;
+    }
+
+    public static StartElement addMark(StartElement start) {
+        List<Attribute> attributes = new LinkedList<>();
+        attributes.add(eventFactory.createAttribute(PROXEUS_MARKER_ATTRIBUTE_NAME, PROXEUS_MARKER_ATTRIBUTE_VALUE));
+
+        start.getAttributes().forEachRemaining(a -> {
+            attributes.add((Attribute) a);
+        });
+
+        return eventFactory.createStartElement(start.getName(), attributes.iterator(), start.getNamespaces());
+    }
+
+    public static StartElement removeMark(StartElement start) {
+        List<Attribute> attributes = new LinkedList<>();
+
+        start.getAttributes().forEachRemaining(a -> {
+            if (!((Attribute) a).getName().equals(PROXEUS_MARKER_ATTRIBUTE_NAME)) {
+                attributes.add((Attribute)a);
+            }
+        });
+
+        return eventFactory.createStartElement(start.getName(), attributes.iterator(), start.getNamespaces());
+    }
 
     private void processEvent(XMLEvent event) {
         log("PROCESS EVENT<%s>\n", eventType(event));
@@ -160,15 +198,33 @@ public class TemplateExtractor implements XMLEventProcessor {
                         }
 
                         if (!ignore) {
-                            switch(parser.getTagType()){
+                            // We find the matching start element and clone it which will mark the element with special
+                            // attribute.
+                            if (resultQueue.size() > 0) {
+                                ListIterator<ExtractorXMLEvent> it = resultQueue.listIterator(resultQueue.size());
+                                while (it.hasPrevious()) {
+                                    ExtractorXMLEvent e = it.previous();
+                                    if (!e.isStartElement()) {
+                                        continue;
+                                    }
+                                    StartElement s = e.asStartElement();
+                                    if (s.getName().equals(end.getName())) {
+                                        log("Match start tag %s\n", e.toString());
+                                        it.set(clone(e));
+                                        break;
+                                    }
+                                }
+                            }
+                            // TODO: Add marker to corresponding start element
+                            switch (parser.getTagType()) {
                                 case CODE:
                                 case COMMENT:
                                     // The end element is pushed before the code and comment islands
-                                    pushResult(event, ParserState.XML, NONE);
+                                    pushResult(end, ParserState.XML, NONE);
                                     break;
                                 case OUTPUT:
                                     // The end element is pushed after the output code island
-                                    pushTmp(event, ParserState.XML, NONE);
+                                    pushTmp(end, ParserState.XML, NONE);
                                     break;
                             }
                         }
@@ -186,21 +242,33 @@ public class TemplateExtractor implements XMLEventProcessor {
                     break;
                 }
 
-                parser.onProcessQueue(s -> processTmpQueue());
-                parser.onFlushCharacters(e -> flush(e.getCharacters(), e.getState(), e.getTagType()));
                 try {
                     log("PROCESS CHARACTERS -->%s<--\n", c.getData());
                     parser.process(c.getData());
                 } catch (XMLStreamException e) {
                     throw new RuntimeException(e);
                 }
-
+                break;
             default:
         }
     }
 
     private void log(String format, Object... args) {
         log.trace(String.format("<%s> <%s> <%d> %s", parser.getState(), parser.getTagType(), parser.getBlockId(), String.format(format, args)));
+    }
+
+
+    private ExtractorXMLEvent clone(ExtractorXMLEvent event) {
+        switch (event.getEventType()) {
+            case XMLEvent.START_ELEMENT:
+                StartElement start = event.asStartElement();
+                return new ExtractorXMLEvent(addMark(start), event.getState(), event.getTagType(), event.getBlockId());
+            case XMLEvent.END_ELEMENT:
+                EndElement end = event.asEndElement();
+                return new ExtractorXMLEvent(eventFactory.createEndElement(end.getName(), end.getNamespaces()), event.getState(), event.getTagType(), event.getBlockId());
+            default:
+                throw new IllegalStateException("not implemented");
+        }
     }
 
     private void pushResult(XMLEvent event) {
@@ -216,6 +284,9 @@ public class TemplateExtractor implements XMLEventProcessor {
         ExtractorXMLEvent e = new ExtractorXMLEvent(event, state, tagType, blockId);
         switch (e.getEvent().getEventType()) {
             case XMLEvent.START_ELEMENT:
+                if (blockId != 0) { // We are inside a template block
+                    e = clone(e);
+                }
                 resultQueue.add(e);
                 elementStack.push(e);
                 break;
@@ -259,13 +330,13 @@ public class TemplateExtractor implements XMLEventProcessor {
 
             it.next();
 
-            it.add(new ExtractorXMLEvent(clone(start.getEvent()), ParserState.XML, NONE, blockId));
+            it.add(clone(start));
             it.previous();
             it.previous();
 
             blockId = it.previous().getBlockId();
             it.next();
-            it.add(new ExtractorXMLEvent(clone(end.getEvent()), ParserState.XML, NONE, blockId));
+            it.add(clone(end));
             if (blockId == start.getBlockId()) {
                 // We closed the element in the right block.
                 break;
@@ -273,30 +344,27 @@ public class TemplateExtractor implements XMLEventProcessor {
         }
     }
 
-    private XMLEvent clone(XMLEvent event) {
-        switch (event.getEventType()) {
-            case XMLEvent.START_ELEMENT:
-                StartElement start = event.asStartElement();
-                return eventFactory.createStartElement(start.getName(), start.getAttributes(), start.getNamespaces());
-            case XMLEvent.END_ELEMENT:
-                EndElement end = event.asEndElement();
-                return eventFactory.createEndElement(end.getName(), end.getNamespaces());
-            default:
-                throw new IllegalStateException("not implemented");
-        }
-    }
 
     private EndElement clone(EndElement s) {
         return eventFactory.createEndElement(s.getName(), s.getNamespaces());
     }
 
     private void pushTmp(XMLEvent event) {
-        pushTmp(event, parser.getState(), parser.getTagType());
+        pushTmp(event, parser.getState(), parser.getTagType(), parser.getBlockId());
     }
 
     private void pushTmp(XMLEvent event, ParserState state, TagType tagType) {
+        pushTmp(event, state, tagType, parser.getBlockId());
+    }
+
+    private void pushTmp(XMLEvent event, ParserState state, TagType tagType, int blockId) {
         log("PUSH EVENT TO TMP QUEUE %d %s\n", event.getEventType(), event.toString());
-        tmpQueue.add(new ExtractorXMLEvent(event, state, tagType, parser.getBlockId()));
+
+        ExtractorXMLEvent e = new ExtractorXMLEvent(event, state, tagType, blockId);
+        if (blockId != 0) { // We are inside a template block
+            e = clone(e);
+        }
+        tmpQueue.add(e);
     }
 
     private void flush(String characters, ParserState state, TagType tagType) {

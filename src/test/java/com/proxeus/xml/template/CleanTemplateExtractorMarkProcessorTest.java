@@ -1,13 +1,12 @@
 package com.proxeus.xml.template;
 
 import com.proxeus.xml.processor.XMLEventProcessor;
-import com.proxeus.xml.template.jtwig.JTwigParser;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -15,43 +14,41 @@ import javax.xml.stream.XMLOutputFactory;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RunWith(Parameterized.class)
-public class TemplateExtractorTest {
+public class CleanTemplateExtractorMarkProcessorTest {
+
+    private static String TEXT = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
+    private static QName TEXT_SPAN = new QName(TEXT, "span");
+    private static QName TEXT_P = new QName(TEXT, "p");
+
+    private static List<QName> ELEMENT_TO_REMOVE_IF_EMPTY = Arrays.asList(TEXT_SPAN);
+    private static List<QName> ELEMENT_TO_REMOVE_IF_ONLY_WHITESPACE = Arrays.asList(TEXT_P);
 
     private String test;
 
-    public TemplateExtractorTest(String test) {
+    public CleanTemplateExtractorMarkProcessorTest(String test) {
         this.test = test;
     }
 
-    @Parameters(name = "{index}: {0}")
+    @Parameterized.Parameters(name = "{index}: {0}")
     public static Iterable<? extends Object> tests() {
         return Arrays.asList(
-                "xml_tags_in_island",
-                "xml_tags_in_content_island",
-                "template_with_code2",
-                "if_statement",
-                "input1",
-                "xml_element_spanning_template_blocks",
-                "content",
-                "content_with_error",
-                "crypto_asset_report",
-                "proof_of_existence",
-                "paragraph",
-                "hr0101",
-                "hr0201",
-                "hr0301",
-                "hr0401"
-                );
+                "hr0301_fixed.xml:hr0301_fixed_nomark.xml"
+        );
     }
 
     @Test
-    public void test() throws Exception{
-        XMLEventProcessor extractor = new TemplateExtractor(new JTwigParser());
+    public void test() throws Exception {
 
-        InputStream input = getClass().getClassLoader().getResourceAsStream(test + ".xml");
+        String[] filenames = test.split(":");
+
+        XMLEventProcessor cleaner = new CleanTemplateExtractorMarkProcessor();
+
+        InputStream input = getClass().getClassLoader().getResourceAsStream(filenames[0]);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
 
         // First, create a new XMLInputFactory
@@ -61,23 +58,24 @@ public class TemplateExtractorTest {
         try {
             XMLEventReader reader = inputFactory.createXMLEventReader(input);
             XMLEventWriter writer = XMLOutputFactory.newInstance().createXMLEventWriter(output);
-            extractor.process(reader, writer);
+            cleaner.process(reader, writer);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         String result = output.toString();
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/" + test + "_fixed.xml"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/tmp/" + filenames[1]));
         writer.write(result);
         writer.close();
 
         try {
-            InputStream expected = JTwigParser.class.getClassLoader().getResourceAsStream(test + "_fixed.xml");
-            Assert.assertEquals(convert(expected, Charset.defaultCharset()), result);
+            InputStream expected = getClass().getClassLoader().getResourceAsStream(filenames[1]);
+            Assert.assertEquals(convert(expected, Charset.defaultCharset()), output.toString());
         } catch (IOException e) {
 
         }
+
     }
 
     private String convert(InputStream inputStream, Charset charset) throws IOException {
@@ -85,4 +83,5 @@ public class TemplateExtractorTest {
             return br.lines().collect(Collectors.joining(System.lineSeparator()));
         }
     }
+
 }

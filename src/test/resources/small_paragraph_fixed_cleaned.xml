@@ -7,7 +7,8 @@
                     <text:span text:style-name="T1">ANMELDUNG</text:span>
                 </text:span>
             </text:p>
-            {%-if input.FirmaFrench != ''%}<text:p text:style-name="P3">
+            <text:p text:style-name="P3">
+                <text:span text:style-name="Absatz-Standardschriftart"></text:span></text:p>{%-if input.FirmaFrench != ''%}<text:p text:style-name="P3"><text:span text:style-name="ProxeusFormula"></text:span>
                 <text:span text:style-name="Absatz-Standardschriftart">{{input.FirmaFrench}}</text:span><text:span text:style-name="Absatz-Standardschriftart"> SA</text:span>
             </text:p>
         </office:text>

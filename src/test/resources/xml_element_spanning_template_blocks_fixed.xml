@@ -5,14 +5,14 @@
         first line
         {% if foobar %}
         second line
-        <b><e>
+        <b _proxeus="template"><e _proxeus="template">
             third line
-            </e></b>{% elseif barfoo %}<b><e><d>
-            <c>
+            </e></b>{% elseif barfoo %}<b _proxeus="template"><e _proxeus="template"><d _proxeus="template">
+            <c _proxeus="template">
                 fourth line
                 {{ barfoo + foobar }}
             </c>
-            </d></e></b>{% elseif foofoo %}<b><e><d>
+            </d></e></b>{% elseif foofoo %}<b _proxeus="template"><e _proxeus="template"><d _proxeus="template">
             </d>{# comment #}
         </e>
         </b>
@@ -20,7 +20,7 @@
         {% endif %}
 
         sixth line
-        </f>{% if barbar %}<f>
+        </f>{% if barbar %}<f _proxeus="template">
             seventh line
         </f>
         {% endif %}
