@@ -4,7 +4,6 @@ import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.template.parser.ParserState;
 import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.template.parser.TemplateParser;
-import com.sun.tools.javadoc.Start;
 import org.apache.log4j.Logger;
 
 import javax.xml.namespace.QName;
@@ -13,7 +12,6 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.*;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
