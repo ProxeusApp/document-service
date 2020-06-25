@@ -73,7 +73,7 @@
       </text:p>
       <text:p text:style-name="Text_20_Body_20_Anmeldung">
         <text:bookmark-start text:name="input.FirmaGerman"></text:bookmark-start>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.FirmaGerman}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.FirmaGerman}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
         <text:bookmark-end text:name="input.FirmaGerman"></text:bookmark-end>
         <text:span text:style-name="Absatz-Standardschriftart"> AG</text:span>
       </text:p>
@@ -81,35 +81,35 @@
         <text:span text:style-name="Absatz-Standardschriftart">Übersetzungen der Firma</text:span>
       </text:p>
       <text:p text:style-name="P3">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span></text:p>{%- if input.FirmaFrench != '' %}<text:p text:style-name="P3" _proxeus="template"><text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.FirmaFrench}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> SA</text:span>
+        <text:span text:style-name="Absatz-Standardschriftart"></text:span></text:p>{%- if input.FirmaFrench != '' %}<text:p text:style-name="P3"><text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.FirmaFrench}}</text:span><text:span text:style-name="Absatz-Standardschriftart"> SA</text:span>
       </text:p>
-      <text:p text:style-name="P3" _proxeus="template">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span></text:p>{% endif -%}<text:p text:style-name="P3" _proxeus="template"><text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span></text:p>{% if input.FirmaEnglish != ''%}<text:p text:style-name="P3" _proxeus="template"><text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.FirmaEnglish}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> Ltd</text:span>
+      <text:p text:style-name="P3">
+        <text:span text:style-name="Absatz-Standardschriftart"></text:span></text:p>{% endif -%}<text:p text:style-name="P3"><text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart"></text:span></text:p>{% if input.FirmaEnglish != ''%}<text:p text:style-name="P3"><text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.FirmaEnglish}}</text:span><text:span text:style-name="Absatz-Standardschriftart"> Ltd</text:span>
       </text:p>
-      <text:p text:style-name="P3" _proxeus="template">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span></text:p>{% endif -%}<text:p text:style-name="P3" _proxeus="template"><text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span></text:p>{%- if (input.FirmaFrench == '')and (input.FirmaEnglish == '') %}<text:p text:style-name="P3" _proxeus="template"><text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">--</text:span>
+      <text:p text:style-name="P3">
+        <text:span text:style-name="Absatz-Standardschriftart"></text:span></text:p>{% endif -%}<text:p text:style-name="P3"><text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart"></text:span></text:p>{%- if (input.FirmaFrench == '')and (input.FirmaEnglish == '') %}<text:p text:style-name="P3"><text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">--</text:span>
       </text:p>
-      <text:p text:style-name="P4" _proxeus="template">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span></text:p>{% endif -%}<text:p text:style-name="P4" _proxeus="template"><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">Sitz</text:span>
+      <text:p text:style-name="P4">
+        <text:span text:style-name="Absatz-Standardschriftart"></text:span></text:p>{% endif -%}<text:p text:style-name="P4"><text:span text:style-name="Absatz-Standardschriftart">Sitz</text:span>
       </text:p>
       <text:p text:style-name="Text_20_Body_20_Anmeldung">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.HeadquarterRegisteredOffice}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> / {{input.HeadquarterCanton}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.HeadquarterRegisteredOffice}}</text:span><text:span text:style-name="Absatz-Standardschriftart"> / {{input.HeadquarterCanton}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
       </text:p>
       <text:p text:style-name="Heading_20_Anmeldung">
         <text:span text:style-name="Absatz-Standardschriftart">Domizil</text:span>
       </text:p>
       <text:p text:style-name="P2">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>{% if input.HeadquarterAddressExtra != '' %}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.HeadquarterAddressExtra}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">, </text:span>{%endif%}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.HeadquarterStreet}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> {{input.HeadquarterStreetNumber}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">, </text:span>{%if input.HeadquarterStreetAddOn != '' %}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.HeadquarterStreetAddOn}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">, </text:span>{%endif%}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.HeadquarterZIP}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> {{input.HeadquarterCity}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>{%if input.HeadquarterAddressExtra is empty %}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> (eigenes Rechtsdomizil)</text:span>{%endif%}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart"></text:span>{% if input.HeadquarterAddressExtra != '' %}<text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.HeadquarterAddressExtra}}</text:span><text:span text:style-name="Absatz-Standardschriftart">, </text:span>{%endif%}<text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.HeadquarterStreet}}</text:span><text:span text:style-name="Absatz-Standardschriftart"> {{input.HeadquarterStreetNumber}}</text:span><text:span text:style-name="Absatz-Standardschriftart">, </text:span>{%if input.HeadquarterStreetAddOn != '' %}<text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.HeadquarterStreetAddOn}}</text:span><text:span text:style-name="Absatz-Standardschriftart">, </text:span>{%endif%}<text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.HeadquarterZIP}}</text:span><text:span text:style-name="Absatz-Standardschriftart"> {{input.HeadquarterCity}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>{%if input.HeadquarterAddressExtra is empty %}<text:span text:style-name="ProxeusFormula"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart"> (eigenes Rechtsdomizil)</text:span>{%endif%}<text:span text:style-name="ProxeusFormula"></text:span>
       </text:p>
       <text:p text:style-name="Heading_20_Anmeldung">
         <text:span text:style-name="Absatz-Standardschriftart">Rechtsform</text:span>
@@ -121,7 +121,7 @@
         <text:span text:style-name="Absatz-Standardschriftart">Statutendatum</text:span>
       </text:p>
       <text:p text:style-name="Text_20_Body_20_Anmeldung">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.DateOfStatutes}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">{{input.DateOfStatutes}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
       </text:p>
       <text:p text:style-name="Heading_20_Anmeldung">
         <text:span text:style-name="Absatz-Standardschriftart"></text:span>

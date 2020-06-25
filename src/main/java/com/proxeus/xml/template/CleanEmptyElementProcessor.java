@@ -23,9 +23,12 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
 
     private XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 
+    private boolean inTemplate;
+
     public CleanEmptyElementProcessor(List<QName> ElementToRemoveIfEmpty, List<QName> elementToRemoveIfOnlyWhitespace) {
         this.elementToRemoveIfEmpty = ElementToRemoveIfEmpty;
         this.elementToRemoveIfOnlyWhitespace = elementToRemoveIfOnlyWhitespace;
+        this.inTemplate = false;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
                     break;
                 case XMLEvent.START_ELEMENT:
                     StartElement s = event.asStartElement();
+                    this.inTemplate = TemplateExtractor.IsMarked(s);
                     queue.offer(s);
                     break;
                 case XMLEvent.CHARACTERS:
@@ -68,9 +72,10 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
                     }
 
                     XMLEvent previous = queue.peekLast();
-                    if (previous.isStartElement() && previous.asStartElement().getName().equals(e.getName())) {
+                    if (inTemplate && previous.isStartElement() && previous.asStartElement().getName().equals(e.getName())) {
                         queue.removeLast();
                         break;
+
                     }
 
                     if (elementToRemoveIfOnlyWhitespace.contains(e.getName())) {
@@ -84,7 +89,7 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
                                     // The queue can only contain whitespaces at this point
                                     continue backtrack;
                                 case XMLEvent.START_ELEMENT:
-                                    if (p.asStartElement().getName().equals(e.getName())) {
+                                    if (inTemplate && p.asStartElement().getName().equals(e.getName())) {
                                         it.remove();
                                         while (it.hasNext()) {
                                             it.next();
@@ -109,7 +114,9 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
         }
     }
 
+
     private void flush(XMLEventWriter writer) {
+        this.inTemplate = false;
         while (!queue.isEmpty()) {
             try {
                 writer.add(queue.pollFirst());

@@ -2,10 +2,10 @@
 <list-item>
   <p style-name="P36">
     <span style-name="Fett">
-      <span style-name="T25"></span></span>{%if input.PurposeDETemplate == 'Other %}' %}<span style-name="ProxeusFormula"></span>
-    <span style-name="Fett">
-      <span style-name="T25">{{input.PurposeDE}}</span></span><span style-name="Fett"><span style-name="T25"> </span></span>{%else%}<span style-name="ProxeusFormula"></span>
-    <span style-name="Fett">
-      <span style-name="T25"> {{input.PurposeDETemplate}}</span></span><span style-name="Fett"><span style-name="T25"> </span></span>{%endif%}<span style-name="ProxeusFormula"></span>
+      <span style-name="T25" _proxeus="template"></span></span>{%if input.PurposeDETemplate == 'Other %}' %}<span style-name="ProxeusFormula" _proxeus="template"></span>
+    <span style-name="Fett" _proxeus="template">
+      <span style-name="T25" _proxeus="template">{{input.PurposeDE}}</span></span><span style-name="Fett" _proxeus="template"><span style-name="T25" _proxeus="template"> </span></span>{%else%}<span style-name="ProxeusFormula" _proxeus="template"></span>
+    <span style-name="Fett" _proxeus="template">
+      <span style-name="T25" _proxeus="template"> {{input.PurposeDETemplate}}</span></span><span style-name="Fett" _proxeus="template"><span style-name="T25" _proxeus="template"> </span></span>{%endif%}<span style-name="ProxeusFormula" _proxeus="template"></span>
   </p>
 </list-item>

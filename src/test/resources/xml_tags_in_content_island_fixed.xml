@@ -7,7 +7,7 @@
     <b _proxeus="template">
         third line
         
-        </b>{% iffoobar hello barfoo %}<e _proxeus="template"><c>
+        {{ iffoobar hello barfoo }}</b><e _proxeus="template"><c>
     fourth line</c>
-    fifth line </e>{% endif %}
+    fifth line {{ endif }}</e>
 </doc>
