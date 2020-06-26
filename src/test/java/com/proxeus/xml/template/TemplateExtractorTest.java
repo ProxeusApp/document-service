@@ -39,6 +39,7 @@ public class TemplateExtractorTest {
                 "content_with_error",
                 "crypto_asset_report",
                 "proof_of_existence",
+                "proof_of_existence_whitespaces",
                 "paragraph",
                 "hr0101",
                 "hr0201",

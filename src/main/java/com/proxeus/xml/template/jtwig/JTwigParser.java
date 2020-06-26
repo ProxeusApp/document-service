@@ -3,7 +3,6 @@ package com.proxeus.xml.template.jtwig;
 import com.proxeus.xml.template.parser.*;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Characters;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
@@ -32,8 +31,9 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
     private int blockCounter;
     private LinkedList<Integer> blockStack;
 
-    private Consumer<CharactersEvent> onFlushCharacters;
-    private Consumer<StateChangeEvent> onProcessQueue;
+    private Consumer<String> onFlushXmlCharacters;
+    private Consumer<String> onFlushTemplateCharacters;
+    private Runnable onProcessQueue;
 
     private static Set<String> blockStart = new HashSet<>(Arrays.asList("if", "elseif", "else", "for", "block", "embed", "macro", "autoescape", "filter", "verbatim"));
     private static Set<String> blockEnd = new HashSet<>(Arrays.asList("elseif", "else", "endif", "endfor", "endblock", "endembed", "endmacro", "endautoescape", "endfilter", "endverbatim"));
@@ -87,12 +87,17 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
     }
 
     @Override
-    public void onFlushCharacters(Consumer<CharactersEvent> onFlushCharacters) {
-        this.onFlushCharacters = onFlushCharacters;
+    public void onFlushXmlCharacters(Consumer<String> onFlushXmlCharacters) {
+        this.onFlushXmlCharacters = onFlushXmlCharacters;
     }
 
     @Override
-    public void onProcessQueue(Consumer<StateChangeEvent> onProcessQueue) {
+    public void onFlushTemplateCharacters(Consumer<String> onFlushTemplateCharacters) {
+        this.onFlushTemplateCharacters = onFlushTemplateCharacters;
+    }
+
+    @Override
+    public void onProcessQueue(Runnable onProcessQueue) {
         this.onProcessQueue = onProcessQueue;
     }
 
@@ -104,7 +109,7 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
             it.next();
         }
         if (state == ParserState.XML && nextCharacters.length() > 0) {
-            flush(nextCharacters, state, tagType, getBlockId());
+            flushXmlCharacters(nextCharacters);
         }
     }
 
@@ -113,9 +118,9 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
             case XML:
                 switch (c) {
                     case '{':
-                        // We flush the current characters as the assumption to be enforced is that code islands
-                        // must be contained in their own characters events.
-                        flush(nextCharacters, state, tagType, getBlockId());
+                        // We flush the current XML characters to ensure that template
+                        // characters are contained in their own character events.
+                        flushXmlCharacters(nextCharacters);
                         stateChange(MAYBE_START_DELIMITER, NONE);
                         nextCharacters.append(c);
                         break;
@@ -145,7 +150,7 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
                         break;
                     default:
                         stateChange(XML, NONE);
-                        flush(nextCharacters, state, tagType, getBlockId());
+                        flushXmlCharacters(nextCharacters);
                         processQueue();
                         nextCharacters.append(c);
                 }
@@ -208,11 +213,12 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
                 }
                 break;
             case MAYBE_END_DELIMITER:
+                stateChange(TEMPLATE);
+                nextCharacters.append(c);
+
                 switch (c) {
                     case '}':
-                        stateChange(TEMPLATE);
                         processQueue();
-                        nextCharacters.append(c);
 
                         if (tagType == CODE) {
                             // This ensure that the code island block id is the same as the block id of the following block.
@@ -222,15 +228,13 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
                             updateBlock(nextCharacters.toString());
                         }
 
-                        flush(nextCharacters, state, tagType, getBlockId());
+                        flushTemplateCharacters(nextCharacters);
 
                         stateChange(XML, NONE);
                         processQueue();
 
                         break;
                     default:
-                        stateChange(TEMPLATE);
-                        nextCharacters.append(c);
                 }
         }
     }
@@ -267,9 +271,16 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
     }
 
 
-    private void flush(StringBuffer characters, ParserState state, TagType tagType, int blockId) {
-        if (onFlushCharacters != null) {
-            onFlushCharacters.accept(new CharactersEvent(characters.toString(), state, tagType, blockId));
+    private void flushXmlCharacters(StringBuffer characters) {
+        if (onFlushXmlCharacters != null) {
+            onFlushXmlCharacters.accept(characters.toString());
+        }
+        characters.delete(0, characters.length());
+    }
+
+    private void flushTemplateCharacters(StringBuffer characters) {
+        if (onFlushTemplateCharacters != null) {
+            onFlushTemplateCharacters.accept(characters.toString());
         }
         characters.delete(0, characters.length());
     }
@@ -285,7 +296,7 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
 
     private void processQueue() {
         if (onProcessQueue != null) {
-            onProcessQueue.accept(new StateChangeEvent(state, tagType, getBlockId()));
+            onProcessQueue.run();
         }
     }
 

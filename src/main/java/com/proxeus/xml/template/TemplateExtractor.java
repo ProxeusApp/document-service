@@ -90,8 +90,9 @@ public class TemplateExtractor implements XMLEventProcessor {
 
     public TemplateExtractor(TemplateParser parser) {
         this.parser = parser;
-        this.parser.onProcessQueue(s -> processTmpQueue());
-        this.parser.onFlushCharacters(e -> flush(e.getCharacters(), e.getState(), e.getTagType()));
+        this.parser.onProcessQueue(() -> processTmpQueue());
+        this.parser.onFlushXmlCharacters(s -> flush(s));
+        this.parser.onFlushTemplateCharacters(s -> flush(s));
 
         this.tmpQueue = new LinkedList<>();
         this.elementStack = new LinkedList<>();
@@ -131,7 +132,7 @@ public class TemplateExtractor implements XMLEventProcessor {
 
         start.getAttributes().forEachRemaining(a -> {
             if (!((Attribute) a).getName().equals(PROXEUS_MARKER_ATTRIBUTE_NAME)) {
-                attributes.add((Attribute)a);
+                attributes.add((Attribute) a);
             }
         });
 
@@ -176,22 +177,34 @@ public class TemplateExtractor implements XMLEventProcessor {
                     case TEMPLATE:
                         log("BEGIN END_ELEMENT IN TEMPLATE %s tmp: %s result: %s\n", end.getName(), tmpQueue.toString(), resultQueue.toString());
                         boolean ignore = false;
+                        int level = 0; // This is to match the start element at the right level.
                         // If the start element is in the template, then we remove the start and the end elements.
                         if (tmpQueue.size() > 0) {
                             ListIterator<ExtractorXMLEvent> it = tmpQueue.listIterator(tmpQueue.size());
+                            backtrackTmpQueue:
                             while (it.hasPrevious()) {
                                 ExtractorXMLEvent e = it.previous();
-                                if (!e.isStartElement()) {
-                                    continue;
+                                switch (e.getEventType()) {
+                                    case XMLEvent.END_ELEMENT:
+                                        level++;
+                                        continue;
+                                    case XMLEvent.START_ELEMENT:
+                                        StartElement s = e.asStartElement();
+                                        if (level > 0) {
+                                            level--;
+                                            continue;
+                                        }
+                                        if (s.getName().equals(end.getName())) {
+                                            log("Match start tag %s\n", e.toString());
+                                            it.remove();
+                                            ignore = true;
+                                            break backtrackTmpQueue;
+                                        }
+                                        throw new IllegalStateException("XML not well formed, start and end tags do not match");
+                                    default:
+                                        continue;
                                 }
-                                StartElement s = e.asStartElement();
-                                if (s.getName().equals(end.getName())) {
-                                    log("Match start tag %s\n", e.toString());
-                                    it.remove();
-                                    ignore = true;
-                                    break;
-                                }
-                                throw new IllegalStateException("XML not well formed, start and end tags do not match");
+
                             }
                         }
 
@@ -200,20 +213,31 @@ public class TemplateExtractor implements XMLEventProcessor {
                             // attribute.
                             if (resultQueue.size() > 0) {
                                 ListIterator<ExtractorXMLEvent> it = resultQueue.listIterator(resultQueue.size());
+
+                                backtrackResultQueue:
                                 while (it.hasPrevious()) {
                                     ExtractorXMLEvent e = it.previous();
-                                    if (!e.isStartElement()) {
-                                        continue;
+                                    switch (e.getEventType()) {
+                                        case XMLEvent.END_ELEMENT:
+                                            level++;
+                                            continue;
+                                        case XMLEvent.START_ELEMENT:
+                                            StartElement s = e.asStartElement();
+                                            if (level > 0) {
+                                                level--;
+                                                continue;
+                                            }
+                                            if (s.getName().equals(end.getName())) {
+                                                log("Match start tag %s\n", e.toString());
+                                                it.set(clone(e));
+                                                break backtrackResultQueue;
+                                            }
+                                        default:
+                                            continue;
                                     }
-                                    StartElement s = e.asStartElement();
-                                    if (s.getName().equals(end.getName())) {
-                                        log("Match start tag %s\n", e.toString());
-                                        it.set(clone(e));
-                                        break;
-                                    }
+
                                 }
                             }
-                            // TODO: Add marker to corresponding start element
                             switch (parser.getTagType()) {
                                 case CODE:
                                 case COMMENT:
@@ -257,13 +281,17 @@ public class TemplateExtractor implements XMLEventProcessor {
 
 
     private ExtractorXMLEvent clone(ExtractorXMLEvent event) {
+        return clone(event, event.getBlockId());
+    }
+
+    private ExtractorXMLEvent clone(ExtractorXMLEvent event, int blockId) {
         switch (event.getEventType()) {
             case XMLEvent.START_ELEMENT:
                 StartElement start = event.asStartElement();
-                return new ExtractorXMLEvent(addMark(start), event.getState(), event.getTagType(), event.getBlockId());
+                return new ExtractorXMLEvent(addMark(start), event.getState(), event.getTagType(), blockId);
             case XMLEvent.END_ELEMENT:
                 EndElement end = event.asEndElement();
-                return new ExtractorXMLEvent(eventFactory.createEndElement(end.getName(), end.getNamespaces()), event.getState(), event.getTagType(), event.getBlockId());
+                return new ExtractorXMLEvent(eventFactory.createEndElement(end.getName(), end.getNamespaces()), event.getState(), event.getTagType(), blockId);
             default:
                 throw new IllegalStateException("not implemented");
         }
@@ -282,9 +310,6 @@ public class TemplateExtractor implements XMLEventProcessor {
         ExtractorXMLEvent e = new ExtractorXMLEvent(event, state, tagType, blockId);
         switch (e.getEvent().getEventType()) {
             case XMLEvent.START_ELEMENT:
-                if (blockId != 0) { // We are inside a template block
-                    e = clone(e);
-                }
                 resultQueue.add(e);
                 elementStack.push(e);
                 break;
@@ -322,21 +347,32 @@ public class TemplateExtractor implements XMLEventProcessor {
                 continue;
             }
 
+            // We have found a template code island.
+
+            int startBlockId = previous.getBlockId();
+
             log("SPLIT CODE %s %s %s %s %s \n", eventType(previous), previous.toString(), previous.getState(), previous.getTagType(), previous.getBlockId());
-            int blockId = previous.getBlockId();
+
             // Wrap the code island with </...> <...>
-
             it.next();
 
-            it.add(clone(start));
+            it.add(clone(start, startBlockId));
             it.previous();
             it.previous();
 
-            blockId = it.previous().getBlockId();
+            int endBlockId = it.previous().getBlockId();
             it.next();
-            it.add(clone(end));
-            if (blockId == start.getBlockId()) {
+            it.add(clone(end, endBlockId));
+            if (endBlockId == start.getBlockId()) {
                 // We closed the element in the right block.
+                // We find the start element and clone it in order to mark it.
+                while (it.hasPrevious()) {
+                    previous = it.previous();
+                    if (previous == start) {
+                        it.set(clone(previous));
+                        break;
+                    }
+                }
                 break;
             }
         }
@@ -359,13 +395,13 @@ public class TemplateExtractor implements XMLEventProcessor {
         log("PUSH EVENT TO TMP QUEUE %d %s\n", event.getEventType(), event.toString());
 
         ExtractorXMLEvent e = new ExtractorXMLEvent(event, state, tagType, blockId);
-        if (blockId != 0) { // We are inside a template block
+        if (e.getEventType() == XMLEvent.START_ELEMENT) {
             e = clone(e);
         }
         tmpQueue.add(e);
     }
 
-    private void flush(String characters, ParserState state, TagType tagType) {
+    private void flush(String characters) {
         pushResult(eventFactory.createCharacters(characters));
     }
 
