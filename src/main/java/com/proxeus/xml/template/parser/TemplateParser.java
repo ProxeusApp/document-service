@@ -16,7 +16,5 @@ public interface TemplateParser {
 
     void onProcessQueue(Runnable onProcessQueue);
 
-    void onExitTemplate(Runnable onProcessQueue);
-
     void process(String characters) throws XMLStreamException;
 }

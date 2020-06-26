@@ -200,8 +200,8 @@
               <text:span text:style-name="Default_20_Paragraph_20_Font">
                 <text:span text:style-name="T10">:<text:line-break></text:line-break></text:span>
               </text:span>
-              <text:span text:style-name="Default_20_Paragraph_20_Font">
-                <text:span text:style-name="T12" _proxeus="template">{{input.id}}</text:span></text:span><text:span text:style-name="Default_20_Paragraph_20_Font"><text:span text:style-name="T12"></text:span>
+              <text:span text:style-name="Default_20_Paragraph_20_Font" _proxeus="template">
+                <text:span text:style-name="T12" _proxeus="template">{{input.id}}</text:span></text:span><text:span text:style-name="Default_20_Paragraph_20_Font" _proxeus="template"><text:span text:style-name="T12" _proxeus="template"></text:span>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -226,7 +226,7 @@
           </table:table-cell>
           <table:table-cell office:value-type="string" table:style-name="Table2.B1">
             <text:p text:style-name="P9">
-              <text:span text:style-name="T1" _proxeus="template">{{input.user.name}}</text:span><text:span text:style-name="T1"></text:span>
+              <text:span text:style-name="T1" _proxeus="template">{{input.user.name}}</text:span><text:span text:style-name="T1" _proxeus="template"></text:span>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -239,7 +239,7 @@
           </table:table-cell>
           <table:table-cell office:value-type="string" table:style-name="Table2.B2">
             <text:p text:style-name="P9">
-              <text:span text:style-name="T1" _proxeus="template">{{input.created_at}}</text:span><text:span text:style-name="T1"></text:span>
+              <text:span text:style-name="T1" _proxeus="template">{{input.created_at}}</text:span><text:span text:style-name="T1" _proxeus="template"></text:span>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -252,7 +252,7 @@
           </table:table-cell>
           <table:table-cell office:value-type="string" table:style-name="Table2.B2">
             <text:p text:style-name="P9">
-              <text:span text:style-name="T1" _proxeus="template">{{input.text}}</text:span><text:span text:style-name="T1"></text:span>
+              <text:span text:style-name="T1" _proxeus="template">{{input.text}}</text:span><text:span text:style-name="T1" _proxeus="template"></text:span>
             </text:p>
           </table:table-cell>
         </table:table-row>

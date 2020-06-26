@@ -83,7 +83,7 @@
       </text:p>
       <text:p text:style-name="Text_20_Body_20_Anmeldung">
         <text:bookmark-start text:name="input.FirmaGerman"></text:bookmark-start>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.FirmaGerman}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.FirmaGerman}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>
         <text:bookmark-end text:name="input.FirmaGerman"></text:bookmark-end>
         <text:span text:style-name="Absatz-Standardschriftart"> AG</text:span>
       </text:p>
@@ -100,14 +100,14 @@
       </text:p>
       <text:p text:style-name="P5">
         <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>{% if (input.FirmaFrench == '')and (input.FirmaEnglish == '') %}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">--</text:span>
+        <text:span text:style-name="Absatz-Standardschriftart">--</text:span>
         <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>{% endif %}<text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>
       </text:p>
       <text:p text:style-name="P4">
         <text:span text:style-name="Absatz-Standardschriftart">Sitz</text:span>
       </text:p>
       <text:p text:style-name="Text_20_Body_20_Anmeldung">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.HeadquarterRegisteredOffice}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> / {{input.HeadquarterCanton}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.HeadquarterRegisteredOffice}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"> / {{input.HeadquarterCanton}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>
       </text:p>
       <text:p text:style-name="Heading_20_Anmeldung">
         <text:span text:style-name="Absatz-Standardschriftart">Domizil</text:span>
@@ -130,7 +130,7 @@
         <text:span text:style-name="Absatz-Standardschriftart">Statutendatum</text:span>
       </text:p>
       <text:p text:style-name="Text_20_Body_20_Anmeldung">
-        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.DateOfStatutes}}</text:span><text:span text:style-name="Absatz-Standardschriftart"></text:span>
+        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">{{input.DateOfStatutes}}</text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"></text:span>
       </text:p>
       <text:p text:style-name="Heading_20_Anmeldung">
         <text:span text:style-name="Absatz-Standardschriftart"></text:span>

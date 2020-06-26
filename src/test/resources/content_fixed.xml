@@ -602,8 +602,8 @@
                 <text:list-item>
                     <text:p text:style-name="P9">
                         <text:bookmark-start text:name="FirmaGerman"></text:bookmark-start>
-                        <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8" _proxeus="template">{{input.FirmaGerman}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T10"></text:span>
+                        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">
+                            <text:span text:style-name="T8" _proxeus="template">{{input.FirmaGerman}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T10" _proxeus="template"></text:span>
                         </text:span>
                         <text:bookmark-end text:name="FirmaGerman"></text:bookmark-end>
                         <text:span text:style-name="Absatz-Standardschriftart">
@@ -622,15 +622,15 @@
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P9">
-                        <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8" _proxeus="template">{{input.FirmaGerman}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> SA</text:span>
+                        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">
+                            <text:span text:style-name="T8" _proxeus="template">{{input.FirmaGerman}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template"> SA</text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P9">
-                        <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8" _proxeus="template">{{input.FirmaGerman}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> Ltd</text:span>
+                        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">
+                            <text:span text:style-name="T8" _proxeus="template">{{input.FirmaGerman}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template"> Ltd</text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
@@ -642,8 +642,8 @@
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P9">
-                        <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8" _proxeus="template">{{input.HeadquarterRegisteredOffice}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8" _proxeus="template"> / {{input.HeadquarterCanton}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"></text:span>
+                        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">
+                            <text:span text:style-name="T8" _proxeus="template">{{input.HeadquarterRegisteredOffice}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template"> / {{input.HeadquarterCanton}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template"></text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
@@ -655,8 +655,8 @@
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P14">
-                        <text:span text:style-name="Absatz-Standardschriftart">
-                            <text:span text:style-name="T8" _proxeus="template">{{input.HeadquarterZIP}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8" _proxeus="template"> {{input.HeadquarterCity}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8" _proxeus="template">, {{input.HeadquarterStreet}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8" _proxeus="template"> {{input.HeadquarterStreetNumber}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart"><text:span text:style-name="T8"> (eigenes Rechtsdomizil)</text:span>
+                        <text:span text:style-name="Absatz-Standardschriftart" _proxeus="template">
+                            <text:span text:style-name="T8" _proxeus="template">{{input.HeadquarterZIP}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template"> {{input.HeadquarterCity}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template">, {{input.HeadquarterStreet}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template"> {{input.HeadquarterStreetNumber}}</text:span></text:span><text:span text:style-name="Absatz-Standardschriftart" _proxeus="template"><text:span text:style-name="T8" _proxeus="template"> (eigenes Rechtsdomizil)</text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
@@ -677,8 +677,8 @@
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P9">
-                        <text:span text:style-name="Fett">
-                            <text:span text:style-name="T11" _proxeus="template">{{input.DateOfStatutes}}</text:span></text:span><text:span text:style-name="Fett"><text:span text:style-name="T11"></text:span>
+                        <text:span text:style-name="Fett" _proxeus="template">
+                            <text:span text:style-name="T11" _proxeus="template">{{input.DateOfStatutes}}</text:span></text:span><text:span text:style-name="Fett" _proxeus="template"><text:span text:style-name="T11" _proxeus="template"></text:span>
                         </text:span>
                     </text:p>
                 </text:list-item>
@@ -690,7 +690,7 @@
                 </text:list-item>
                 <text:list-item>
                     <text:p text:style-name="P36">
-                        <text:span text:style-name="Fett">
+                        <text:span text:style-name="Fett" _proxeus="template">
                             <text:span text:style-name="T25" _proxeus="template"></text:span></text:span>{%if input.PurposeDETemplate == 'Other'%}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>
                         <text:span text:style-name="Fett" _proxeus="template">
                             <text:span text:style-name="T25" _proxeus="template">{{input.PurposeDE}}</text:span></text:span><text:span text:style-name="Fett" _proxeus="template"><text:span text:style-name="T25" _proxeus="template"> </text:span></text:span>{%else%}<text:span text:style-name="ProxeusFormula" _proxeus="template"></text:span>

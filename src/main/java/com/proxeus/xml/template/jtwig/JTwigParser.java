@@ -34,7 +34,6 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
     private Consumer<String> onFlushXmlCharacters;
     private Consumer<String> onFlushTemplateCharacters;
     private Runnable onProcessQueue;
-    private Runnable onExitTemplate;
 
     private static Set<String> blockStart = new HashSet<>(Arrays.asList("if", "elseif", "else", "for", "block", "embed", "macro", "autoescape", "filter", "verbatim"));
     private static Set<String> blockEnd = new HashSet<>(Arrays.asList("elseif", "else", "endif", "endfor", "endblock", "endembed", "endmacro", "endautoescape", "endfilter", "endverbatim"));
@@ -100,11 +99,6 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
     @Override
     public void onProcessQueue(Runnable onProcessQueue) {
         this.onProcessQueue = onProcessQueue;
-    }
-
-    @Override
-    public void onExitTemplate(Runnable onExitTemplate) {
-        this.onExitTemplate = onExitTemplate;
     }
 
     @Override
@@ -236,7 +230,6 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
 
                         flushTemplateCharacters(nextCharacters);
 
-                        exitTemplate();
                         stateChange(XML, NONE);
                         processQueue();
 
@@ -290,12 +283,6 @@ public class JTwigParser implements TemplateParser, TemplateParserFactory {
             onFlushTemplateCharacters.accept(characters.toString());
         }
         characters.delete(0, characters.length());
-    }
-
-    private void exitTemplate(){
-        if (onExitTemplate != null){
-            onExitTemplate.run();
-        }
     }
 
     private void stateChange(ParserState state) throws XMLStreamException {

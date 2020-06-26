@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doc>
     <a>
-        <f>
+        <f _proxeus="template">
         first line
         {% if foobar %}
         second line
         <b _proxeus="template"><e _proxeus="template">
             third line
             </e></b>{% elseif barfoo %}<b _proxeus="template"><e _proxeus="template"><d _proxeus="template">
-            <c _proxeus="template">
+            <c>
                 fourth line
                 {{ barfoo + foobar }}
             </c>
