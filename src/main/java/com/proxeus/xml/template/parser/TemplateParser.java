@@ -10,9 +10,13 @@ public interface TemplateParser {
 
     int getBlockId();
 
-    void onFlushCharacters(Consumer<CharactersEvent> onFlushCharacters);
+    void onFlushXmlCharacters(Consumer<String> onFlushCharacters);
 
-    void onProcessQueue(Consumer<StateChangeEvent> onProcessQueue);
+    void onFlushTemplateCharacters(Consumer<String> onFlushCharacters);
+
+    void onProcessQueue(Runnable onProcessQueue);
+
+    void onExitTemplate(Runnable onProcessQueue);
 
     void process(String characters) throws XMLStreamException;
 }

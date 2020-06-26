@@ -90,8 +90,10 @@ public class TemplateExtractor implements XMLEventProcessor {
 
     public TemplateExtractor(TemplateParser parser) {
         this.parser = parser;
-        this.parser.onProcessQueue(s -> processTmpQueue());
-        this.parser.onFlushCharacters(e -> flush(e.getCharacters(), e.getState(), e.getTagType()));
+        this.parser.onProcessQueue(() -> processTmpQueue());
+        this.parser.onExitTemplate(() -> exitTemplate());
+        this.parser.onFlushXmlCharacters(s -> flush(s));
+        this.parser.onFlushTemplateCharacters(s -> flush(s));
 
         this.tmpQueue = new LinkedList<>();
         this.elementStack = new LinkedList<>();
@@ -131,7 +133,7 @@ public class TemplateExtractor implements XMLEventProcessor {
 
         start.getAttributes().forEachRemaining(a -> {
             if (!((Attribute) a).getName().equals(PROXEUS_MARKER_ATTRIBUTE_NAME)) {
-                attributes.add((Attribute)a);
+                attributes.add((Attribute) a);
             }
         });
 
@@ -213,7 +215,6 @@ public class TemplateExtractor implements XMLEventProcessor {
                                     }
                                 }
                             }
-                            // TODO: Add marker to corresponding start element
                             switch (parser.getTagType()) {
                                 case CODE:
                                 case COMMENT:
@@ -323,16 +324,15 @@ public class TemplateExtractor implements XMLEventProcessor {
             }
 
             log("SPLIT CODE %s %s %s %s %s \n", eventType(previous), previous.toString(), previous.getState(), previous.getTagType(), previous.getBlockId());
-            int blockId = previous.getBlockId();
-            // Wrap the code island with </...> <...>
 
+            // Wrap the code island with </...> <...>
             it.next();
 
             it.add(clone(start));
             it.previous();
             it.previous();
 
-            blockId = it.previous().getBlockId();
+            int blockId = it.previous().getBlockId();
             it.next();
             it.add(clone(end));
             if (blockId == start.getBlockId()) {
@@ -365,7 +365,7 @@ public class TemplateExtractor implements XMLEventProcessor {
         tmpQueue.add(e);
     }
 
-    private void flush(String characters, ParserState state, TagType tagType) {
+    private void flush(String characters) {
         pushResult(eventFactory.createCharacters(characters));
     }
 
@@ -381,6 +381,10 @@ public class TemplateExtractor implements XMLEventProcessor {
             }
         }
         log("END PROCESSING TMP QUEUE %s\n", resultQueue.toString());
+    }
+
+    private void exitTemplate() {
+
     }
 
     private String eventType(XMLEvent event) {
