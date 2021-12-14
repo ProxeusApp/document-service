@@ -62,9 +62,13 @@ public class DefaultTemplateHandler implements TemplateHandler {
             XMLEvent e = it.next();
             if (e.isStartDocument()) {
                 StartDocument sd = (StartDocument) e;
-                charset = Charset.forName(sd.getCharacterEncodingScheme());
+                String strCharset = sd.getCharacterEncodingScheme();
+                charset = Charset.forName(strCharset);
+                XMLEvent event_out = eventFactory.createStartDocument(strCharset, "1.0");
+                writer.add(event_out);
+            } else {
+                writer.add(e);
             }
-            writer.add(e);
         }
 
         if (data == null) {
@@ -98,9 +102,12 @@ public class DefaultTemplateHandler implements TemplateHandler {
         Iterator<XMLEvent> it = eventWriter.interator();
         while (it.hasNext()) {
             XMLEvent e = it.next();
-            writer.add(e);
             if (e.isStartDocument()) {
+                XMLEvent event_out = eventFactory.createStartDocument("UTF-8", "1.0");
+                writer.add(event_out);
                 writer.add(eventFactory.createCharacters(System.lineSeparator()));
+            } else {
+                writer.add(e);
             }
         }
     }

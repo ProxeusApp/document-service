@@ -144,7 +144,8 @@ public class TemplateExtractor implements XMLEventProcessor {
         log("PROCESS EVENT<%s>\n", eventType(event));
         switch (event.getEventType()) {
             case XMLEvent.START_DOCUMENT:
-                pushResult(event);
+                // pushResult(event);
+                pushResult(eventFactory.createStartDocument("UTF-8", "1.0"));
                 pushResult(eventFactory.createCharacters(System.lineSeparator()));
                 break;
             case XMLEvent.END_DOCUMENT:
