@@ -93,7 +93,7 @@ public class Config {
 		T o = map(config, clazz);
 		if(o == null){
 			try{
-				o = clazz.newInstance();
+				o = clazz.getDeclaredConstructor().newInstance();
 			}catch (Exception e){
 				//no default constructor
 			}
@@ -105,7 +105,7 @@ public class Config {
 		T o = Json.fromJson(Json.toJson(config), clazz);
 		if(o == null){
 			try{
-				o = clazz.newInstance();
+				o = clazz.getDeclaredConstructor().newInstance();
 			}catch (Exception e){
 				//no default constructor
 			}
