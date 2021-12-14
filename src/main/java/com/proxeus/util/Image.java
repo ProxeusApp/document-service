@@ -1,5 +1,7 @@
 package com.proxeus.util;
 
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
@@ -9,14 +11,30 @@ import java.io.IOException;
  * The container will be invisible as the output is always png.
  */
 public class Image {
+    public static BufferedImage resize(BufferedImage inputImage, int scaledWidth, int scaledHeight)
+           throws IOException {
+        // creates output image
+        BufferedImage outputImage = new BufferedImage(scaledWidth,
+                scaledHeight, inputImage.getType());
+
+        // scales the input image to the output image
+        Graphics2D g2d = outputImage.createGraphics();
+        g2d.drawImage(inputImage, 0, 0, scaledWidth, scaledHeight, null);
+        g2d.dispose();
+
+        return outputImage;
+    }
+
     public static void adjustToFitToRatio(File src, File dst, int maxWidth, int maxHeight, String alignment, boolean sizeItUpIfSmaller) throws IOException {
-        javaxt.io.Image image = new javaxt.io.Image(src);
-        image.setOutputQuality(98.0);
+        BufferedImage image = ImageIO.read(src);
+        // image.setOutputQuality(98.0);
         if (sizeItUpIfSmaller) {
             if (maxHeight > maxWidth) {
-                image.setHeight(maxHeight);//works with lower images
+                // image.setHeight(maxHeight);//works with lower images
+                image = resize(image, image.getHeight() * maxWidth / maxHeight, maxHeight);
             } else {
-                image.setWidth(maxWidth);
+                // image.setWidth(maxWidth);
+                image = resize(image, maxWidth, image.getWidth() * maxHeight / maxWidth);
             }
         }
         int width = image.getWidth();
@@ -39,7 +57,7 @@ public class Image {
         }
 
         if (image.getWidth() != outputWidth || image.getHeight() != outputHeight) {
-            image.resize(outputWidth, outputHeight, false);
+            resize(image, outputWidth, outputHeight);
         }
         width = image.getWidth();
         height = image.getHeight();
@@ -77,9 +95,10 @@ public class Image {
                 width = 0;
             }
         }
-        javaxt.io.Image containerImage = new javaxt.io.Image(maxWidth, maxHeight);
-        containerImage.setOutputQuality(98.0);
-        containerImage.addImage(image, width, height, false);
-        ImageIO.write(containerImage.getBufferedImage(), "png", dst);
+        BufferedImage containerImage = resize(image, width, height);
+        // BufferedImage containerImage = new BufferedImage(maxWidth, maxHeight);
+        // containerImage.setOutputQuality(98.0);
+        // containerImage.addImage(image, width, height, false);
+        ImageIO.write(containerImage, "png", dst);
     }
 }
