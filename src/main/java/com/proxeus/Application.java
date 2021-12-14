@@ -2,7 +2,7 @@ package com.proxeus;
 
 import com.proxeus.util.Json;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.*;
+import org.apache.logging.log4j.*;
 import spark.utils.IOUtils;
 
 import java.io.File;
@@ -24,7 +24,8 @@ public class Application {
 			}
 			config = Config.create(Json.fromJson(IOUtils.toString(new FileInputStream(file)), Map.class));
 			try{
-				initLog4j(Config.by(LogConfig.class));
+				// TODO: https://logging.apache.org/log4j/2.x/manual/customconfig.html#ConfigurationBuilder
+				// initLog4j(Config.by(LogConfig.class));
 			}catch (Exception e){
                 e.printStackTrace();
 			}
@@ -32,6 +33,7 @@ public class Application {
 		return config;
 	}
 
+	/*
 	private static void initLog4j(LogConfig config){
 		ConsoleAppender ca = new ConsoleAppender(); //create appender
 		ca.setLayout(new PatternLayout(config.pattern));
@@ -54,7 +56,7 @@ public class Application {
 		Logger.getRootLogger().addAppender(fa);
 		Logger.getRootLogger().addAppender(ca);
 	}
-
+	*/
 
 
 }

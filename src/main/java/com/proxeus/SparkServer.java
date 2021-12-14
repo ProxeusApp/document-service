@@ -22,7 +22,9 @@ import org.apache.commons.fileupload.MultipartStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.time.StopWatch;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import org.eclipse.jetty.io.EofException;
 import spark.Response;
 
@@ -56,7 +58,7 @@ public class SparkServer {
 
     SparkServer(Config config) {
         removeTheDiskCacheOfDocs();
-        Logger log = Logger.getLogger(this.getClass());
+        Logger log = LogManager.getLogger(this.getClass());
         threadPool(config.getMax(), config.getMin(), config.getTimeoutMillis());
         port(config.getPort());
         ipAddress(config.getHost());

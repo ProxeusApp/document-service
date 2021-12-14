@@ -15,7 +15,8 @@ import com.proxeus.xml.template.TemplateHandler;
 import com.proxeus.xml.template.TemplateHandlerFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.namespace.QName;
 import java.io.*;
@@ -36,7 +37,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * by keeping the things that are needed from the beginning until the end here together.
  */
 public class ODTRenderer {
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     private static String TEXT = "urn:oasis:names:tc:opendocument:xmlns:text:1.0";
     private static QName TEXT_SPAN = new QName(TEXT, "span");

@@ -1,11 +1,12 @@
 package com.proxeus;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.PrintStream;
 
 public class DefaultOutAndErrToLog4jRedirector {
-		private final Logger logger = Logger.getLogger("Default");
+		private final Logger logger = LogManager.getLogger("Default");
 
     public DefaultOutAndErrToLog4jRedirector(){
 			tieSystemOutAndErrToLog();

@@ -7,7 +7,8 @@ import com.proxeus.util.zip.Zip;
 import com.proxeus.xml.Config;
 import com.proxeus.xml.template.*;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -26,7 +27,7 @@ import static com.proxeus.document.odt.ODTRenderer.STYLE_XML;
  * It makes it possible to parse the vars only and it can print errors readable in the ODT.
  */
 public class ODTCompiler implements DocumentCompiler {
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     //only used for error
     public final static Charset UTF_8 = StandardCharsets.UTF_8;

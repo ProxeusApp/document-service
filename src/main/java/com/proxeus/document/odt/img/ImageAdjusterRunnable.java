@@ -2,7 +2,8 @@ package com.proxeus.document.odt.img;
 
 import com.proxeus.document.AssetFile;
 import com.proxeus.util.Image;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.util.Queue;
 
@@ -11,7 +12,7 @@ import java.util.Queue;
  * Until the main thread is ready to pack the files back to the ODT.
  */
 public class ImageAdjusterRunnable implements Runnable {
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     private ImageSettings imageSettings;
     private Queue<Exception> exceptions;

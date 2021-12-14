@@ -9,7 +9,8 @@ import com.proxeus.xml.template.TemplateHandlerFactory;
 import com.proxeus.xml.template.TemplateVarParserFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.File;
 import java.io.InputStream;
@@ -23,7 +24,7 @@ import static com.proxeus.document.TemplateType.ODT;
 
 
 public class TemplateCompiler {
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     private ODTCompiler odtCompiler;
 

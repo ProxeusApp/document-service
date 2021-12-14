@@ -3,7 +3,8 @@ package com.proxeus.document.odt;
 import com.google.common.base.Strings;
 import com.proxeus.document.AssetFile;
 import com.proxeus.xml.processor.XMLEventProcessor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Queue;
 
 public class ODTManifestProcessor implements XMLEventProcessor {
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     static private String MANIFEST_NAMESPACE = "urn:oasis:names:tc:opendocument:xmlns:manifest:1.0";
     static private String MANIFEST_PREFIX = "manifest";
