@@ -30,6 +30,7 @@ task buildJar(type: Jar) {
     archiveFileName = "document-service.jar"
     destinationDirectory = file("$rootDir/")
     archiveBaseName = project.name
+    duplicatesStrategy = "exclude"
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA', '**/*Test.java', '**/*.xsd', '**/*.cat', '**/*.txt'
