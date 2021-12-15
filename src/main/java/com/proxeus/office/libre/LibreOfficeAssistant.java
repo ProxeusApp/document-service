@@ -5,7 +5,8 @@ import com.proxeus.error.UnavailableException;
 import com.proxeus.office.libre.exe.Extension;
 import com.proxeus.office.libre.exe.LibreOffice;
 import com.proxeus.office.libre.exe.LibreOfficePool;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.Closeable;
 import java.io.File;
@@ -15,7 +16,7 @@ import java.io.InputStream;
  * LibreOfficeAssistant makes the communication between LibreOffice and the Document-Service easier and safely.
  */
 public class LibreOfficeAssistant implements TemplateFormatter, Closeable {
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     private LibreOfficePool libreOfficePool;
 
@@ -51,7 +52,7 @@ public class LibreOfficeAssistant implements TemplateFormatter, Closeable {
         }finally {
             libreOfficePool.release();
         }
-       
+
         if (lo == null){
             throw new UnavailableException("Cannot initialize LibreOffice instance. Please try again later.");
         }

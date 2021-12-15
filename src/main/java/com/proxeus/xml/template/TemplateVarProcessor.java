@@ -1,7 +1,8 @@
 package com.proxeus.xml.template;
 
 import com.proxeus.xml.processor.XMLEventProcessor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -11,7 +12,7 @@ import javax.xml.stream.events.XMLEvent;
 
 public class TemplateVarProcessor implements XMLEventProcessor {
 
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
     private TemplateVarParser varParser;
 
     public TemplateVarProcessor(TemplateVarParser varParser) {

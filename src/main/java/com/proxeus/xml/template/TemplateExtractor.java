@@ -4,7 +4,8 @@ import com.proxeus.xml.processor.XMLEventProcessor;
 import com.proxeus.xml.template.parser.ParserState;
 import com.proxeus.xml.template.parser.TagType;
 import com.proxeus.xml.template.parser.TemplateParser;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLEventFactory;
@@ -78,7 +79,7 @@ public class TemplateExtractor implements XMLEventProcessor {
     static public final QName PROXEUS_MARKER_ATTRIBUTE_NAME = new QName("_proxeus");
     static private final String PROXEUS_MARKER_ATTRIBUTE_VALUE = "template";
 
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
     private TemplateParser parser;
 
     private LinkedList<ExtractorXMLEvent> tmpQueue;
@@ -143,7 +144,8 @@ public class TemplateExtractor implements XMLEventProcessor {
         log("PROCESS EVENT<%s>\n", eventType(event));
         switch (event.getEventType()) {
             case XMLEvent.START_DOCUMENT:
-                pushResult(event);
+                // pushResult(event);
+                pushResult(eventFactory.createStartDocument("UTF-8", "1.0"));
                 pushResult(eventFactory.createCharacters(System.lineSeparator()));
                 break;
             case XMLEvent.END_DOCUMENT:

@@ -19,7 +19,8 @@ public class CleanTemplateExtractorMarkProcessor implements XMLEventProcessor {
             XMLEvent event = reader.nextEvent();
             switch (event.getEventType()) {
                 case XMLEvent.START_DOCUMENT:
-                    writer.add(event);
+                    // writer.add(event);
+                    writer.add(eventFactory.createStartDocument("UTF-8", "1.0"));
                     writer.add(eventFactory.createCharacters(System.lineSeparator()));
                     break;
                 case XMLEvent.START_ELEMENT:

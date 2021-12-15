@@ -1,7 +1,8 @@
 package com.proxeus.xml.template;
 
 import com.proxeus.xml.processor.XMLEventProcessor;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.*;
@@ -19,7 +20,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DefaultTemplateHandler implements TemplateHandler {
 
-    private Logger log = Logger.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
     private TemplateXMLEventWriter events;
     private XMLEventProcessor preProcessor;
     private XMLEventProcessor postProcessor;
@@ -61,9 +62,13 @@ public class DefaultTemplateHandler implements TemplateHandler {
             XMLEvent e = it.next();
             if (e.isStartDocument()) {
                 StartDocument sd = (StartDocument) e;
-                charset = Charset.forName(sd.getCharacterEncodingScheme());
+                String strCharset = sd.getCharacterEncodingScheme();
+                charset = Charset.forName(strCharset);
+                XMLEvent event_out = eventFactory.createStartDocument(strCharset, "1.0");
+                writer.add(event_out);
+            } else {
+                writer.add(e);
             }
-            writer.add(e);
         }
 
         if (data == null) {
@@ -97,9 +102,12 @@ public class DefaultTemplateHandler implements TemplateHandler {
         Iterator<XMLEvent> it = eventWriter.interator();
         while (it.hasNext()) {
             XMLEvent e = it.next();
-            writer.add(e);
             if (e.isStartDocument()) {
+                XMLEvent event_out = eventFactory.createStartDocument("UTF-8", "1.0");
+                writer.add(event_out);
                 writer.add(eventFactory.createCharacters(System.lineSeparator()));
+            } else {
+                writer.add(e);
             }
         }
     }

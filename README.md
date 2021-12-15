@@ -21,6 +21,8 @@ Currently supported template format is `ODT`. Other formats like `DOCX` are not 
 + gradle
 + docker
 
+Tip: use [sdkman.io](https://sdkman.io/install) for a quick developer setup.
+
 #### Building
 ```
 sudo docker build -t document-service .

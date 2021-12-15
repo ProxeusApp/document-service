@@ -7,7 +7,7 @@ plugins {
 apply plugin: 'groovy'
 apply plugin: 'java'
 
-version = '1.0'
+version = '1.1'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -24,22 +24,20 @@ allprojects {
 task buildJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Proxeus Document Service',
-                'Implementation-Version': version,
+                'Implementation-Version': archiveVersion,
                 'Main-Class': 'com.proxeus.Main'
     }
-    archiveName = "document-service.jar"
-    destinationDir = file("$rootDir/")
-    baseName = project.name
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    archiveFileName = "document-service.jar"
+    destinationDirectory = file("$rootDir/")
+    archiveBaseName = project.name
+    duplicatesStrategy = "exclude"
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA', '**/*Test.java', '**/*.xsd', '**/*.cat', '**/*.txt'
 }
 
 repositories {
     mavenCentral()
-    maven {
-        url "http://repository.jspresso.org/maven2"
-    }
     maven {
         url "https://jcenter.bintray.com/"
     }
@@ -49,40 +47,53 @@ repositories {
 }
 
 dependencies {
-    compile 'com.google.guava:guava:18.0'
-    compile 'javax.servlet:javax.servlet-api:3.1.0'
-    compile 'org.eclipse.jetty:jetty-io:9.4.18.v20190429'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.9.9'
+    implementation 'com.google.guava:guava:31.0.1-jre'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'org.eclipse.jetty:jetty-io:9.4.44.v20210927'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.0'
     def ex = {
         exclude group: 'org.slf4j', module: 'slf4j-jdk14'
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'org.slf4j', module: 'slf4j-nop'
         exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
     }
-    compile "org.slf4j:slf4j-simple:1.7.25"
-    compile "log4j:log4j:1.2.17", ex
-    compile 'org.codehaus.groovy:groovy-all:2.3.11', ex
+    implementation "org.slf4j:slf4j-simple:1.7.32"
 
-    compile "org.jtwig:jtwig-core:5.87.0.RELEASE", ex
+    // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
+    implementation 'org.apache.logging.log4j:log4j-core:2.16.0'
 
-    compile "javax.xml.bind:jaxb-api:2.2.11", ex
-    compile "commons-io:commons-io:RELEASE", ex
-    compile "javaxt:javaxt-core:1.7.8", ex
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    implementation 'org.codehaus.groovy:groovy-all:3.0.9', ex
 
-    compile "commons-codec:commons-codec:1.11", ex
-    compile "commons-io:commons-io:2.5", ex
-    compile "commons-fileupload:commons-fileupload:1.3.3", ex
-    compile group: 'org.apache.commons', name: 'commons-text', version: '1.6', ex
+    // !! UNSUPPORTED - OBSOLETE
+    implementation "org.jtwig:jtwig-core:5.87.0.RELEASE", ex
 
-    compile "com.fasterxml.jackson.core:jackson-databind:2.9.9", ex
-    compile "com.sparkjava:spark-core:2.9.1", ex
+    // !! UNSUPPORTED - OBSOLETE
+    implementation "javax.xml.bind:jaxb-api:2.2.11", ex
 
-    compile "org.libreoffice:unoil:6.2.3", ex
-    compile "org.libreoffice:jurt:6.2.3", ex
-    compile "org.libreoffice:juh:6.2.3", ex
-    compile "org.libreoffice:ridl:6.2.3", ex
+    implementation "commons-io:commons-io:2.11.0", ex
 
-    testCompile "junit:junit:4.13"
-    testCompile "org.mockito:mockito-core:2.+"
+    // !! UNSUPPORTED - UNAVAILABLE
+    // https://mvnrepository.com/artifact/javaxt/javaxt-core
+    //implementation "javaxt:javaxt-core:1.7.8"
+
+    implementation "org.apache.commons:commons-lang3:3.9"
+
+    implementation "commons-codec:commons-codec:1.15", ex
+    implementation "commons-io:commons-io:2.11.0", ex
+    implementation "commons-fileupload:commons-fileupload:1.4", ex
+    implementation "org.apache.commons:commons-text:1.9", ex
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.13.0", ex
+
+    // https://mvnrepository.com/artifact/com.sparkjava/spark-core
+    implementation 'com.sparkjava:spark-core:2.9.3'
+
+    implementation "org.libreoffice:unoil:6.4.7", ex
+    implementation "org.libreoffice:jurt:6.4.7", ex
+    implementation "org.libreoffice:juh:6.4.7", ex
+    implementation "org.libreoffice:ridl:6.4.7", ex
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.2"
+    testImplementation "org.mockito:mockito-core:4.1.0"
 }
