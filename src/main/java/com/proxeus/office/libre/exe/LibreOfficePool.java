@@ -48,6 +48,7 @@ public class LibreOfficePool {
     private int highLoad = 60;
     private int lowLoad = 0;
     private final int failoverStart = 1;
+    private final int reconnectWait = 8;
     private int failover = failoverStart;
     private long cleanupThreadSleep = 200;
     private Thread cleanupThread;
@@ -242,6 +243,7 @@ public class LibreOfficePool {
     }
 
     private void prepare() {
+        log.info("Preparing LibreOfficePool: ", exeDir);
         for (; executables.size() < min; ) {
             LibreOffice lo = tryNewLibreOffice();
             if (lo != null) {
@@ -276,7 +278,7 @@ public class LibreOfficePool {
         }
         if (currentOccupiedSize + toReconnect.size() >= max) {
             //full, lets wait until one of them is getting released again
-            lo = executables.poll(8, TimeUnit.SECONDS);
+            lo = executables.poll(reconnectWait, TimeUnit.SECONDS);
             //looks like the service is under heavy load, lets throw and exceptions saying try again later
             //holding the request longer doesn't make sense as it takes more resources
             if (lo == null) {
@@ -287,7 +289,7 @@ public class LibreOfficePool {
             lo = executables.poll();
             if (lo == null) {
                 offerNew();
-                lo = executables.poll(8, TimeUnit.SECONDS);
+                lo = executables.poll(reconnectWait, TimeUnit.SECONDS);
                 if (lo == null) {
                     throw new UnavailableException("Cannot get LibreOffice instance.  Please try again later.");
                 }
