@@ -4,6 +4,7 @@
 /logs/
 out/
 /data
+/docsCache/
 
 /conf.json
 document-service.jar

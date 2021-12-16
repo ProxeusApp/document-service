@@ -119,8 +119,6 @@ public class ODTRenderer {
                             output.flush();
                         } catch (Exception e) {
                             compileExceptions.offer(e);
-                            log.error("Compiling ODT");
-                            log.debug(toExtract.getAbsolutePath());
                         }
                     });
                 }
