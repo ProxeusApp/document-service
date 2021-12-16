@@ -5,7 +5,9 @@
 out/
 /data
 
+/conf.json
 document-service.jar
+
 **/.DS_Store
 .classpath
 .project
