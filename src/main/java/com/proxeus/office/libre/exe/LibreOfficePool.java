@@ -58,7 +58,10 @@ public class LibreOfficePool {
         if (libreConfig.min <= 0 || libreConfig.max < libreConfig.min) {
             throw new InvalidParameterException("min must be higher than 0 and max must be at least as min or higher");
         }
-        pathFixForLibrary();
+        // UNSAFE and removed in fix-templ-22:
+        // pathFixForLibrary();
+        // Instead you can use:
+        // export LD_LIBRARY_PATH=path/to/your/library/dir/
         executables = new LinkedBlockingDeque<>(libreConfig.max);
         occupied = new HashMap<>(libreConfig.max);
         toBeReleased = new LinkedBlockingQueue<>(libreConfig.max);
@@ -367,19 +370,6 @@ public class LibreOfficePool {
         } while (count < maxAttempts);
         lo.close();
         throw new UnavailableException("Please try again later.");
-    }
-
-    private void pathFixForLibrary() {
-        System.setProperty("java.library.path", exeDir);
-        //set sys_paths to null
-        final Field sysPathsField;
-        try {
-            sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-            sysPathsField.setAccessible(true);
-            sysPathsField.set(null, null);
-        } catch (java.lang.Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void close() {
