@@ -1,0 +1,46 @@
+{
+  "configuration": {
+    "name": "Default",
+    "properties": {
+      "property": [
+        {
+          "name": "log-path",
+          "value": "logs"
+        },
+        {
+          "name": "archive",
+          "value": "${log-path}/archive"
+        }
+      ]
+    },
+    "appenders": {
+      "Console": {
+        "name": "Console-Appender",
+        "target": "SYSTEM_OUT",
+        "PatternLayout": {
+          "pattern": "[%-5level] %d{dd.MM.yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n"
+        }
+      },
+      "File": {
+        "name": "File-Appender",
+        "fileName": "${log-path}/document-service.log",
+        "maxFileSize": "5MB",
+        "maxBackupIndex": 5,
+        "PatternLayout": {
+          "pattern": "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+        }
+      }
+    },
+    "loggers": {
+      "logger": {
+        "name": "com.proxeus",
+        "level": "debug",
+        "appender-ref": [{"ref": "File-Appender", "level":"warn"}]
+      },
+      "root": {
+        "level": "debug",
+        "appender-ref": {"ref": "Console-Appender"}
+      }
+    }
+  }
+}

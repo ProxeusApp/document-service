@@ -23,6 +23,10 @@ Currently supported template format is `ODT`. Other formats like `DOCX` are not 
 
 Tip: use [sdkman.io](https://sdkman.io/install) for a quick developer setup.
 
+#### Configuration
+
+See [conf.json](src/main/resources/conf.json) and [log4j2.json](src/main/resources/log4j2.json).
+
 #### Building
 ```
 sudo docker build -t document-service .
