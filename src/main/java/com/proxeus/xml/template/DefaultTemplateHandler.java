@@ -91,6 +91,7 @@ public class DefaultTemplateHandler implements TemplateHandler {
             XMLEventReader reader = inputFactory.createXMLEventReader(input);
             this.postProcessor.process(reader, eventWriter);
         } catch (Exception e) {
+            log.debug((String) input.readAllBytes());
             e.printStackTrace();
         }
 
