@@ -29,4 +29,5 @@ RUN gradle clean buildJar --no-daemon --quiet
 COPY document-service.jar /document-service/
 
 # Run service
-CMD ["java", "-jar", "/document-service/document-service.jar"]
+# * add-opens: https://github.com/ProxeusApp/document-service/issues/23#issuecomment-996166084
+CMD ["java", "--add-opens=java.base/java.lang=ALL-UNNAMED", "-jar", "/document-service/document-service.jar"]

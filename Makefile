@@ -2,6 +2,8 @@
 
 all: build build-docker
 
+docker: build-docker run-docker
+
 build:
 	gradle test buildJar
 
