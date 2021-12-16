@@ -88,10 +88,10 @@ dependencies {
     // https://mvnrepository.com/artifact/com.sparkjava/spark-core
     implementation 'com.sparkjava:spark-core:2.9.3'
 
-    implementation "org.libreoffice:unoil:6.4.7", ex
-    implementation "org.libreoffice:jurt:6.4.7", ex
-    implementation "org.libreoffice:juh:6.4.7", ex
-    implementation "org.libreoffice:ridl:6.4.7", ex
+    implementation "org.libreoffice:unoil:6.4.6", ex
+    implementation "org.libreoffice:jurt:6.4.6", ex
+    implementation "org.libreoffice:juh:6.4.6", ex
+    implementation "org.libreoffice:ridl:6.4.6", ex
 
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.8.2"

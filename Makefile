@@ -16,3 +16,6 @@ clean:
 
 start:
 	java -jar document-service.jar
+
+watch:
+	gradle clean test --continuous
