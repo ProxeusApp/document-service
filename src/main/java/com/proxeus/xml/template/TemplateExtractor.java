@@ -158,7 +158,6 @@ public class TemplateExtractor implements XMLEventProcessor {
                 switch (parser.getState()) {
                     case XML:
                         pushResult(event);
-
                         break;
                     case MAYBE_START_DELIMITER:
                     case MAYBE_END_DELIMITER:

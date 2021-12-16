@@ -46,7 +46,7 @@ public class ODTManifestProcessor implements XMLEventProcessor {
                 switch (event.getEventType()) {
                     case XMLEvent.START_DOCUMENT:
                         writer.add(event);
-                        writer.add(eventFactory.createCharacters(System.lineSeparator()));
+                        // writer.add(eventFactory.createCharacters(System.lineSeparator()));
                         break;
                     case XMLEvent.START_ELEMENT:
                         StartElement s = event.asStartElement();
