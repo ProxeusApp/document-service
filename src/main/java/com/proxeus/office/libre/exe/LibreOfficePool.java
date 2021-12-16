@@ -48,6 +48,7 @@ public class LibreOfficePool {
     private int highLoad = 60;
     private int lowLoad = 0;
     private final int failoverStart = 1;
+    private final int reconnectWait = 8;
     private int failover = failoverStart;
     private long cleanupThreadSleep = 200;
     private Thread cleanupThread;
@@ -58,7 +59,10 @@ public class LibreOfficePool {
         if (libreConfig.min <= 0 || libreConfig.max < libreConfig.min) {
             throw new InvalidParameterException("min must be higher than 0 and max must be at least as min or higher");
         }
-        pathFixForLibrary();
+        // UNSAFE and removed in fix-templ-22:
+        // pathFixForLibrary();
+        // Instead you can use:
+        // export LD_LIBRARY_PATH=path/to/your/library/dir/
         executables = new LinkedBlockingDeque<>(libreConfig.max);
         occupied = new HashMap<>(libreConfig.max);
         toBeReleased = new LinkedBlockingQueue<>(libreConfig.max);
@@ -239,6 +243,7 @@ public class LibreOfficePool {
     }
 
     private void prepare() {
+        log.info("Preparing LibreOfficePool: ", exeDir);
         for (; executables.size() < min; ) {
             LibreOffice lo = tryNewLibreOffice();
             if (lo != null) {
@@ -273,7 +278,7 @@ public class LibreOfficePool {
         }
         if (currentOccupiedSize + toReconnect.size() >= max) {
             //full, lets wait until one of them is getting released again
-            lo = executables.poll(8, TimeUnit.SECONDS);
+            lo = executables.poll(reconnectWait, TimeUnit.SECONDS);
             //looks like the service is under heavy load, lets throw and exceptions saying try again later
             //holding the request longer doesn't make sense as it takes more resources
             if (lo == null) {
@@ -284,7 +289,7 @@ public class LibreOfficePool {
             lo = executables.poll();
             if (lo == null) {
                 offerNew();
-                lo = executables.poll(8, TimeUnit.SECONDS);
+                lo = executables.poll(reconnectWait, TimeUnit.SECONDS);
                 if (lo == null) {
                     throw new UnavailableException("Cannot get LibreOffice instance.  Please try again later.");
                 }
@@ -367,19 +372,6 @@ public class LibreOfficePool {
         } while (count < maxAttempts);
         lo.close();
         throw new UnavailableException("Please try again later.");
-    }
-
-    private void pathFixForLibrary() {
-        System.setProperty("java.library.path", exeDir);
-        //set sys_paths to null
-        final Field sysPathsField;
-        try {
-            sysPathsField = ClassLoader.class.getDeclaredField("sys_paths");
-            sysPathsField.setAccessible(true);
-            sysPathsField.set(null, null);
-        } catch (java.lang.Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void close() {

@@ -23,6 +23,10 @@ Currently supported template format is `ODT`. Other formats like `DOCX` are not 
 
 Tip: use [sdkman.io](https://sdkman.io/install) for a quick developer setup.
 
+#### Configuration
+
+See [conf.json](src/main/resources/conf.json) and [log4j2.json](src/main/resources/log4j2.json).
+
 #### Building
 ```
 sudo docker build -t document-service .
@@ -30,7 +34,7 @@ sudo docker build -t document-service .
 
 #### Local run for development
 ```
- sudo docker run -p 2115:2115 document-service
+sudo docker run -p 2115:2115 document-service
 ```
 
 #### Use the official docker hub image from Proxeus
@@ -47,26 +51,26 @@ You can simply interact with the server using `curl`.
 
 curl --form template=@template.odt --form data=@data.json http://<server>/compile > result.pdf
 
-# To compile a template to odt (available format are pdf, odt, docx or doc) 
+# To compile a template to odt (available format are pdf, odt, docx or doc)
 
 curl --form template=@template.odt --form data=@data.json http://<server>/compile?format=odt > result.odt
 
-# To embed the template rendering error in the pdf result (add the `error` query parameter 
+# To embed the template rendering error in the pdf result (add the `error` query parameter
 
 curl --form template=@template.odt --form data=@data.json http://<server>/compile?error > result.pdf
 
 # To get the variables used in a template
 
 curl --data-binary @template.odt http://<server>/vars
-curl --form template=@template.odt  http:/<server>/vars 
+curl --form template=@template.odt  http:/<server>/vars
 
-# To get the subset of the variable starting with a given prefix 
+# To get the subset of the variable starting with a given prefix
 
 curl --data-binary @template.odt http://<server>/vars?prefix=foo
-curl --form template=@template.odt  http:/<server>/vars?prefix=bar 
+curl --form template=@template.odt  http:/<server>/vars?prefix=bar
 
 # To add asset files
- 
+
 curl --form template=@template.odt --form data=@data.json --form asset1=@asset1.png http://<server>/compile > result.pdf
 
 ```

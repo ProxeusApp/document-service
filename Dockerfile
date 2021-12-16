@@ -1,27 +1,33 @@
-FROM gradle:jdk8 as build
-
-COPY --chown=gradle:gradle . /home/gradle/project/
-WORKDIR /home/gradle/project
-RUN gradle clean test buildJar --no-daemon
-
-FROM ubuntu:18.04
+FROM gradle:jdk11-alpine
 EXPOSE 2115
 ENV LANG="en_US.UTF-8"
 
-## Fix installation of openjdk-8-jre-headless (https://github.com/nextcloud/docker/issues/380)
-RUN mkdir -p /usr/share/man/man1
-RUN apt-get update && apt-get install -y \
-        software-properties-common \
-        language-pack-en-base \
-        openjdk-8-jre-headless \
-        libreoffice \
-    && apt-get clean && rm -rf /var/cache/* /var/lib/apt/lists/* \
-    && update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+# Install packages
+RUN apk update
+RUN set -xe \
+    && apk add --no-cache --purge -uU \
+        curl icu-libs unzip zlib-dev musl \
+        mesa-gl mesa-dri-swrast \
+        libreoffice-common=6.4.6.2-r11 \
+        libreoffice-writer=6.4.6.2-r11 \
+        libreofficekit=6.4.6.2-r11 \
+        ttf-freefont ttf-opensans ttf-inconsolata \
+	      ttf-liberation ttf-dejavu \
+        libstdc++ dbus-x11 \
+    && rm -rf /var/cache/apk/* /tmp/*
 
-#font configuration
+# Custom font configuration
 COPY ./00-fontconfig.conf /etc/fonts/conf.d/
 
-RUN mkdir /document-service /document-service/fonts /document-service/logs
-COPY --from=build /home/gradle/project/document-service.jar /document-service/
+# Create working folders
+RUN mkdir -p /document-service/fonts /document-service/logs
+COPY --chown=gradle:gradle . /home/gradle/project/
+WORKDIR /home/gradle/project
 
-CMD ["/usr/bin/java", "-jar", "/document-service/document-service.jar"]
+# Build and install binary
+RUN gradle clean buildJar --no-daemon --quiet
+COPY document-service.jar /document-service/
+
+# Run service
+# * add-opens: https://github.com/ProxeusApp/document-service/issues/23#issuecomment-996166084
+CMD ["java", "--add-opens=java.base/java.lang=ALL-UNNAMED", "-jar", "/document-service/document-service.jar"]

@@ -87,12 +87,8 @@ public class DefaultTemplateHandler implements TemplateHandler {
         // First, create a new XMLInputFactory
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         // Setup a new eventReader
-        try {
-            XMLEventReader reader = inputFactory.createXMLEventReader(input);
-            this.postProcessor.process(reader, eventWriter);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        XMLEventReader reader = inputFactory.createXMLEventReader(input);
+        this.postProcessor.process(reader, eventWriter);
 
         XMLOutputFactory outputXMLFactory = XMLOutputFactory.newInstance();
         outputXMLFactory.setProperty("escapeCharacters", false);

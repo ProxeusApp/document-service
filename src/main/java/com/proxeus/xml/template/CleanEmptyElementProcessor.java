@@ -39,8 +39,8 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
             switch (event.getEventType()) {
                 case XMLEvent.START_DOCUMENT:
                     // writer.add(event);
-                    writer.add(eventFactory.createStartDocument("UTF-8", "1.0"));
-                    writer.add(eventFactory.createCharacters(System.lineSeparator()));
+                    queue.offer(eventFactory.createStartDocument("UTF-8", "1.0"));
+                    queue.offer(eventFactory.createCharacters(System.lineSeparator()));
                     break;
                 case XMLEvent.START_ELEMENT:
                     StartElement s = event.asStartElement();
@@ -76,7 +76,6 @@ public class CleanEmptyElementProcessor implements XMLEventProcessor {
                     if (inTemplate && previous.isStartElement() && previous.asStartElement().getName().equals(e.getName())) {
                         queue.removeLast();
                         break;
-
                     }
 
                     if (elementToRemoveIfOnlyWhitespace.contains(e.getName())) {

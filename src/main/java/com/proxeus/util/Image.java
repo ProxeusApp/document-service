@@ -27,18 +27,27 @@ public class Image {
 
     public static void adjustToFitToRatio(File src, File dst, int maxWidth, int maxHeight, String alignment, boolean sizeItUpIfSmaller) throws IOException {
         BufferedImage image = ImageIO.read(src);
-        // image.setOutputQuality(98.0);
-        if (sizeItUpIfSmaller) {
-            if (maxHeight > maxWidth) {
-                // image.setHeight(maxHeight);//works with lower images
-                image = resize(image, image.getHeight() * maxWidth / maxHeight, maxHeight);
-            } else {
-                // image.setWidth(maxWidth);
-                image = resize(image, maxWidth, image.getWidth() * maxHeight / maxWidth);
-            }
-        }
+
         int width = image.getWidth();
         int height = image.getHeight();
+        if (width == 0 || height == 0) {
+          throw new IOException("Image has width or height zero");
+        }
+
+        // TODO: fixme
+        /*
+        if (sizeItUpIfSmaller) {
+          if (width < height) {
+            double w = (double) image.getHeight() * (double) maxWidth / (double) maxHeight;
+            image = resize(image, (int) w, maxHeight);
+          } else {
+            double h = (double) image.getWidth() * (double) maxHeight / (double) maxWidth;
+            image = resize(image, maxWidth, (int) h);
+          }
+        }
+        width = image.getWidth();
+        height = image.getHeight();
+        */
 
         double outputImage = 0.0D;
         if (maxWidth < maxHeight) {
@@ -95,7 +104,14 @@ public class Image {
                 width = 0;
             }
         }
+        if (width == 0) {
+          width = image.getWidth();
+        }
+        if (height == 0) {
+          height = image.getHeight();
+        }
         BufferedImage containerImage = resize(image, width, height);
+
         // BufferedImage containerImage = new BufferedImage(maxWidth, maxHeight);
         // containerImage.setOutputQuality(98.0);
         // containerImage.addImage(image, width, height, false);
