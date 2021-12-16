@@ -3,7 +3,7 @@
   "host":"0.0.0.0",
   "port":2115,
   "tmpFolder":"docsCache",/** cache during a request, it will be deleted when the request is finished **/
-  "min": 10,/** min workers **/
+  "min": 2,/** min workers **/
   "max": 100,/** max workers **/
   "timeout":"30s",/** timeout duration **/
   "libreConfig":{

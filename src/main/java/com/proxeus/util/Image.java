@@ -104,6 +104,12 @@ public class Image {
                 width = 0;
             }
         }
+        if (width == 0) {
+          width = image.getWidth();
+        }
+        if (height == 0) {
+          height = image.getHeight();
+        }
         BufferedImage containerImage = resize(image, width, height);
 
         // BufferedImage containerImage = new BufferedImage(maxWidth, maxHeight);

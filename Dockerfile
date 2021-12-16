@@ -20,9 +20,9 @@ RUN set -xe \
 COPY ./00-fontconfig.conf /etc/fonts/conf.d/
 
 # Create working folders
+RUN mkdir -p /document-service/fonts /document-service/logs
 COPY --chown=gradle:gradle . /home/gradle/project/
 WORKDIR /home/gradle/project
-RUN mkdir -p /document-service/fonts /document-service/logs
 
 # Build and install binary
 RUN gradle clean buildJar --no-daemon --quiet
