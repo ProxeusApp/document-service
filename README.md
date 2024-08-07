@@ -17,9 +17,13 @@ Currently supported template format is `ODT`. Other formats like `DOCX` are not 
 
 ## Install, Build and Run
 #### Prerequisites
-+ JDK 8
-+ gradle
 + docker
++ make
+
+For development:
+
++ JDK 11
++ gradle
 
 Tip: use [sdkman.io](https://sdkman.io/install) for a quick developer setup.
 
@@ -29,17 +33,17 @@ See [conf.json](src/main/resources/conf.json) and [log4j2.json](src/main/resourc
 
 #### Building
 ```
-sudo docker build -t document-service .
+make build-docker
 ```
 
 #### Local run for development
 ```
-sudo docker run -p 2115:2115 document-service
+make run-docker
 ```
 
 #### Use the official docker hub image from Proxeus
 ```
-sudo docker run -p 2115:2115 proxeus/document-service:latest
+docker run -p 2115:2115 proxeus/document-service:latest
 ```
 
 ## Command line client

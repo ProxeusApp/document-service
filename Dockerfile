@@ -1,16 +1,16 @@
 FROM gradle:jdk11-alpine
 EXPOSE 2115
 ENV LANG="en_US.UTF-8"
+USER root
 
 # Install packages
 RUN apk update
 RUN set -xe \
     && apk add --no-cache --purge -uU \
         curl icu-libs unzip zlib-dev musl \
-        mesa-gl mesa-dri-swrast \
-        libreoffice-common=6.4.6.2-r11 \
-        libreoffice-writer=6.4.6.2-r11 \
-        libreofficekit=6.4.6.2-r11 \
+        mesa-gl \
+        libreoffice-writer \
+        libreofficekit \
         ttf-freefont ttf-opensans ttf-inconsolata \
 	      ttf-liberation ttf-dejavu \
         libstdc++ dbus-x11 \
@@ -26,7 +26,7 @@ WORKDIR /home/gradle/project
 
 # Build and install binary
 RUN gradle clean buildJar --no-daemon --quiet
-COPY document-service.jar /document-service/
+RUN cp ./document-service.jar /document-service/
 
 # Run service
 # * add-opens: https://github.com/ProxeusApp/document-service/issues/23#issuecomment-996166084

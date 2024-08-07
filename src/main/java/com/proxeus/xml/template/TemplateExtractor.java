@@ -117,6 +117,7 @@ public class TemplateExtractor implements XMLEventProcessor {
         return s.getAttributeByName(TemplateExtractor.PROXEUS_MARKER_ATTRIBUTE_NAME) != null;
     }
 
+    @SuppressWarnings("unchecked")
     public static StartElement addMark(StartElement start) {
         List<Attribute> attributes = new LinkedList<>();
         attributes.add(eventFactory.createAttribute(PROXEUS_MARKER_ATTRIBUTE_NAME, PROXEUS_MARKER_ATTRIBUTE_VALUE));
@@ -128,6 +129,7 @@ public class TemplateExtractor implements XMLEventProcessor {
         return eventFactory.createStartElement(start.getName(), attributes.iterator(), start.getNamespaces());
     }
 
+    @SuppressWarnings("unchecked")
     public static StartElement removeMark(StartElement start) {
         List<Attribute> attributes = new LinkedList<>();
 
